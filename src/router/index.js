@@ -317,8 +317,8 @@ export const constantRouterMap = [
       }
       ,
       {
-        path: 'flash',
-        name: 'flash',
+        path: 'roleList',
+        name: 'roleList',
         component: () => import('@/views/rbac/resource/roleList'),
         meta: {title: '角色列表', icon: 'example.svg'}
       }
