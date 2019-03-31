@@ -159,7 +159,7 @@
       </el-table-column>
       <el-table-column
         prop="name"
-        label="姓名"
+        label="名称"
         width="120">
       </el-table-column>
       <el-table-column
