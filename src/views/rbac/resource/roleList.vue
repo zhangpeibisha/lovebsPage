@@ -3,10 +3,10 @@
     <!--删除提示框-->
     <div>
       <el-dialog
-        title="删除资源"
+        title="删除角色"
         :visible.sync="deletePopoverView"
         width="30%">
-        <span>是否要删除该资源配置</span>
+        <span>是否要删除该角色</span>
         <span slot="footer" class="dialog-footer">
         <el-button @click="deletePopoverView = false">取 消</el-button>
         <el-button type="primary" @click="deleteClick">确 定</el-button>
@@ -16,7 +16,7 @@
 
     <!--更新数据展示-->
     <div>
-      <el-dialog title="更新资源信息" :visible.sync="updatePopoverView">
+      <el-dialog title="更新角色信息" :visible.sync="updatePopoverView">
         <el-form :label-position="labelPosition" label-width="80px" :model="updateRole">
           <el-form-item label="名称">
             <el-input v-model="updateRole.name"></el-input>
