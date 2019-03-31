@@ -106,14 +106,14 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="addResourcePopoverView = false">取 消</el-button>
+          <el-button @click="addRolePopoverView = false">取 消</el-button>
           <el-button type="primary" @click="addResourceRun">确 定</el-button>
         </div>
       </el-dialog>
     </div>
 
     <!--搜索框-->
-    <div style="justify-items: center;margin-top: 15px;margin-left: 15%">
+    <div style="justify-items: center;margin-top: 15px;margin-left: 13%">
       <el-row :gutter="20">
         <el-col :span="16">
           <div class="grid-content bg-purple">
@@ -133,11 +133,19 @@
             </div>
           </div>
         </el-col>
-        <el-col :span="6">
+        <el-col :span="3">
           <div class="grid-content">
-            <div>
+            <div style="margin-left: 10%;margin-right: 0px">
               <el-row>
                 <el-button type="success" @click="addResourceBtn">添加资源</el-button>
+              </el-row>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="3">
+          <div class="grid-content">
+            <div style="margin-left: 0px">
+              <el-row>
                 <el-button type="danger">批量删除</el-button>
               </el-row>
             </div>
@@ -340,14 +348,13 @@
         this.updateResource = row;
       },
       // 触发添加框展示
-      addResourceBtn() {
+      addResourceBtn(){
         this.addResourcePopoverView = true;
-        console.log("添加信息")
       },
       // 执行添加动作
       addResourceRun(){
         this.addResourcePopoverView = false;
-        console.log("获取到的添加数据",this.addResourceModel)
+        console.log("获取到的添加数据",this.addRoleModel)
       },
       // 分页显示页面
       handleSizeChange(pageSize) {
