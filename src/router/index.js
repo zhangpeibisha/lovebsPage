@@ -305,8 +305,7 @@ export const constantRouterMap = [
     path: "/rbac",
     name: "rbac",
     component: Layout,
-    meta: {title: "资源管理", icon: 'example.svg'},
-    // redirect: "/resource",
+    meta: {title: "资源管理", icon: 'example'},
     hidden: false,
     children: [
       {
@@ -316,13 +315,13 @@ export const constantRouterMap = [
         meta: {title: '资源列表', icon: 'example.svg'},
         hidden: false
       }
-      // ,
-      // {
-      //   path: 'flash',
-      //   name: 'flash',
-      //   component: () => import('@/views/rbac/resource/roleList'),
-      //   meta: {title: '角色列表', icon: 'example.svg'}
-      // }
+      ,
+      {
+        path: 'flash',
+        name: 'flash',
+        component: () => import('@/views/rbac/resource/roleList'),
+        meta: {title: '角色列表', icon: 'example.svg'}
+      }
     ]
   },
   {path: '*', redirect: '/404', hidden: true}
