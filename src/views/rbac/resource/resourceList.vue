@@ -121,7 +121,7 @@
               <div>
                 <el-input placeholder="请输入内容" v-model="selectValue" class="input-with-select">
                   <el-select v-model="selectType" slot="prepend" placeholder="请选择查询类型">
-                    <el-option label="角色" value="role"></el-option>
+                    <el-option label="名称" value="role"></el-option>
                     <el-option label="请求路径" value="url"></el-option>
                     <el-option label="请求方法" value="method"></el-option>
                     <el-option label="匿名访问" value="permissionAll"></el-option>
