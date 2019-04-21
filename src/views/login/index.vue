@@ -9,7 +9,7 @@
         <div style="text-align: center">
           <svg-icon icon-class="login-mall" style="width: 56px;height: 56px;color: #409EFF"></svg-icon>
         </div>
-        <h2 class="login-title color-main">mall-admin-web</h2>
+        <h2 class="login-title color-main">重庆理工大学教学系统</h2>
         <el-form-item prop="username">
           <el-input name="username"
                     type="text"
@@ -21,6 +21,22 @@
           </span>
           </el-input>
         </el-form-item>
+        
+        <!--<input type="text" value="获取验证码" readonly @click="image"/>-->
+        
+         <el-form-item prop="image">
+          <el-input name="image"
+                    type="text"
+                    v-model="loginForm.image"
+                    autoComplete="on"
+                    placeholder="请输入验证码">
+          <span slot="prefix">
+            <svg-icon icon-class="user" class="color-main"></svg-icon>
+          </span>
+          </el-input>
+        </el-form-item>
+        
+        <button ></button>
         <el-form-item prop="password">
           <el-input name="password"
                     :type="pwdType"
@@ -55,23 +71,27 @@
     name: 'login',
     data() {
       const validateUsername = (rule, value, callback) => {
-        if (!isvalidUsername(value)) {
-          callback(new Error('请输入正确的用户名'))
-        } else {
-          callback()
-        }
+      	console.log(value)
+//      if (!isvalidUsername(value)) {
+//        callback(new Error('请输入正确的用户名'))
+//      } else {
+//        callback()
+			     callback()
+//      }
       };
       const validatePass = (rule, value, callback) => {
-        if (value.length < 3) {
-          callback(new Error('密码不能小于3位'))
-        } else {
-          callback()
-        }
+//      if (value.length < 3) {
+//        callback(new Error('密码不能小于3位'))
+//      } else {
+//        callback()
+//      }
+		       callback()
       };
       return {
         loginForm: {
           username: 'admin',
-          password: '123456'
+          password: '123456',
+          image:""
         },
         loginRules: {
           username: [{required: true, trigger: 'blur', validator: validateUsername}],
@@ -83,6 +103,9 @@
       }
     },
     methods: {
+//  	image(){
+//  		
+//  	},
       showPwd() {
         if (this.pwdType === 'password') {
           this.pwdType = ''
@@ -92,9 +115,10 @@
       },
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
+        	
           console.log("获取valid数据",valid);
           if (valid) {
-            this.loading = true;
+            this.loading = true;         
             this.$store.dispatch('Login', this.loginForm).then(() => {
               this.loading = false;
               this.$router.push({path: '/'})

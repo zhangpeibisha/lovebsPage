@@ -1,13 +1,15 @@
 import request from '@/utils/request'
 
-export function login(username, password) {
+export function login(username, password,image) {
+	console.log("logapi",username, password,image)
   return request({
-    url: '/admin/login',
+    url: '/authentication/form?username='+username+'&password='+password+'&image='+image,
     method: 'post',
-    data: {
-      username,
-      password
-    }
+//  data: {
+//    username,
+//    password,
+//    image
+//  }
   })
 }
 

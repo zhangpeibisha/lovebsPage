@@ -5,7 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
-
+import Creat from '../views/Questionnaire/Establish/creat'
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -19,18 +19,20 @@ import Layout from '../views/layout/Layout'
   }
  **/
 export const constantRouterMap = [
-  {path: '/login', component: () => import('@/views/login/index'), hidden: true},
+  {path: '/login', component: () => import('@/views/login/index'),hidden: false},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
   {
     path: '',
     component: Layout,
     redirect: '/home',
+    meta: {title: '首页', icon: 'home'},
     children: [{
       path: 'home',
       name: 'home',
       component: () => import('@/views/home/index'),
       meta: {title: '首页', icon: 'home'}
-    }]
+    },
+    ]
   },
   {
     path: '/pms',
@@ -77,7 +79,34 @@ export const constantRouterMap = [
       }
     ]
   },
-  {path: '*', redirect: '/404', hidden: true}
+  {path: '*', redirect: '/404', hidden: true},
+  
+ {
+    path: '/Questionnaire',
+    component: Layout,
+    redirect: '/Questionnaire/Establish',
+    alwaysShow: true,
+    name: 'Questionnaire',
+    meta: {title: '问卷调查', icon: 'product'},
+    children: [{
+      path: 'Establish',
+      name: 'Establish',
+      component: () => import('@/views/Questionnaire/Establish/index'),
+      meta: {title: '问卷创建', icon: 'product-add'}
+    },
+      {
+        path: 'Release',
+        name: 'Release',
+        component: () => import('@/views/Questionnaire/Release/index'),
+        meta: {title: '问卷发布', icon: 'product-add'}
+      },
+      {
+      	path:'/Questionnaire/Establish/creat',
+      	name:'Creat',
+      	component:Creat
+      }
+    ]
+ },
 ]
 
 export default new Router({
