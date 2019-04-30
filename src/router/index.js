@@ -5,7 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
-import Creat from '../views/Questionnaire/Establish/creat'
+
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
@@ -21,13 +21,14 @@ import Creat from '../views/Questionnaire/Establish/creat'
 export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index'),hidden: false},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
+  {path: '/question/card/edit', component: () => import('@/views/question/card/index'), hidden: true},
   {
     path: '',
     component: Layout,
     redirect: '/home',
     meta: {title: '首页', icon: 'home'},
     children: [{
-      path: 'home',
+      path: '/home',
       name: 'home',
       component: () => import('@/views/home/index'),
       meta: {title: '首页', icon: 'home'}
@@ -35,11 +36,10 @@ export const constantRouterMap = [
     ]
   },
   {
-    path: '/pms',
+    path: '/student',
     component: Layout,
-    redirect: '/pms/product',
-    alwaysShow: true,
-    name: 'pms',
+    redirect: '/student/manager',
+    name: 'student',
     meta: {title: '学生', icon: 'product'},
     children: [{
       path: 'product',
@@ -48,8 +48,8 @@ export const constantRouterMap = [
       meta: {title: '学生管理', icon: 'product-list'}
     },
       {
-        path: 'addProduct',
-        name: 'addProduct',
+        path: 'manager',
+        name: 'manager',
         component: () => import('@/views/student/manager/index'),
         meta: {title: '问卷数据', icon: 'product-add'}
       }
@@ -80,7 +80,7 @@ export const constantRouterMap = [
     ]
   },
   {path: '*', redirect: '/404', hidden: true},
-  
+
  {
     path: '/Questionnaire',
     component: Layout,
@@ -102,8 +102,8 @@ export const constantRouterMap = [
       },
       {
       	path:'/Questionnaire/Establish/creat',
-      	name:'Creat',
-      	component:Creat
+        name:'Creat',
+        component: () => import('@/views/Questionnaire/Release/index'),
       }
     ]
  },

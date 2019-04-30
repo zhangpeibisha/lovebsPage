@@ -10,7 +10,7 @@ const service = axios.create({
 });
 
 export function getBaseUrl(){
-  return "http://47.102.214.252:9030";
+  return "/api";
 }
 
 // request拦截器
