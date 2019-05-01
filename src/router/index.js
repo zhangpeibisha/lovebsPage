@@ -5,6 +5,7 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
+import Center from '../views/center/student'
 
 /**
  * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -19,6 +20,8 @@ import Layout from '../views/layout/Layout'
   }
  **/
 export const constantRouterMap = [
+   {path:"/teacherCenter",component: () => import('@/views/center/teacherCenter')},
+  {path:"/center",component:Center},
   {path: '/login', component: () => import('@/views/login/index'),hidden: false},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
   {path: '/question/card/edit', component: () => import('@/views/question/card/index'), hidden: true},
