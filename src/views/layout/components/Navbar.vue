@@ -4,13 +4,19 @@
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img class="user-avatar" :src="avatar">
+        <img class="user-avatar" src="../../../assets/user/1.png">
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/">
+        <router-link class="inlineBlock" to="/center" v-if="student==='STUDENT'">
           <el-dropdown-item>
-            首页
+            个人中心
+          </el-dropdown-item>
+        </router-link>
+        
+        <router-link class="inlineBlock" to="/teacherCenter" v-if="student==='TEACHER'">
+          <el-dropdown-item>
+            个人中心
           </el-dropdown-item>
         </router-link>
         <el-dropdown-item divided>
@@ -25,8 +31,14 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
+import {findUserInfo} from '@/api/center';
 
 export default {
+	data(){
+		return{
+			student:""
+		}
+	},
   components: {
     Breadcrumb,
     Hamburger
@@ -37,7 +49,15 @@ export default {
       'avatar'
     ])
   },
+  created(){
+  		this.getList()
+  },
   methods: {
+  	getList(){
+				findUserInfo().then((res)=>{
+					this.student=res.data.userType
+				})
+			},
     toggleSideBar() {
       this.$store.dispatch('ToggleSideBar')
     },

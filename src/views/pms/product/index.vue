@@ -66,6 +66,7 @@
         </el-form>
       </div>
     </el-card>
+    
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>数据列表</span>
@@ -179,6 +180,7 @@
         </el-table-column>
       </el-table>
     </div>
+    
     <div class="batch-operate-container">
       <el-select
         size="small"
