@@ -4,7 +4,7 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
-        <el-button style="float: right" @click="handleSearchList()" type="primary" size="small">查询结果</el-button>
+        <el-button style="float: right" @click="getList()" type="primary" size="small">查询结果</el-button>
         <el-button
           style="float: right;margin-right: 15px"
           @click="handleResetSearch()"
@@ -23,20 +23,44 @@
             <el-input style="width: 203px" v-model="listQuery.name" placeholder="姓名"></el-input>
           </el-form-item>
           <el-form-item label="学院：">
-              <el-select v-model="listQuery.facultyId" placeholder="请选择学院" clearable>
+            <el-select
+              v-model="listQuery.facultyId"
+              placeholder="请选择学院"
+              clearable
+              filterable
+              @change="getProfessionList()"
+            >
               <el-option
                 v-for="item in facultyList"
-                :key="item.coding"
-                :value="item.name"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="专业：">
-            <el-select v-model="listQuery.professionId" placeholder="请选择专业" clearable>
+            <el-select
+              v-model="listQuery.professionId"
+              placeholder="请选择专业"
+              clearable
+              filterable
+              @change="getClasses(listQuery.professionId)"
+            >
               <el-option
                 v-for="item in professionList"
-                :key="item.coding"
-                :value="item.name"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="班级：">
+            <el-select v-model="listQuery.classId" placeholder="请选择班级" clearable filterable>
+              <el-option
+                v-for="item in classes"
+                :key="item.id"
+                :label="item.classid"
+                :value="item.id"
               ></el-option>
             </el-select>
           </el-form-item>
@@ -46,7 +70,18 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>学生数据</span>
-      <el-button class="btn-add" @click="handleAddProduct()" size="mini">添加</el-button>
+      <el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
+      <el-button
+        class="btn-add"
+        @click="student = {
+        classzz:{
+          profession: {
+            facultyVo:{}
+          }
+        }
+      };editDialog = true;dialogTitle='添加'"
+        size="mini"
+      >添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table
@@ -58,34 +93,6 @@
         border
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column type="expand">
-          <template slot-scope="props">
-            <el-form label-position="left" inline class="demo-table-expand">
-              <el-form-item label="学号">
-                <span>{{ props.row.studentId }}</span>
-              </el-form-item>
-              <el-form-item label="姓名">
-                <span>{{ props.row.name }}</span>
-              </el-form-item>
-              <el-form-item label="手机">
-                <span>{{ props.row.phone }}</span>
-              </el-form-item>
-              <el-form-item label="邮件">
-                <span>{{ props.row.email }}</span>
-              </el-form-item>
-              <el-form-item label="学院">
-                <span>{{ props.row.class.profession.faculty.name }}</span>
-              </el-form-item>
-              <el-form-item label="专业">
-                <span>{{ props.row.class.profession.name }}</span>
-              </el-form-item>
-              <el-form-item label="指导员">
-                <span>指导员</span>
-              </el-form-item>
-            </el-form>
-          </template>
-        </el-table-column>
-
         <el-table-column label="头像" width="100" align="center">
           <template slot-scope="scope">
             <img style="height: 80px;width:80px;" :src="scope.row.imageUrl">
@@ -98,7 +105,20 @@
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="专业" align="center">
-          <template slot-scope="scope">{{scope.row.class.profession.name}}</template>
+          <template slot-scope="scope">{{scope.row.classzz.profession.name}}</template>
+        </el-table-column>
+        <el-table-column label="操作">
+          <template slot-scope="scope">
+            <el-button
+              size="mini"
+              @click="student = scope.row;editDialog = true;student.type = 'see';dialogTitle='查看'"
+            >查看</el-button>
+            <el-button
+              size="mini"
+              @click="student = scope.row;editDialog = true;dialogTitle='编辑';student.type='edit'"
+            >编辑</el-button>
+            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -108,25 +128,98 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         layout="total, sizes,prev, pager, next,jumper"
-        :page-size="listQuery.pageSize"
+        :page-size="listQuery.limit"
         :page-sizes="[5,10,15]"
-        :current-page.sync="listQuery.pageNum"
+        :current-page.sync="listQuery.page"
         :total="total"
       ></el-pagination>
     </div>
+    <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
+      <el-form label-width="80px">
+        <el-form-item label="学号">
+          <el-input v-model="student.studentId" :disabled="student.type == 'see'"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="student.name" :disabled="student.type == 'see'"></el-input>
+        </el-form-item>
+        <el-form-item label="电话">
+          <el-input v-model="student.phone" :disabled="student.type == 'see'"></el-input>
+        </el-form-item>
+        <el-form-item label="学院：">
+          <el-select
+            v-model="student.classzz.profession.facultyVo.id"
+            placeholder="请选择学院"
+            clearable
+            filterable
+            @change="getProfessionList(student.classzz.profession.facultyVo.id)"
+            :disabled="student.type == 'see'"
+          >
+            <el-option
+              v-for="item in facultyList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="专业：">
+          <el-select
+            v-model="student.classzz.profession.id"
+            placeholder="请选择专业"
+            clearable
+            filterable
+            :disabled="student.type == 'see'"
+            @change="getClasses(student.classzz.profession.id)"
+          >
+            <el-option
+              v-for="item in professionList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="班级：">
+          <el-select
+            v-model="student.classzz.id"
+            placeholder="请选择班级"
+            clearable
+            filterable
+            :disabled="student.type == 'see'"
+          >
+            <el-option
+              v-for="item in classes"
+              :key="item.id"
+              :label="item.classid"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer" v-if="student.type != 'see'">
+        <el-button @click="editDialog = false">取 消</el-button>
+        <el-button type="primary" @click="edit()">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { fetchList } from "@/api/student";
+import {
+  fetchList,
+  fetchProfessionList,
+  fetchFacultyList,
+  fetchClassList,
+  create,
+  update,
+  _delete
+} from "@/api/student";
 
 const defaultListQuery = {
-  keyword: null,
-  pageNum: 1,
-  pageSize: 5,
-  studentId: null,
-  name: null,
-  professionId: null,
-  facultyId: null
+  key: null,
+  word: null,
+  blurry: false,
+  page: 1,
+  limit: 5
 };
 export default {
   name: "studentList",
@@ -144,53 +237,106 @@ export default {
       selectProductCateValue: null,
       multipleSelection: [],
       facultyList: [],
-      professionList: []
+      professionList: [],
+      classes: [],
+      editDialog: false,
+      student: {
+        classzz: {
+          profession: {
+            facultyVo: {}
+          }
+        }
+      },
+      dialogTitle: ""
     };
   },
   created() {
     this.getList();
-    this.getProfessionList();
     this.getFacultyList();
+  },
+  watch: {
+    student: function(val) {
+      try {
+        if (val && val.classzz.profession.facultyVo.id) {
+          fetchProfessionList({
+            quire: ` and facultyId = ${val.classzz.profession.facultyVo.id}`
+          }).then(result => {
+            this.professionList = result.data.data;
+          });
+        }
+      } catch (e) {}
+    }
   },
   methods: {
     getList() {
       this.listLoading = true;
+      this.listQuery.quire = "and 1 = 1";
+      this.listQuery.keyword
+        ? (this.listQuery.sql +=
+            ` and (name like '%${this.listQuery.keyword}%' or studentId like '%${
+              this.listQuery.keyword
+            }%' ` +
+            `or studentId like '%${
+              this.listQuery.keyword
+            }%'  or email like '%${this.listQuery.keyword}%')`)
+        : "";
+      this.listQuery.studentId
+        ? (this.listQuery.sql += ` and studentId = ${this.listQuery.studentId}`)
+        : "";
+      this.listQuery.name
+        ? (this.listQuery.sql += ` and name = '${this.listQuery.name}'`)
+        : "";
+      this.listQuery.facultyId && !this.listQuery.professionId
+        ? (this.listQuery.sql += ` and classId in (select id from class where professionId in (select id from profession where facultyId = ${
+            this.listQuery.facultyId
+          }))`)
+        : "";
+      this.listQuery.professionId && !this.listQuery.classId
+        ? (this.listQuery.sql += ` and classId in (select id from class where professionId = ${
+            this.listQuery.professionId
+          })`)
+        : "";
+      this.listQuery.classId
+        ? (this.listQuery.sql += ` and classId = ${this.listQuery.classId}`)
+        : "";
       fetchList(this.listQuery).then(response => {
         this.listLoading = false;
-        this.list = response.data;
+        this.list = response.data.data;
         this.total = 1;
       });
     },
-    getProfessionList(code) {
-        this.professionList = [{
-            coding: '09',
-            name: '网络工程'
-        }]
+    getProfessionList(facultyId) {
+      this.professionList = [];
+      fetchProfessionList({
+        quire: ` and facultyId = ${facultyId || this.listQuery.facultyId}`
+      }).then(result => {
+        this.professionList = result.data.data;
+      });
     },
     getFacultyList() {
-        this.facultyList = [
-            {
-                code: '03',
-                name: '计算机'
-            }
-        ]
+      fetchFacultyList({}).then(result => {
+        this.facultyList = result.data.data;
+      });
+    },
+    getClasses(professionId) {
+      fetchClassList({
+        quire: `and professionId = ${professionId ||
+          this.listQuery.professionId}`
+      }).then(result => {
+        this.classes = result.data.data;
+      });
     },
     handleSizeChange(val) {
-      this.listQuery.pageNum = 1;
-      this.listQuery.pageSize = val;
+      this.listQuery.page = 1;
+      this.listQuery.limit = val;
       this.getList();
     },
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val;
+      this.listQuery.page = val;
       this.getList();
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
-    },
-    handlePublishStatusChange(index, row) {
-      let ids = [];
-      ids.push(row.id);
-      this.updatePublishStatus(row.publishStatus, ids);
     },
     handleResetSearch() {
       this.selectProductCateValue = [];
@@ -204,26 +350,52 @@ export default {
       }).then(() => {
         let ids = [];
         ids.push(row.id);
-        this.updateDeleteStatus(1, ids);
+        _delete({
+          ids
+        });
       });
+    },
+    edit() {
+      let student = this.student;
+      student.classId = student.classzz.id;
+      // 编辑学生信息
+      if (student.id) {
+        update(this.student).then(result => {
+          Message({
+            message: "添加成功",
+            type: "success",
+            duration: 1000
+          });
+        });
+      }
+      // 添加学生
+      else {
+        create(this.student).then(result => {
+          Message({
+            message: "添加成功",
+            type: "success",
+            duration: 1000
+          });
+        });
+      }
     }
   }
 };
 </script>
 
 <style>
-  .demo-table-expand {
-    font-size: 0;
-  }
-  .demo-table-expand label {
-    width: 90px;
-    color: #99a9bf;
-  }
-  .demo-table-expand .el-form-item {
-    margin-right: 0;
-    margin-bottom: 0;
-    width: 50%;
-  }
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>
 
 

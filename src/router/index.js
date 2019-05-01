@@ -23,7 +23,7 @@ export const constantRouterMap = [
   {path: '/404', component: () => import('@/views/404'), hidden: true},
   {path: '/question/card/edit', component: () => import('@/views/question/card/index'), hidden: true},
   {
-    path: '',
+    path: '/',
     component: Layout,
     redirect: '/home',
     meta: {title: '首页', icon: 'home'},
@@ -44,7 +44,7 @@ export const constantRouterMap = [
     children: [{
       path: 'product',
       name: 'product',
-      component: () => import('@/views/pms/product/index'),
+      component: () => import('@/views/student/manager/index'),
       meta: {title: '学生管理', icon: 'product-list'}
     },
       {
