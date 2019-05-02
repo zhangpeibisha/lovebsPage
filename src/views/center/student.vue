@@ -14,7 +14,7 @@
 		</el-container>
 
 		<el-tabs v-model="activeName" @tab-click="handleClick">
-			<el-tab-pane label="已完成问卷" name="first">
+			<el-tab-pane :label="'已完成问卷'" name="first">
 
 				<el-table :data="tableData" style="width: 100%">
 
@@ -124,6 +124,7 @@
 	export default {
 		data() {
 			return {
+				task:"",
 				list:[],								 
 				activeName: 'second',
 				tableData: [{
@@ -168,7 +169,8 @@
 			getList(){
 				findUserInfo().then((res)=>{
 					this.list=res.data
-					console.log(this.list)
+					this.task=res.data.userInfo.task
+					console.log(this.task)
 				})
 			},
 			

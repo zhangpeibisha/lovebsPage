@@ -14,28 +14,45 @@
 		</el-container>
 
 		<el-tabs v-model="activeName" @tab-click="handleClick">
-			<el-tab-pane label="已完成问卷" name="first">
+			<el-tab-pane :label="'已完成问卷'+'('+task.qnaireTask.complete+')'" name="first">
 
-				<el-table :data="tableData" style="width: 100%">
+				<el-table :data="datalist" style="width: 100%">
 
-					<el-table-column label="日期" width="180">
+					<el-table-column label="创建时间" width="180">
 						<template slot-scope="scope">
-							<i class="el-icon-time"></i>
-							<span style="margin-left: 10px">{{ scope.row.date }}</span>
+							<span style="margin-left: 10px">{{scope.row.startrespondtime}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="更新时间" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.endrespondtime}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="描述" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.description}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="老师名" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.teacherid}}</span>
 						</template>
 					</el-table-column>
 
-					<el-table-column label="姓名" width="180">
+					<!--<el-table-column label="姓名" width="180">
 						<template slot-scope="scope">
 							<el-popover trigger="hover" placement="top">
-								<p>姓名: {{ scope.row.name }}</p>
-								<p>住址: {{ scope.row.address }}</p>
+								<p>姓名: {{ scope.row.courseid }}</p>
+								<p>住址: {{ scope.row.courseid }}</p>
 								<div slot="reference" class="name-wrapper">
-									<el-tag size="medium">{{ scope.row.name }}</el-tag>
+									<el-tag size="medium">{{ scope.row.courseid }}</el-tag>
 								</div>
 							</el-popover>
 						</template>
-					</el-table-column>
+					</el-table-column>-->
 
 					<el-table-column label="操作">
 						<template slot-scope="scope">
@@ -46,34 +63,47 @@
 				</el-table>
 			</el-tab-pane>
 
-			<el-tab-pane label="未完成问卷" name="second">
 
-				<el-table :data="tableData" style="width: 100%">
 
-					<el-table-column label="日期" width="180">
+			<el-tab-pane :label="'未完成问卷'+'('+task.qnaireTask.pending+')'" name="second">
+
+				<el-table :data="datalist" style="width: 100%">
+
+					<el-table-column label="创建时间" width="180">
 						<template slot-scope="scope">
-							<i class="el-icon-time"></i>
-							<span style="margin-left: 10px">{{ scope.row.date }}</span>
+							<span style="margin-left: 10px">{{scope.row.startrespondtime}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="更新时间" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.endrespondtime}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="描述" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.description}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="老师名" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.teacherid}}</span>
 						</template>
 					</el-table-column>
 
-					<el-table-column label="姓名" width="180">
+					<!--<el-table-column label="姓名" width="180">
 						<template slot-scope="scope">
 							<el-popover trigger="hover" placement="top">
-								<p>姓名: {{ scope.row.name }}</p>
-								<p>住址: {{ scope.row.address }}</p>
+								<p>姓名: {{ scope.row.courseid }}</p>
+								<p>住址: {{ scope.row.courseid }}</p>
 								<div slot="reference" class="name-wrapper">
-									<el-tag size="medium">{{ scope.row.name }}</el-tag>
+									<el-tag size="medium">{{ scope.row.courseid }}</el-tag>
 								</div>
 							</el-popover>
 						</template>
-					</el-table-column>
-
-					<el-table-column label="问卷名称" width="180">
-						<template slot-scope="scope">
-							<span style="margin-left: 10px">{{ scope.row.title }}</span>
-						</template>
-					</el-table-column>
+					</el-table-column>-->
 
 					<el-table-column label="操作">
 						<template slot-scope="scope">
@@ -83,10 +113,56 @@
 					</el-table-column>
 				</el-table>
 			</el-tab-pane>
+			
+		<el-tab-pane :label="'待查看问卷'+'('+task.qnaireTask.checked+')'" name="third">
+				<el-table :data="datalist" style="width: 100%">
+
+					<el-table-column label="创建时间" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.startrespondtime}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="更新时间" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.endrespondtime}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="描述" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.description}}</span>
+						</template>
+					</el-table-column>
+					
+					<el-table-column label="老师名" width="180">
+						<template slot-scope="scope">
+							<span style="margin-left: 10px">{{scope.row.teacherid}}</span>
+						</template>
+					</el-table-column>
+
+					<!--<el-table-column label="姓名" width="180">
+						<template slot-scope="scope">
+							<el-popover trigger="hover" placement="top">
+								<p>姓名: {{ scope.row.courseid }}</p>
+								<p>住址: {{ scope.row.courseid }}</p>
+								<div slot="reference" class="name-wrapper">
+									<el-tag size="medium">{{ scope.row.courseid }}</el-tag>
+								</div>
+							</el-popover>
+						</template>
+					</el-table-column>-->
+
+					<el-table-column label="操作">
+						<template slot-scope="scope">
+							<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+							<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+						</template>
+					</el-table-column>
+				</el-table>
 			</el-tab-pane>
-
-			<el-tab-pane label="编辑信息" name="third">
-
+						
+			<el-tab-pane label="编辑信息" name="fouth">
 				<el-form ref="form" :model="form" label-width="80px">
 					<el-form-item label="活动名称">
 						<el-input v-model="form.name"></el-input>
@@ -112,41 +188,43 @@
 						<el-button>取消</el-button>
 					</el-form-item>
 				</el-form>
-
-			</el-tab-pane>
+			</el-tab-pane>		
 		</el-tabs>
 	</div>
 </template>
 
 <script>
-	import {findUserInfo} from '@/api/center';
+	import {findUserInfo,findPublishInfoByids,timestampToTime} from '@/api/center';
 	
 	export default {
 		data() {
 			return {
-				list:[],								 
+				datalist:"",
+				id:"",
+				list:[],
+				task:[],
 				activeName: 'second',
-				tableData: [{
-					title: '问卷名称',
-					date: '2016-05-02',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1518 弄'
-				}, {
-					title: '问卷名称',
-					date: '2016-05-04',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1517 弄'
-				}, {
-					title: '问卷名称',
-					date: '2016-05-01',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1519 弄'
-				}, {
-					title: '问卷名称',
-					date: '2016-05-03',
-					name: '王小虎',
-					address: '上海市普陀区金沙江路 1516 弄'
-				}],
+//				tableData: [{
+//					title: '问卷名称',
+//					date: '2016-05-02',
+//					name: '王小虎',
+//					address: '上海市普陀区金沙江路 1518 弄'
+//				}, {
+//					title: '问卷名称',
+//					date: '2016-05-04',
+//					name: '王大虎',
+//					address: '上海市普陀区金沙江路 1517 弄'
+//				}, {
+//					title: '问卷名称',
+//					date: '2016-05-01',
+//					name: '王小虎',
+//					address: '上海市普陀区金沙江路 1519 弄'
+//				}, {
+//					title: '问卷名称',
+//					date: '2016-05-03',
+//					name: '王小虎',
+//					address: '上海市普陀区金沙江路 1516 弄'
+//				}],
 				form: {
 					name: '',
 					region: '',
@@ -167,9 +245,22 @@
 		methods: {
 			getList(){
 				findUserInfo().then((res)=>{
-					this.list=res.data
-					console.log(this.list)
+					this.list=res.data             
+					this.task=res.data.userInfo.workJson
+					this.id=this.task.qnaireTask.pendingDetail[0].id
+                    this.getPublishInfo()
 				})
+			},
+			
+			getPublishInfo(){				
+				findPublishInfoByids(this.id).then((res)=>{
+					this.datalist=res.data
+					console.log(this.datalist)					
+					for(var i=0; i<this.datalist.length; i++){						
+						this.datalist[i].releasetime=timestampToTime(this.datalist[i].releasetime)
+						this.datalist[i].startrespondtime=timestampToTime(this.datalist[i].startrespondtime)
+					}					
+				})				
 			},
 			
 			handleClick(tab, event) {
