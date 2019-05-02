@@ -74,7 +74,7 @@
       <el-button
         class="btn-add"
         @click="student = {
-        classzz:{
+        class:{
           profession: {
             facultyVo:{}
           }
@@ -105,7 +105,7 @@
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="专业" align="center">
-          <template slot-scope="scope">{{scope.row.classzz.profession.name}}</template>
+          <template slot-scope="scope">{{scope.row.class.profession.name}}</template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -147,11 +147,11 @@
         </el-form-item>
         <el-form-item label="学院：">
           <el-select
-            v-model="student.classzz.profession.facultyVo.id"
+            v-model="student.class.profession.facultyVo.id"
             placeholder="请选择学院"
             clearable
             filterable
-            @change="getProfessionList(student.classzz.profession.facultyVo.id)"
+            @change="getProfessionList(student.class.profession.facultyVo.id)"
             :disabled="student.type == 'see'"
           >
             <el-option
@@ -164,12 +164,12 @@
         </el-form-item>
         <el-form-item label="专业：">
           <el-select
-            v-model="student.classzz.profession.id"
+            v-model="student.class.profession.id"
             placeholder="请选择专业"
             clearable
             filterable
             :disabled="student.type == 'see'"
-            @change="getClasses(student.classzz.profession.id)"
+            @change="getClasses(student.class.profession.id)"
           >
             <el-option
               v-for="item in professionList"
@@ -181,7 +181,7 @@
         </el-form-item>
         <el-form-item label="班级：">
           <el-select
-            v-model="student.classzz.id"
+            v-model="student.class.id"
             placeholder="请选择班级"
             clearable
             filterable
@@ -241,7 +241,7 @@ export default {
       classes: [],
       editDialog: false,
       student: {
-        classzz: {
+        class: {
           profession: {
             facultyVo: {}
           }
@@ -257,9 +257,9 @@ export default {
   watch: {
     student: function(val) {
       try {
-        if (val && val.classzz.profession.facultyVo.id) {
+        if (val && val.class.profession.facultyVo.id) {
           fetchProfessionList({
-            quire: ` and facultyId = ${val.classzz.profession.facultyVo.id}`
+            quire: ` and facultyId = ${val.class.profession.facultyVo.id}`
           }).then(result => {
             this.professionList = result.data.data;
           });
@@ -272,7 +272,7 @@ export default {
       this.listLoading = true;
       this.listQuery.quire = "and 1 = 1";
       this.listQuery.keyword
-        ? (this.listQuery.sql +=
+        ? (this.listQuery.quire +=
             ` and (name like '%${this.listQuery.keyword}%' or studentId like '%${
               this.listQuery.keyword
             }%' ` +
@@ -281,23 +281,23 @@ export default {
             }%'  or email like '%${this.listQuery.keyword}%')`)
         : "";
       this.listQuery.studentId
-        ? (this.listQuery.sql += ` and studentId = ${this.listQuery.studentId}`)
+        ? (this.listQuery.quire += ` and studentId = ${this.listQuery.studentId}`)
         : "";
       this.listQuery.name
-        ? (this.listQuery.sql += ` and name = '${this.listQuery.name}'`)
+        ? (this.listQuery.quire += ` and name = '${this.listQuery.name}'`)
         : "";
       this.listQuery.facultyId && !this.listQuery.professionId
-        ? (this.listQuery.sql += ` and classId in (select id from class where professionId in (select id from profession where facultyId = ${
+        ? (this.listQuery.quire += ` and classId in (select id from class where professionId in (select id from profession where facultyId = ${
             this.listQuery.facultyId
           }))`)
         : "";
       this.listQuery.professionId && !this.listQuery.classId
-        ? (this.listQuery.sql += ` and classId in (select id from class where professionId = ${
+        ? (this.listQuery.quire += ` and classId in (select id from class where professionId = ${
             this.listQuery.professionId
           })`)
         : "";
       this.listQuery.classId
-        ? (this.listQuery.sql += ` and classId = ${this.listQuery.classId}`)
+        ? (this.listQuery.quire += ` and classId = ${this.listQuery.classId}`)
         : "";
       fetchList(this.listQuery).then(response => {
         this.listLoading = false;
@@ -349,7 +349,7 @@ export default {
         type: "warning"
       }).then(() => {
         let ids = [];
-        ids.push(row.id);
+        this.multipleSelection.forEach(row => ids.push(row.id))
         _delete({
           ids
         });
@@ -357,7 +357,7 @@ export default {
     },
     edit() {
       let student = this.student;
-      student.classId = student.classzz.id;
+      student.classId = student.class.id;
       // 编辑学生信息
       if (student.id) {
         update(this.student).then(result => {
@@ -370,7 +370,7 @@ export default {
       }
       // 添加学生
       else {
-        create(this.student).then(result => {
+        create([this.student]).then(result => {
           Message({
             message: "添加成功",
             type: "success",

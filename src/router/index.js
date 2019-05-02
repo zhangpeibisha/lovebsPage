@@ -45,16 +45,23 @@ export const constantRouterMap = [
     name: 'student',
     meta: {title: '学生', icon: 'product'},
     children: [{
-      path: 'product',
-      name: 'product',
-      component: () => import('@/views/student/manager/index'),
-      meta: {title: '学生管理', icon: 'product-list'}
+      path: 'faculty',
+      name: 'faculty',
+      component: () => import('@/views/student/faculty/index'),
+      meta: {title: '学院管理', icon: 'product-list'}
     },
       {
         path: 'manager',
         name: 'manager',
         component: () => import('@/views/student/manager/index'),
-        meta: {title: '问卷数据', icon: 'product-add'}
+        meta: {title: '学生管理', icon: 'product-list'}
+      },
+      
+      {
+        path: 'profession',
+        name: 'profession',
+        component: () => import('@/views/student/profession/index'),
+        meta: {title: '专业管理', icon: 'product-list'}
       }
     ]
   },
@@ -87,7 +94,7 @@ export const constantRouterMap = [
  {
     path: '/Questionnaire',
     component: Layout,
-    redirect: '/Questionnaire/Establish',
+    // redirect: '/Questionnaire/Establish',
     alwaysShow: true,
     name: 'Questionnaire',
     meta: {title: '问卷调查', icon: 'product'},
@@ -104,9 +111,10 @@ export const constantRouterMap = [
         meta: {title: '问卷发布', icon: 'product-add'}
       },
       {
-      	path:'/Questionnaire/Establish/creat',
-        name:'Creat',
-        component: () => import('@/views/Questionnaire/Release/index'),
+      	path:'edit',
+        name:'Creat1',
+        component: () => import('@/views/question/card/Edit'),
+        meta: {title: '问卷编辑', icon: 'product-add'}
       }
     ]
  },
