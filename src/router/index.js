@@ -115,6 +115,18 @@ export const constantRouterMap = [
         name:'Creat1',
         component: () => import('@/views/question/card/Edit'),
         meta: {title: '问卷编辑', icon: 'product-add'}
+      },
+      {
+      	path:'view',
+        name:'view',
+        component: () => import('@/views/question/card/view'),
+        meta: {title: '问卷查看', icon: 'product-add'}
+      },
+      {
+      	path:'edit1',
+        name:'edit1',
+        component: () => import('@/views/question/card/edit1'),
+        meta: {title: '问卷编辑', icon: 'product-add'}
       }
     ]
  },

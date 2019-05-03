@@ -2,9 +2,7 @@
   <li>
     <div class="content">
       <!-- 问题题目 -->
-      <p
-        @keyup="changeQuestionTitle(qIndex, $event)"
-        class="input title" contenteditable>{{ question.title }}</p>
+      <p>{{ question.title }}</p>
       <!-- 问题题目 end -->
       <!-- 所有答案 -->
       <ol v-if="question.type !== 'text'" class="answers">
@@ -13,65 +11,20 @@
           v-for="answer in question.answers"
           class="answer">
           <!-- 选择框 -->
-          <input class="select" :type="question.type" :name="question.title" :value="`问题${qIndex + 1}`">
+          <input class="select" :type="question.type" :value="`问题${qIndex + 1}`" disabled>
           <!-- 选项内容 -->
           <div class="option">
             <div class="input-fix">
-              <p
-                class="input"
-                contenteditable>{{ answer }}</p>
-                <p>分值:</p>
-                <p
-                class="input"
-                contenteditable>{{ answer }}</p>
+              <p >{{ answer.name }}</p>
+                <p>分值:<span>{{ answer.weights }}</span></p>
+                
             </div>
-            <!-- 选项工具框 -->
-            <ul class="option-panel">
-              <li
-                @click="optionPositionFront(qIndex, $index)"
-                class="iconfont">↑</li>
-              <li
-                @click="optionPositionBack(qIndex, $index)"
-                class="iconfont">↓</li>
-              <li
-                v-show="question.answers.length > 2"
-                @click="deleteOption(qIndex, $index)"
-                class="iconfont">&#xe646;</li>
-            </ul>
           </div>
         </li>
       </ol>
-      <!-- 所有答案 end -->
-      <div
-        @click="addOption(qIndex)"
-        v-if="question.type !== 'text'"
-        class="add-option"><span class="iconfont">&#xe60f;</span>添加选项</div>
-      <div v-else class="option">
-        <textarea class="textarea"></textarea>
-        <label for="isRequired"><input
-          @change="changeTextRequired(qIndex, $event)"
-          :checked="question.required"
-          class="required"
-          id="isRequired"
-          type="checkbox">是否必填</label>
-      </div>
     </div>
     <div class="side">
       <div class="order">Q{{ qIndex + 1 }}</div>
-      <ul class="opertions">
-        <li
-          @click="questionPositionFront(qIndex)"
-          class="iconfont">&#xe63e;</li>
-        <li
-          @click="questionPositionBack(qIndex)"
-          class="iconfont">&#xe63f;</li>
-        <li
-          @click="copyQuestion(qIndex)"
-          class="iconfont">&#xe62e;</li>
-        <li
-          @click="deleteQuestion(qIndex)"
-          class="iconfont">&#xe60d;</li>
-      </ul>
     </div>
   </li>
 </template>
@@ -139,17 +92,6 @@ export default {
   padding: 1rem;
   border-radius: .4rem;
   list-style: none;
-  &:hover {
-    background-color: $bg-gray;
-    .side {
-      .opertions {
-        visibility: visible !important;
-      }
-    }
-    .add-option {
-      visibility: visible !important;
-    }
-  }
   .side {
     float: left;
     margin-left: -100%;
@@ -168,9 +110,6 @@ export default {
       visibility: hidden;
       line-height: 2;
       color: $gray;
-      .iconfont:hover {
-        color: $blue;
-      }
     }
   }
   .content {
@@ -183,10 +122,6 @@ export default {
       background-color: transparent;
       margin: 0;
       outline: none;
-      &:hover {
-        border-color: $blue;
-        background-color: $bg-yellow;
-      }
     }
     .title {
       font-size: $font-size-default;
@@ -195,10 +130,6 @@ export default {
       max-width: 100%;
       border-radius: .3rem;
       line-height: 2.4rem;
-      &:hover {
-        border-color: $light-black;
-        background-color: $bg-yellow;
-      }
     }
     .answers {
       list-style: none;
@@ -231,18 +162,7 @@ export default {
             width: 100%;
             padding-right: 10rem;
             display: flex;
-            .input {
-              line-height: 2.4rem;
-              border: 1px solid transparent;
-              background-color: transparent;
-              margin: 0;
-              outline: none;
-              min-width: 40%;
-              max-width: 40%;
-              padding: 0 .2rem;
-              border-radius: .3rem;
-              color: #777;
-            }
+            justify-content: space-between;
           }
           .option-panel {
             display: none;
@@ -258,20 +178,6 @@ export default {
               color: $blue;
               padding: 0;
               text-align: center;
-              &:hover {
-                color: lighten($blue, 30%);
-              }
-            }
-          }
-          &:hover {
-            .input-fix {
-              .input {
-                border-color: $blue;
-                background-color: $bg-yellow;
-              }
-            }
-            .option-panel {
-              display: block;
             }
           }
         }
@@ -287,9 +193,6 @@ export default {
       text-align: center;
       border-radius: .4rem;
       visibility: hidden;
-      &:hover {
-        color: $blue;
-      }
       .iconfont {
         margin-right: .6rem;
       }
