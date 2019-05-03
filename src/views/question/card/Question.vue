@@ -7,23 +7,23 @@
         class="input title" contenteditable>{{ question.title }}</p>
       <!-- 问题题目 end -->
       <!-- 所有答案 -->
-      <ol v-if="question.type !== 'text'" class="answers">
+      <ol v-if="question.questionnaireType !== 'text'" class="answers">
         <!-- 答案 -->
         <li
-          v-for="answer in question.answers"
+          v-for="answer in question.items"
           class="answer">
           <!-- 选择框 -->
-          <input class="select" :type="question.type" :name="question.title" :value="`问题${qIndex + 1}`">
+          <input class="select" :type="question.questionnaireType" :name="question.title" :value="`问题${qIndex + 1}`">
           <!-- 选项内容 -->
           <div class="option">
             <div class="input-fix">
               <p
                 class="input"
-                contenteditable>{{ answer }}</p>
+                contenteditable>{{ answer.title }}</p>
                 <p>分值:</p>
                 <p
                 class="input"
-                contenteditable>{{ answer }}</p>
+                contenteditable>{{ answer.weights }}</p>
             </div>
             <!-- 选项工具框 -->
             <ul class="option-panel">
@@ -34,7 +34,7 @@
                 @click="optionPositionBack(qIndex, $index)"
                 class="iconfont">↓</li>
               <li
-                v-show="question.answers.length > 2"
+                v-show="question.items.length > 2"
                 @click="deleteOption(qIndex, $index)"
                 class="iconfont">&#xe646;</li>
             </ul>
@@ -44,13 +44,13 @@
       <!-- 所有答案 end -->
       <div
         @click="addOption(qIndex)"
-        v-if="question.type !== 'text'"
+        v-if="question.questionnaireType !== 'text'"
         class="add-option"><span class="iconfont">&#xe60f;</span>添加选项</div>
       <div v-else class="option">
         <textarea class="textarea"></textarea>
         <label for="isRequired"><input
           @change="changeTextRequired(qIndex, $event)"
-          :checked="question.required"
+          :checked="question.mustWriter"
           class="required"
           id="isRequired"
           type="checkbox">是否必填</label>

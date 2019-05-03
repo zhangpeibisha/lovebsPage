@@ -5,23 +5,23 @@
       <p>{{ question.title }}</p>
       <!-- 问题题目 end -->
       <!-- 所有答案 -->
-      <ol v-if="question.type !== 'text'" class="answers">
+      <ol v-if="question.questionnaireType !== 'text'" class="answers">
         <!-- 答案 -->
         <li
-          v-for="answer in question.answers"
+          v-for="answer in question.items"
           class="answer">
           <!-- 选择框 -->
-          <input class="select" :type="question.type" :name="question.title" :value="`问题${qIndex + 1}`">
+          <input class="select" :type="question.questionnaireType" :name="question.title" :value="`问题${qIndex + 1}`">
           <!-- 选项内容 -->
           <div class="option">
             <div class="input-fix">
-              <p>{{ answer.name }}</p>
+              <p>{{ answer.title }}</p>
             </div>
           </div>
         </li>
       </ol>
       <!-- 所有答案 end -->
-      <div v-if="question.type === 'text'" class="option">
+      <div v-if="question.questionnaireType === 'text'" class="option">
         <textarea class="textarea"></textarea>
       </div>
     </div>

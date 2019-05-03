@@ -4,7 +4,7 @@
   <div class="qn-wrap">
     <div class="qn">
       <header class="header">
-        <input type="text" class="title" placeholder="填写问卷标题" v-modal="title" v-model="title">
+        <p class="title" >{{title}}</p>
       </header>
       <div class="body">
         <div class="body-wrap">
@@ -49,39 +49,703 @@ export default {
     }
     let defaults = {
       title: "问卷题目",
+      
       questions: [
         {
-          title: "标题",
-          type: "radio",
-          answers: [
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
             {
-              name: "选项1",
-              weights: 50
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 3,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
             },
             {
-              name: "选项2",
-              weights: 50
-            }
-          ]
-        },
-        {
-          title: "标题",
-          type: "checkbox",
-          answers: [
-            {
-              name: "选项1",
-              weights: 50
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 8,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
             },
             {
-              name: "选项2",
-              weights: 50
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 24,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 29,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
             }
-          ]
+          ],
+          questionnaireType: "text",
+          mustWriter: true
         },
         {
-          title: "标题",
-          type: "text",
-          answers: []
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 23,
+              weights: 22,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 15,
+              weights: 3,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 21,
+              weights: 13,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 17,
+              weights: 16,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "radio",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 11,
+              weights: 26,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 7,
+              weights: 20,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 7,
+              weights: 25,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 3,
+              weights: 28,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "radio",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 8,
+              weights: 29,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 8,
+              weights: 20,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 27,
+              weights: 20,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 29,
+              weights: 29,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "radio",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 9,
+              weights: 23,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 15,
+              weights: 4,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 4,
+              weights: 8,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 14,
+              weights: 16,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "checkbox",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 7,
+              weights: 8,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 21,
+              weights: 16,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 26,
+              weights: 20,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 10,
+              weights: 8,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "radio",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 17,
+              weights: 22,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 17,
+              weights: 1,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 5,
+              weights: 29,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 18,
+              weights: 16,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "checkbox",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 29,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 9,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 26,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 26,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "text",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 27,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 17,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 24,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 28,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "text",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 22,
+              weights: 16,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 8,
+              weights: 21,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 7,
+              weights: 20,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 0,
+              weights: 3,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "checkbox",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 20,
+              weights: 19,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 17,
+              weights: 2,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 4,
+              weights: 16,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 15,
+              weights: 18,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "checkbox",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 12,
+              weights: 2,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 6,
+              weights: 17,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 15,
+              weights: 0,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 15,
+              weights: 18,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "checkbox",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 23,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 17,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 20,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              high: 20,
+              width: 20,
+              defaultsValue: "hello",
+              maxSize: 2000,
+              sort: 21,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "text",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 17,
+              weights: 22,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 4,
+              weights: 18,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 17,
+              weights: 25,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 1,
+              weights: 6,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "radio",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 7,
+              weights: 29,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 26,
+              weights: 8,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 22,
+              weights: 28,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 24,
+              weights: 29,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "radio",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 21,
+              weights: 21,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 7,
+              weights: 16,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 22,
+              weights: 6,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 9,
+              weights: 22,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "radio",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 3,
+              weights: 17,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 4,
+              weights: 1,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 12,
+              weights: 7,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 18,
+              weights: 22,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "radio",
+          mustWriter: true
+        },
+        {
+          title: "测试你的题目",
+          prompt: "测试题目",
+          items: [
+            {
+              sort: 26,
+              weights: 8,
+              title: "选项1",
+              prompt: "选项1",
+              mustWriter: true
+            },
+            {
+              sort: 1,
+              weights: 1,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 1,
+              weights: 24,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            },
+            {
+              sort: 0,
+              weights: 1,
+              title: "选项2",
+              prompt: "选项2",
+              mustWriter: true
+            }
+          ],
+          questionnaireType: "checkbox",
+          mustWriter: true
         }
       ],
       showAlert: false,
@@ -269,7 +933,7 @@ export default {
   padding: 3rem 6rem;
   border-top: 1px solid $line-color;
   background: $bg-gray;
-  height: 100%;
+  height: 700px;
   overflow: auto;
   @at-root {
     .qn {
