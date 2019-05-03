@@ -112,7 +112,7 @@ export default {
     saveData() {
       addAllQuestion(
         {
-          evaluationId
+          evaluationId: this.evaluationId
         },
         this.questions
       ).then(r => {});
