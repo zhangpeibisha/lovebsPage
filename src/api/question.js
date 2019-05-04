@@ -42,3 +42,13 @@ export function updateQuestion(params) {
         params: params
     })
 }
+
+export function findEvaluationById(evaluationId) {
+  return request({
+    url: '/evaluationquestionnaire/question/by/id',
+    method: 'get',
+    params: {
+      evaluationId:evaluationId
+    }
+  })
+}
