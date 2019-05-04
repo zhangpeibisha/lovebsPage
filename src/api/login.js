@@ -1,28 +1,29 @@
 import request from '@/utils/request'
 
-export function login(username, password,image) {
-	console.log("logapi",username, password,image)
+// 图片验证码登陆
+export function login(username, password, image) {
   return request({
-    url: '/authentication/form?username='+username+'&password='+password+'&image='+image,
+    url: '/authentication/form',
     method: 'post',
-//  data: {
-//    username,
-//    password,
-//    image
-//  }
+    params: {
+      username,
+      password,
+      image
+    }
   })
 }
-
+// 获取当前登陆用户的信息
 export function getInfo() {
   return request({
-    url: '/admin/info',
+    url: '/account/user/info',
     method: 'get',
   })
 }
 
+// 用户退出登陆
 export function logout() {
   return request({
-    url: '/admin/logout',
-    method: 'post'
+    url: '/logout',
+    method: 'get'
   })
 }
