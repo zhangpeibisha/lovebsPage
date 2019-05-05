@@ -20,9 +20,9 @@ import Center from '../views/center/student'
   }
  **/
 export const constantRouterMap = [
-   {path:"/teacherCenter",component: () => import('@/views/center/teacherCenter')},
-  {path:"/center",component:Center},
-  {path: '/login', component: () => import('@/views/login/index'),hidden: false},
+  {path: "/teacherCenter", component: () => import('@/views/center/teacherCenter')},
+  {path: "/center", component: Center},
+  {path: '/login', component: () => import('@/views/login/index'), hidden: false},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
   {path: '/question/card/edit', component: () => import('@/views/question/card/index'), hidden: true},
   {
@@ -56,7 +56,7 @@ export const constantRouterMap = [
         component: () => import('@/views/student/manager/index'),
         meta: {title: '学生管理', icon: 'product-list'}
       },
-      
+
       {
         path: 'profession',
         name: 'profession',
@@ -91,45 +91,34 @@ export const constantRouterMap = [
   },
   {path: '*', redirect: '/404', hidden: true},
 
- {
-    path: '/Questionnaire',
+  {
+    path: '/questionnaire',
     component: Layout,
     // redirect: '/Questionnaire/Establish',
     alwaysShow: true,
-    name: 'Questionnaire',
+    name: 'questionnaire',
     meta: {title: '问卷调查', icon: 'product'},
-    children: [{
-      path: 'Establish',
-      name: 'Establish',
-      component: () => import('@/views/Questionnaire/Establish/index'),
-      meta: {title: '问卷创建', icon: 'product-add'}
-    },
+    children: [
       {
-        path: 'Release',
-        name: 'Release',
-        component: () => import('@/views/Questionnaire/Release/index'),
-        meta: {title: '问卷发布', icon: 'product-add'}
+        path: 'create',
+        name: 'create',
+        component: () => import('@/views/question/card/create'),
+        meta: {title: '创建问卷', icon: 'product-add'}
       },
       {
-      	path:'edit',
-        name:'Creat1',
-        component: () => import('@/views/question/card/Edit'),
-        meta: {title: '问卷编辑', icon: 'product-add'}
-      },
-      {
-      	path:'view',
-        name:'view',
+        path: 'view',
+        name: 'view',
         component: () => import('@/views/question/card/view'),
         meta: {title: '问卷查看', icon: 'product-add'}
       },
       {
-      	path:'edit1',
-        name:'edit1',
-        component: () => import('@/views/question/card/edit1'),
+        path: 'edit',
+        name: 'edit',
+        component: () => import('@/views/question/card/edit'),
         meta: {title: '问卷编辑', icon: 'product-add'}
       }
     ]
- },
+  },
 ]
 
 export default new Router({
