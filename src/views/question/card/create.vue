@@ -31,7 +31,11 @@
       <footer class="footer">
         <div class="pick-date">
           <span class="msg">问卷截止日期</span>
-          <calendar v-ref:date-picker></calendar>
+          <el-date-picker
+            v-model="expires"
+            type="date"
+            placeholder="选择日期">
+          </el-date-picker>
         </div>
         <div class="operation">
           <span class="btn" :class="{ disabled: isLoading }" @click="saveData()">保存问卷</span>
@@ -112,7 +116,7 @@ export default {
     saveData() {
       addAllQuestion(
         {
-          evaluationId
+          evaluationId: this.evaluationId
         },
         this.questions
       ).then(r => {});
@@ -125,11 +129,11 @@ export default {
       if (type !== "text") {
         option.items = [
           {
-            name: "选项1",
+            title: "选项1",
             weights: 10
           },
           {
-            name: "选项2",
+            title: "选项2",
             weights: 10
           }
         ];
@@ -157,6 +161,41 @@ export default {
     getRandomNumber() {
       return Math.floor(Math.random() * 30);
     },
+    deleteQue(qIndex) {
+      this.questions.splice(qIndex, 1);
+    },
+    addOption(qindex) {
+      this.questions[qindex].items.push({
+        title: "选项" + (this.questions[qindex].items.length + 1),
+        weights: 10
+      });
+    },
+    copyQuestion(qIndex) {
+      let temp = JSON.stringify(this.questions[qIndex]);
+      let newQ = JSON.parse(temp);
+      this.questions.push(newQ);
+    },
+    questionPositionChange(oldIndex, newIndex) {
+      this.transposition(this.questions, oldIndex, newIndex);
+    },
+    deleteOption(qIndex, oIndex) {
+      this.questions[qIndex].items.splice(oIndex, 1);
+    },
+    changeTextRequired(qIndex, required) {
+      this.questions[qIndex].required = required;
+    },
+    changeQuestionTitle(qIndex, value) {
+      this.questions[qIndex].title = value;
+    },
+    changeOptionValue(qIndex, oIndex, value) {
+      this.questions[qIndex].items[oIndex].title = value;
+    },
+    changeOptionValue1(qIndex, oIndex, value) {
+      this.questions[qIndex].items[oIndex].weights = value;
+    },
+    optionPositionChange() {
+      this.transposition(this.questions[qIndex].answers, oOldIndex, oNewIndex);
+    },
     createE() {
       createQuestion({
         title: this.title
@@ -171,44 +210,6 @@ export default {
     Calendar,
     Alert,
     Modal
-  },
-  events: {
-    "change-option-value": function(qIndex, oIndex, value) {
-      this.questions[qIndex].answers[oIndex] = value;
-    },
-    "change-question-title": function(qIndex, value) {
-      this.questions[qIndex].title = value;
-    },
-    "question-pos-change": function(oldIndex, newIndex) {
-      this.transposition(this.questions, oldIndex, newIndex);
-    },
-    "add-option": function(qIndex) {
-      this.questions[qIndex].answers.push(
-        "选项" + (this.questions[qIndex].answers.length + 1)
-      );
-      this.questions[qIndex].answersData.push(this.getRandomNumber());
-    },
-    "delete-option": function(qIndex, oIndex) {
-      this.questions[qIndex].answers.splice(oIndex, 1);
-      this.questions[qIndex].answersData.pop();
-    },
-    "delete-question": function(qIndex) {
-      this.questions.splice(qIndex, 1);
-    },
-    "copy-question": function(qIndex) {
-      let temp = JSON.stringify(this.questions[qIndex]);
-      let newQ = JSON.parse(temp);
-      this.questions.push(newQ);
-    },
-    "change-text-required": function(qIndex, required) {
-      this.questions[qIndex].required = required;
-    },
-    "option-pos-change": function(qIndex, oOldIndex, oNewIndex) {
-      this.transposition(this.questions[qIndex].answers, oOldIndex, oNewIndex);
-    },
-    "date-change": function(dateValue) {
-      this.expires = dateValue;
-    }
   },
   route: {
     canDeactivate() {

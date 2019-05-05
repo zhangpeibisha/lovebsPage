@@ -291,7 +291,8 @@ export default {
       return ele.classList.contains(className)
     },
     dateChangeHandler (dateValue) {
-      this.$dispatch('date-change', dateValue)
+      this.show = false;
+      this.$parent.dateChange(dateValue)
     }
   }
 }
