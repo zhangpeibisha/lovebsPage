@@ -178,7 +178,7 @@ export default {
         facultyVo: {},
         teacher: {}
       },
-      dialogTitle: ""
+      dialogTitle: "",
     };
   },
   created() {
@@ -194,7 +194,7 @@ export default {
       this.listQuery.keyword
         ? (this.listQuery.quire += ` and (coding like '%${
             this.listQuery.keyword
-          }%' or name like '%${this.listQuery.keyword}%' `)
+          }%' or name like '%${this.listQuery.keyword}%') `)
         : "";
       this.listQuery.facultyId
         ? (this.listQuery.quire += ` and facultyId = ${
