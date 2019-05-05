@@ -10,7 +10,7 @@
       <ol v-if="question.questionnaireType !== 'text'" class="answers">
         <!-- 答案 -->
         <li
-          v-for="answer in question.items"
+          v-for="(answer,oIndex) in question.items"
           class="answer">
           <!-- 选择框 -->
           <input class="select" :type="question.questionnaireType" :name="question.title" :value="`问题${qIndex + 1}`">
@@ -18,10 +18,14 @@
           <div class="option">
             <div class="input-fix">
               <p
+                @keyup="changeOptionValue(qIndex, oIndex, $event)"
+                @change="changeOptionValue(qIndex,oIndex,$event)"
                 class="input"
                 contenteditable>{{ answer.title }}</p>
                 <p>分值:</p>
                 <p
+                @keyup="changeOptionValue1(qIndex, oIndex, $event)"
+                @change="changeOptionValue1(qIndex,oIndex,$event)"
                 class="input"
                 contenteditable>{{ answer.weights }}</p>
             </div>
@@ -34,7 +38,7 @@
                 @click="optionPositionBack(qIndex, $index)"
                 class="iconfont">↓</li>
               <li
-                v-show="question.items.length > 2"
+                v-show="question.items.length > 1"
                 @click="deleteOption(qIndex, $index)"
                 class="iconfont">&#xe646;</li>
             </ul>
@@ -90,45 +94,52 @@ export default {
   },
   methods: {
     // 问题题目
-    changeQuestionTitle (qIndex, e) {
-      this.$dispatch('change-question-title', qIndex, e.target.textContent)
+    changeQuestionTitle(qIndex, e) {
+      this.$parent.changeQuestionTitle(qIndex, e.target.textContent);
     },
     // 问题位置
-    questionPositionFront (oldIndex) {
-      this.$dispatch('question-pos-change', oldIndex, oldIndex - 1)
+    questionPositionFront(oldIndex) {
+      this.$parent.questionPositionChange(oldIndex, oldIndex - 1);
     },
-    questionPositionBack (oldIndex) {
-      this.$dispatch('question-pos-change', oldIndex, oldIndex + 1)
+    questionPositionBack(oldIndex) {
+      this.$parent.questionPositionChange(oldIndex, oldIndex + 1);
     },
-    deleteQuestion (qIndex) {
-      this.$dispatch('delete-question', qIndex)
+    deleteQuestion(qIndex) {
+      this.$parent.deleteQue(qIndex);
     },
     // 选项值
-    changeOptionValue (qIndex, oIndex, e) {
-      this.$dispatch('change-option-value', qIndex, oIndex, e.target.textContent)
+    changeOptionValue(qIndex, oIndex, e) {
+      this.$parent.changeOptionValue(qIndex, oIndex, e.target.textContent);
+    },
+    changeOptionValue1(qIndex, oIndex, e) {
+      this.$parent.changeOptionValue1(qIndex, oIndex, e.target.textContent);
     },
     // 添加选项
-    addOption (qIndex) {
-      this.$dispatch('add-option', qIndex)
+    addOption(qIndex) {
+      this.$parent.addOption(qIndex);
     },
     // 删除选项
-    deleteOption (qIndex, oIndex) {
-      this.$dispatch('delete-option', qIndex, oIndex)
+    deleteOption(qIndex, oIndex) {
+      this.$parent.deleteOption(qIndex, oIndex);
     },
-    copyQuestion (qIndex) {
-      this.$dispatch('copy-question', qIndex)
+    copyQuestion(qIndex) {
+      this.$parent.copyQuestion(qIndex);
     },
-    changeTextRequired (qIndex, e) {
-      this.$dispatch('change-text-required', qIndex, e.target.checked)
+    changeTextRequired(qIndex, e) {
+      this.$parent.changeTextRequired(
+        "change-text-required",
+        qIndex,
+        e.target.checked
+      );
     },
-    optionPositionFront (qIndex, oIndex) {
-      this.$dispatch('option-pos-change', qIndex, oIndex, oIndex - 1)
+    optionPositionFront(qIndex, oIndex) {
+      this.$parent.optionPositionChange(qIndex, oIndex, oIndex - 1);
     },
-    optionPositionBack (qIndex, oIndex) {
-      this.$dispatch('option-pos-change', qIndex, oIndex, oIndex + 1)
+    optionPositionBack(qIndex, oIndex) {
+      this.$parent.optionPositionChange(qIndex, oIndex, oIndex + 1);
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -137,7 +148,7 @@ export default {
 .question {
   @include clearfix;
   padding: 1rem;
-  border-radius: .4rem;
+  border-radius: 0.4rem;
   list-style: none;
   &:hover {
     background-color: $bg-gray;
@@ -162,7 +173,7 @@ export default {
       line-height: 2.4rem;
     }
     .opertions {
-      margin-top: .3rem;
+      margin-top: 0.3rem;
       list-style: none;
       padding: 0;
       visibility: hidden;
@@ -193,7 +204,7 @@ export default {
       line-height: 1.5;
       width: 100%;
       max-width: 100%;
-      border-radius: .3rem;
+      border-radius: 0.3rem;
       line-height: 2.4rem;
       &:hover {
         border-color: $light-black;
@@ -206,11 +217,11 @@ export default {
       line-height: 2;
       font-size: $font-size-sm;
       color: $light-black;
-      margin-top: .4rem;
+      margin-top: 0.4rem;
       .answer {
         display: flex;
         align-items: flex-start;
-        margin-bottom: .4rem;
+        margin-bottom: 0.4rem;
         @include clearfix;
         .select {
           display: inline-block;
@@ -239,8 +250,8 @@ export default {
               outline: none;
               min-width: 40%;
               max-width: 40%;
-              padding: 0 .2rem;
-              border-radius: .3rem;
+              padding: 0 0.2rem;
+              border-radius: 0.3rem;
               color: #777;
             }
           }
@@ -285,27 +296,27 @@ export default {
       display: inline-block;
       line-height: 2;
       text-align: center;
-      border-radius: .4rem;
+      border-radius: 0.4rem;
       visibility: hidden;
       &:hover {
         color: $blue;
       }
       .iconfont {
-        margin-right: .6rem;
+        margin-right: 0.6rem;
       }
     }
     .option {
       .textarea {
         width: 100%;
         height: 10rem;
-        margin-top: .8rem;
+        margin-top: 0.8rem;
         border: 1px solid $light-black;
       }
       [for="isRequired"] {
         margin-top: 1rem;
         display: block;
         .required {
-          margin-right: .4rem;
+          margin-right: 0.4rem;
         }
       }
     }
