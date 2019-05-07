@@ -52,3 +52,15 @@ export function findEvaluationById(evaluationId) {
     }
   })
 }
+
+export function commitE(params,data) {
+    return request({
+        url: '/publishquestionnaire/writeQuestion',
+        method: 'post',
+        params: params,
+        data,
+        headers: {
+            "Content-Type": "application/json;"
+        }
+    })
+}
