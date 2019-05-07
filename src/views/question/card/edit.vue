@@ -37,7 +37,7 @@ import Question from "./Question1";
 import Calendar from "../common/Calendar";
 import Alert from "../common/Alert";
 import Modal from "../common/Modal";
-  import {findEvaluationById,commitE} from "@/api/question"
+  import {findEvaluationById,commitE,findPublishQuestionById} from "@/api/question"
 
 export default {
   data() {
@@ -60,7 +60,9 @@ export default {
       isLoading: false,
       answers:{
         questionReplies:[]
-      }
+      },
+      // 发布问卷的id
+      publishId: -1
     };
     return defaults;
   },
@@ -72,7 +74,7 @@ export default {
       this.answers.status = 'commit';
       this.answers.studentId = '';
       commitE({
-        publisId: this.evaluationId
+        publisId: this.publishId
       },this.answers).then(result => {
         // 提交问卷成功
       })
@@ -92,11 +94,11 @@ export default {
       this.saveData();
     },
     getParams: function() {
-      // 取到路由带过来的参数
-      this.evaluationId = this.$route.query.evaluationId;
+      // 取到路由带过来的参数,这个是发布问卷的id
+      this.publishId = this.$route.query.publishId;
     },
-    findEvaluationById() {
-      findEvaluationById(this.evaluationId).then(result => {
+    findEvaluationById(evaluationId) {
+      findEvaluationById(evaluationId).then(result => {
         console.log("查询问卷信息", result);
         if (result.code === 200) {
           var data = result.data;
@@ -105,11 +107,17 @@ export default {
           this.author = data.author;
         }
       });
+    },
+    findPublishQuestionById(){
+      findPublishQuestionById(this.publishId).then(result=>{
+        const data = result.data;
+        this.findEvaluationById(data.questionnaireid);
+      });
     }
   },
   created() {
     this.getParams();
-    this.findEvaluationById();
+    this.findPublishQuestionById();
   },
   components: {
     Question,
@@ -138,7 +146,7 @@ export default {
   padding: 3rem 6rem;
   border-top: 1px solid $line-color;
   background: $bg-gray;
-  height: 700px;
+  height: 500px;
   overflow: auto;
   @at-root {
     .qn {

@@ -43,12 +43,24 @@ export function updateQuestion(params) {
     })
 }
 
+// 发现问卷id
 export function findEvaluationById(evaluationId) {
   return request({
     url: '/evaluationquestionnaire/question/by/id',
     method: 'get',
     params: {
       evaluationId:evaluationId
+    }
+  })
+}
+
+// 发现发布问卷id
+export function findPublishQuestionById(publishId) {
+  return request({
+    url: '/publishquestionnaire/findById',
+    method: 'get',
+    params: {
+      id:publishId
     }
   })
 }

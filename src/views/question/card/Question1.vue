@@ -57,6 +57,7 @@ export default {
   methods: {
     answer(e) {
       console.log("eeee", e);
+      console.log("this.question", this.question);
       this.$parent.answer({
         questionnaireEnum: this.question.questionnaireType,
         questionId: this.question.id,
