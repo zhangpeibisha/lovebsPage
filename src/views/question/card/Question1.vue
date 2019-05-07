@@ -12,11 +12,11 @@
           class="answer">
           <!-- 选择框 -->
           <input v-if="question.questionnaireType == 'checkbox'"
-           class="select" :type="question.questionnaireType" :name="question.title" :value="`${answer.id}`" v-model="answer.choose"
+           class="select" :type="question.questionnaireType" :name="question.id" :value="`${answer.id}`" v-model="answer.choose"
            @change="checkboxChoose"
            >
           <input v-if="question.questionnaireType == 'radio'"
-           class="select" :type="question.questionnaireType" :name="question.title" :value="`${answer.id}`" v-model="chooseId"
+           class="select" :type="question.questionnaireType" :name="question.id" :value="`${answer.id}`" v-model="chooseId"
            @change="radioChoose">
           <!-- 选项内容 -->
           <div class="option">
