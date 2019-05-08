@@ -13,6 +13,25 @@
       </el-main>
     </el-container>
 
+    <el-dialog title="选择不统计分数的学生" :visible.sync="blacklist.dialogFormVisible">
+      <el-form :model="blacklist">
+        <el-form-item label="不统计分数的学生" :label-width="blacklist.formLabelWidth">
+          <el-input v-model="blacklist.showChooseStudentName" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="学生列表" :label-width="blacklist.formLabelWidth">
+          <el-select v-model="blacklist.student" placeholder="请选择学生">
+            <el-option label="张三" value="shanghai"></el-option>
+            <el-option label="李四" value="beijing"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="blacklist.dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click="blacklist.dialogFormVisible = false">确 定</el-button>
+      </div>
+    </el-dialog>
+
+
     <el-tabs v-model="activeName" @tab-click="handleClick">
 
       <el-tab-pane :label="'未读问卷'+'('+pendingQuestionIds.length+')'" name="first">
@@ -50,8 +69,8 @@
 
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" @click="dialogVisible = true" size="mini">配置</el-button>
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+              <el-button type="text" @click="blacklist.dialogFormVisible = true" size="mini">配置</el-button>
+              <el-button size="mini" @click="handleView(scope.$index, scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -63,89 +82,105 @@
         </el-pagination>
       </el-tab-pane>
 
-      <el-tab-pane :label="'已完成问卷'+'('+completeQuestionIds.length+')'" name="second">
-        <el-table :data="completeQuestionLis" style="width: 100%">
 
-          <el-table-column label="标题" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.title}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="描述" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.descritption}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="作者" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.author.name}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="创建时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.createtime}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="更新时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.updatetime}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button type="text" @click="dialogVisible = true" size="mini">配置</el-button>
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-tab-pane>
 
-      <el-tab-pane :label="'已经查看问卷'+'('+clickedQuestionIds.length+')'" name="third">
-        <el-table :data="clickedQuestionList" style="width: 100%">
 
-          <el-table-column label="标题" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.title}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="描述" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.descritption}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="作者" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.author.name}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="创建时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.createtime}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="更新时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{ scope.row.updatetime}}</span>
-            </template>
-          </el-table-column>
 
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button type="text" @click="dialogVisible = true" size="mini">配置</el-button>
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-tab-pane>
+
+      <!--<el-tab-pane :label="'已经查看问卷'+'('+clickedQuestionIds.length+')'" name="second">-->
+        <!--<el-table :data="clickedQuestionList" style="width: 100%">-->
+
+          <!--<el-table-column label="标题" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.title}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="描述" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.descritption}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="作者" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.author.name}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="创建时间" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.createtime}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="更新时间" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.updatetime}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="操作">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button type="text" @click="dialogVisible = true" size="mini">配置</el-button>-->
+              <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+        <!--</el-table>-->
+      <!--</el-tab-pane>-->
+
+      <!--<el-tab-pane :label="'已完成问卷'+'('+completeQuestionIds.length+')'" name="third">-->
+        <!--<el-table :data="completeQuestionLis" style="width: 100%">-->
+
+          <!--<el-table-column label="标题" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.title}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="描述" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.descritption}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="作者" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.author.name}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="创建时间" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.createtime}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="更新时间" width="180">-->
+            <!--<template slot-scope="scope">-->
+              <!--<span style="margin-left: 10px">{{ scope.row.updatetime}}</span>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+
+          <!--<el-table-column label="操作">-->
+            <!--<template slot-scope="scope">-->
+              <!--<el-button type="text" @click="dialogVisible = true" size="mini">配置</el-button>-->
+              <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>-->
+            <!--</template>-->
+          <!--</el-table-column>-->
+        <!--</el-table>-->
+
+      <!--</el-tab-pane>-->
+
 
       <!--<el-tab-pane label="编辑信息" name="fouth">-->
       <!--<el-form ref="form" :model="form" label-width="80px">-->
@@ -218,7 +253,15 @@
         completeQuestionIds: [],
         // 已经查看了的问卷信息，为了实现懒加载
         completeQuestionLis: [],
-        dialogVisible: false
+        blacklist:{
+          dialogVisible: true,
+          // 选中的学生
+          chooseStudent:[],
+          showChooseStudentName:'张三，李四',
+          // 该问卷有的学生
+          student:[],
+          formLabelWidth: '120px'
+        }
       };
     },
     created() {
@@ -231,7 +274,6 @@
           this.userInfo = result.data.userInfo;
           this.qnaireTask = this.userInfo.workJson.qnaireTask;
           this.findUserPendingIds();
-          this.pendingChangePageSize(1);
           this.findUserClickedIds();
           this.findUserCompleteIds();
         });
@@ -244,9 +286,12 @@
         this.pendingQuestionIds = pendingIds;
         findPublishInfoByids(this.pendingQuestionIds).then(result => {
           result.data.forEach(row => {
-            this.pendingQuestionList.push(row.questionnaire)
+            const questionnaire = row.questionnaire;
+            questionnaire.publishId = row.id;
+            this.pendingQuestionList.push(questionnaire)
           });
-        })
+          this.pendingChangePageSize(1);
+        });
       },
       findUserClickedIds() {
         const clickedIds = [];
@@ -256,7 +301,9 @@
         this.clickedQuestionIds = clickedIds;
         findPublishInfoByids(this.clickedQuestionIds).then(result => {
           result.data.forEach(row => {
-            this.clickedQuestionList.push(row.questionnaire)
+            const questionnaire = row.questionnaire;
+            questionnaire.publishId = row.id;
+            this.clickedQuestionList.push(questionnaire)
           });
         })
       },
@@ -268,12 +315,15 @@
         this.completeQuestionIds = completeIds;
         findPublishInfoByids(this.completeQuestionIds).then(result => {
           result.data.forEach(row => {
-            this.completeQuestionLis.push(row.questionnaire)
+            const questionnaire = row.questionnaire;
+            questionnaire.publishId = row.id;
+            this.completeQuestionLis.push(questionnaire)
           });
         })
       },
       pendingChangePageSize(currPage) {
         const maxLen = this.pendingQuestionList.length;
+        console.log("获取到未读信息",this.pendingQuestionList);
         const startIndex = (currPage - 1) * this.pendingQuestionPageSize;
         const endIndex = startIndex + this.pendingQuestionPageSize;
         console.log(maxLen, startIndex, endIndex);
@@ -290,8 +340,14 @@
       handleClick() {
 
       },
-      handleEdit(index, row) {
-
+      handleView(index, row) {
+        console.log("查看问卷点击了",index,row)
+        this.$router.push({
+          path:"/questionnaire/view",
+          query:{
+            evaluationId:row.id
+          }
+        })
       },
       handleDelete(index, row) {
 
@@ -301,24 +357,6 @@
 </script>
 
 <style scoped>
-  .configure {
-    z-index: 111;
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    width: 80%;
-    height: 20%;
-    margin: auto;
-    background: rgba(0, 0, 0, .5);
-  }
-
-  .message {
-    background: white;
-    margin: 20px;
-  }
-
   .personleCenter {
     width: 1200px;
     margin: 0 auto;
@@ -335,6 +373,7 @@
     text-align: center;
     border-bottom: 1px solid #E4E7ED;
     padding: 20px;
+
   }
 
   .el-aside {
