@@ -11,20 +11,20 @@
           v-for="answer in question.items"
           class="answer">
           <!-- 选择框 -->
-          <input class="select" :type="question.questionnaireType" :value="`问题${qIndex + 1}`" disabled>
+          <input class="select" :type="question.questionnaireType" :name="question.id" :value="answer.id" disabled
+           :checked="qAnwser.chooseId && qAnwser.chooseId.spilt(',').indexOf(answer.id) >= 0">
           <!-- 选项内容 -->
           <div class="option">
             <div class="input-fix">
               <p >{{ answer.title }}</p>
-                <p>分值:<span>{{ answer.weights }}</span></p>
-                
+              <p v-if="!qAnwser.questionId">分值:<span>{{ answer.weights }}</span></p>
             </div>
           </div>
         </li>
       </ol>
       <!-- 所有答案 end -->
       <div v-if="question.questionnaireType === 'text'" class="option">
-        <textarea class="textarea" disabled></textarea>
+        <textarea class="textarea" disabled :value="qAnwser.suggest"></textarea>
       </div>
     </div>
     <div class="side">
@@ -43,6 +43,11 @@ export default {
     qIndex: {
       type: Number,
       required: true
+    },
+    qAnwser: {
+      type: Object,
+      required: false,
+      default: {}
     }
   },
   methods: {

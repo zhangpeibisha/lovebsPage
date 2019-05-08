@@ -44,6 +44,7 @@
                 track-by="$index"
                 :qIndex="q"
                 :question="qIndex"
+                :qAnswer="getAnswer(q)"
                 class="question">
               </li>
             </ol>
@@ -86,7 +87,8 @@
         },
         isLoading: false,
         dialogViewAuthorInfo: false,
-        formLabelWidth: '120px'
+        formLabelWidth: '120px',
+        qAnswers:[]
       }
     },
     created: function () {
@@ -100,8 +102,12 @@
       },
       saveBtnHandler() {
         this.saveData();
-      }, editEvaluation() {
+      },
+       editEvaluation() {
 
+      },
+      getAnswer(q) {
+        return (this.qAnswers.filter(a => a.id == q.id) || [{}])[0];
       },
       findEvaluationById() {
         findEvaluationById(this.evaluationId).then(result => {
