@@ -4,7 +4,7 @@
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img class="user-avatar" :src="userInfo.imageUrl">
+        <img class="user-avatar" :src="imageUrl">
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
@@ -37,9 +37,7 @@
     data() {
       return {
         student: "",
-        userInfo:{
-          imageUrl:''
-        }
+        imageUrl:''
       }
     },
     components: {
@@ -59,7 +57,7 @@
       getList() {
         findUserInfo().then((res) => {
           this.student = res.data.userType;
-          this.userInfo = res.data.userInfo;
+          this.imageUrl = res.data.userInfo.imageUrl;
           console.log("获取到用户信息：", this.userInfo)
         })
       },
