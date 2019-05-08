@@ -4,7 +4,7 @@
     <breadcrumb></breadcrumb>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img class="user-avatar" src="../../../assets/user/1.png">
+        <img class="user-avatar" :src="userInfo.imageUrl">
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
@@ -13,7 +13,7 @@
             个人中心
           </el-dropdown-item>
         </router-link>
-        
+
         <router-link class="inlineBlock" to="/teacherCenter" v-if="student==='TEACHER'">
           <el-dropdown-item>
             个人中心
@@ -28,87 +28,92 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
-import {findUserInfo} from '@/api/center';
+  import {mapGetters} from 'vuex'
+  import Breadcrumb from '@/components/Breadcrumb'
+  import Hamburger from '@/components/Hamburger'
+  import {findUserInfo} from '@/api/center';
 
-export default {
-	data(){
-		return{
-			student:""
-		}
-	},
-  components: {
-    Breadcrumb,
-    Hamburger
-  },
-  computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar'
-    ])
-  },
-  created(){
-  		this.getList()
-  },
-  methods: {
-  	getList(){
-				findUserInfo().then((res)=>{
-					this.student=res.data.userType
-				})
-			},
-    toggleSideBar() {
-      this.$store.dispatch('ToggleSideBar')
+  export default {
+    data() {
+      return {
+        student: "",
+        userInfo:{
+          imageUrl:''
+        }
+      }
     },
-    logout() {
-      this.$store.dispatch('LogOut').then(() => {
-        location.reload() // 为了重新实例化vue-router对象 避免bug
-      })
+    components: {
+      Breadcrumb,
+      Hamburger
+    },
+    computed: {
+      ...mapGetters([
+        'sidebar',
+        'avatar'
+      ])
+    },
+    created() {
+      this.getList()
+    },
+    methods: {
+      getList() {
+        findUserInfo().then((res) => {
+          this.student = res.data.userType;
+          this.userInfo = res.data.userInfo;
+          console.log("获取到用户信息：", this.userInfo)
+        })
+      },
+      toggleSideBar() {
+        this.$store.dispatch('ToggleSideBar')
+      },
+      logout() {
+        this.$store.dispatch('LogOut').then(() => {
+          location.reload() // 为了重新实例化vue-router对象 避免bug
+        })
+      }
     }
   }
-}
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-.navbar {
-  height: 50px;
-  line-height: 50px;
-  border-radius: 0px !important;
-  .hamburger-container {
-    line-height: 58px;
+  .navbar {
     height: 50px;
-    float: left;
-    padding: 0 10px;
-  }
-  .screenfull {
-    position: absolute;
-    right: 90px;
-    top: 16px;
-    color: red;
-  }
-  .avatar-container {
-    height: 50px;
-    display: inline-block;
-    position: absolute;
-    right: 35px;
-    .avatar-wrapper {
-      cursor: pointer;
-      margin-top: 5px;
-      position: relative;
-      .user-avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-      }
-      .el-icon-caret-bottom {
-        position: absolute;
-        right: -20px;
-        top: 25px;
-        font-size: 12px;
+    line-height: 50px;
+    border-radius: 0px !important;
+    .hamburger-container {
+      line-height: 58px;
+      height: 50px;
+      float: left;
+      padding: 0 10px;
+    }
+    .screenfull {
+      position: absolute;
+      right: 90px;
+      top: 16px;
+      color: red;
+    }
+    .avatar-container {
+      height: 50px;
+      display: inline-block;
+      position: absolute;
+      right: 35px;
+      .avatar-wrapper {
+        cursor: pointer;
+        margin-top: 5px;
+        position: relative;
+        .user-avatar {
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
+        .el-icon-caret-bottom {
+          position: absolute;
+          right: -20px;
+          top: 25px;
+          font-size: 12px;
+        }
       }
     }
   }
-}
 </style>
 
