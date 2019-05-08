@@ -13,21 +13,25 @@
       </el-main>
     </el-container>
 
-    <el-dialog title="选择不统计分数的学生" :visible.sync="blacklist.dialogFormVisible">
+    <el-dialog title="选择不统计分数的学生" :visible.sync="blacklist.dialogVisible">
       <el-form :model="blacklist">
         <el-form-item label="不统计分数的学生" :label-width="blacklist.formLabelWidth">
           <el-input v-model="blacklist.showChooseStudentName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="学生列表" :label-width="blacklist.formLabelWidth">
-          <el-select v-model="blacklist.student" placeholder="请选择学生">
-            <el-option label="张三" value="shanghai"></el-option>
-            <el-option label="李四" value="beijing"></el-option>
+          <el-select v-model="blacklist.tempChooseStudent" placeholder="请选择学生" clearable filterable>
+            <el-option
+              v-for="item in blacklist.student"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="blacklist.dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="blacklist.dialogFormVisible = false">确 定</el-button>
+        <el-button @click="blacklist.dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="blacklist.dialogVisible = false">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -69,7 +73,7 @@
 
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" @click="blacklist.dialogFormVisible = true" size="mini">配置</el-button>
+              <el-button type="text" @click="handleConfig(scope.$index, scope.row)" size="mini">配置</el-button>
               <el-button size="mini" @click="handleView(scope.$index, scope.row)">详情</el-button>
             </template>
           </el-table-column>
@@ -242,13 +246,14 @@
         // 已经查看了的问卷信息，为了实现懒加载
         completeQuestionLis: [],
         blacklist: {
-          dialogVisible: true,
+          dialogVisible: false,
           // 选中的学生
           chooseStudent: [],
           showChooseStudentName: '张三，李四',
           // 该问卷有的学生
           student: [],
-          formLabelWidth: '120px'
+          formLabelWidth: '120px',
+          tempChooseStudent:''
         }
       };
     },
@@ -328,10 +333,11 @@
       handleClick() {
 
       },
+      // 老师查看问卷信息
       handleView(index, row) {
         console.log("查看问卷点击了", index, row);
         teacherClieckPublishQuestion(row.publishId).then(result => {
-          console.log("查看成功", result)
+
         });
         this.$router.push({
           path: "/questionnaire/view",
@@ -339,6 +345,16 @@
             evaluationId: row.id
           }
         })
+      },
+      // 老师配置黑名单学生
+      handleConfig(index, row) {
+        this.blacklist.dialogVisible = true;
+        teacherClieckPublishQuestion(row.publishId).then(result => {
+          console.log("查看成功", result)
+          result.data.statisticsJson.students.forEach(row => {
+              this.blacklist.student.push(row);
+          })
+        });
       },
       handleDelete(index, row) {
 
