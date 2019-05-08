@@ -27,14 +27,14 @@ const user = {
   actions: {
     // 登录
     Login({commit}, userInfo) {
-      const username = userInfo.username.trim()
+      const username = userInfo.username.trim();
       return new Promise((resolve, reject) => {
         login(username, userInfo.password, userInfo.image).then(response => {
-          const data = response.data
-          const tokenStr = data.tokenHead + data.token
-
-          setToken(tokenStr)
-          commit('SET_TOKEN', tokenStr)
+          const data = response.data;
+          const tokenStr = data.details.sessionId;
+          console.log("登陆获取的信息",data);
+          setToken(tokenStr);
+          commit('SET_TOKEN', tokenStr);
           resolve()
         }).catch(error => {
           reject(error)
@@ -75,9 +75,9 @@ const user = {
     // 前端 登出
     FedLogOut({commit}) {
       return new Promise(resolve => {
-        commit('SET_TOKEN', '')
-        removeToken()
-        resolve()
+        commit('SET_TOKEN', '');
+        removeToken();
+        resolve();
       })
     }
   }
