@@ -83,101 +83,88 @@
       </el-tab-pane>
 
 
+      <el-tab-pane :label="'已经查看问卷'+'('+clickedQuestionIds.length+')'" name="second">
+        <el-table :data="clickedQuestionList" style="width: 100%">
 
+          <el-table-column label="标题" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.title}}</span>
+            </template>
+          </el-table-column>
 
+          <el-table-column label="描述" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.descritption}}</span>
+            </template>
+          </el-table-column>
 
+          <el-table-column label="作者" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.author.name}}</span>
+            </template>
+          </el-table-column>
 
+          <el-table-column label="创建时间" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.createtime}}</span>
+            </template>
+          </el-table-column>
 
+          <el-table-column label="更新时间" width="180">
+            <template slot-scope="scope">
+              <span style="margin-left: 10px">{{ scope.row.updatetime}}</span>
+            </template>
+          </el-table-column>
 
-
-
-
-
-
-
-
-      <!--<el-tab-pane :label="'已经查看问卷'+'('+clickedQuestionIds.length+')'" name="second">-->
-        <!--<el-table :data="clickedQuestionList" style="width: 100%">-->
-
-          <!--<el-table-column label="标题" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.title}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column label="描述" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.descritption}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column label="作者" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.author.name}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column label="创建时间" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.createtime}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column label="更新时间" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.updatetime}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-
-          <!--<el-table-column label="操作">-->
-            <!--<template slot-scope="scope">-->
-              <!--<el-button type="text" @click="dialogVisible = true" size="mini">配置</el-button>-->
-              <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-        <!--</el-table>-->
-      <!--</el-tab-pane>-->
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button type="text" @click="blacklist.dialogVisible = true" size="mini">配置</el-button>
+              <el-button size="mini" @click="handleView(scope.$index, scope.row)">详情</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-tab-pane>
 
       <!--<el-tab-pane :label="'已完成问卷'+'('+completeQuestionIds.length+')'" name="third">-->
-        <!--<el-table :data="completeQuestionLis" style="width: 100%">-->
+      <!--<el-table :data="completeQuestionLis" style="width: 100%">-->
 
-          <!--<el-table-column label="标题" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.title}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
+      <!--<el-table-column label="标题" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{ scope.row.title}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <!--<el-table-column label="描述" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.descritption}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
+      <!--<el-table-column label="描述" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{ scope.row.descritption}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <!--<el-table-column label="作者" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.author.name}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
+      <!--<el-table-column label="作者" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{ scope.row.author.name}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <!--<el-table-column label="创建时间" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.createtime}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
+      <!--<el-table-column label="创建时间" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{ scope.row.createtime}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <!--<el-table-column label="更新时间" width="180">-->
-            <!--<template slot-scope="scope">-->
-              <!--<span style="margin-left: 10px">{{ scope.row.updatetime}}</span>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
+      <!--<el-table-column label="更新时间" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{ scope.row.updatetime}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <!--<el-table-column label="操作">-->
-            <!--<template slot-scope="scope">-->
-              <!--<el-button type="text" @click="dialogVisible = true" size="mini">配置</el-button>-->
-              <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>-->
-            <!--</template>-->
-          <!--</el-table-column>-->
-        <!--</el-table>-->
+      <!--<el-table-column label="操作">-->
+      <!--<template slot-scope="scope">-->
+      <!--<el-button type="text" @click="dialogVisible = true" size="mini">配置</el-button>-->
+      <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
+      <!--</el-table>-->
 
       <!--</el-tab-pane>-->
 
@@ -216,6 +203,7 @@
 
 <script>
   import {findUserInfo, findPublishInfoByids, timestampToTime} from '@/api/center';
+  import {teacherClieckPublishQuestion} from '@/api/question'
 
   export default {
     data() {
@@ -253,13 +241,13 @@
         completeQuestionIds: [],
         // 已经查看了的问卷信息，为了实现懒加载
         completeQuestionLis: [],
-        blacklist:{
+        blacklist: {
           dialogVisible: true,
           // 选中的学生
-          chooseStudent:[],
-          showChooseStudentName:'张三，李四',
+          chooseStudent: [],
+          showChooseStudentName: '张三，李四',
           // 该问卷有的学生
-          student:[],
+          student: [],
           formLabelWidth: '120px'
         }
       };
@@ -323,7 +311,7 @@
       },
       pendingChangePageSize(currPage) {
         const maxLen = this.pendingQuestionList.length;
-        console.log("获取到未读信息",this.pendingQuestionList);
+        console.log("获取到未读信息", this.pendingQuestionList);
         const startIndex = (currPage - 1) * this.pendingQuestionPageSize;
         const endIndex = startIndex + this.pendingQuestionPageSize;
         console.log(maxLen, startIndex, endIndex);
@@ -341,11 +329,14 @@
 
       },
       handleView(index, row) {
-        console.log("查看问卷点击了",index,row)
+        console.log("查看问卷点击了", index, row);
+        teacherClieckPublishQuestion(row.publishId).then(result => {
+          console.log("查看成功", result)
+        });
         this.$router.push({
-          path:"/questionnaire/view",
-          query:{
-            evaluationId:row.id
+          path: "/questionnaire/view",
+          query: {
+            evaluationId: row.id
           }
         })
       },

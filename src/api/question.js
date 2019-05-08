@@ -1,46 +1,51 @@
 import request from '@/utils/request'
+
 export function createQuestion(params) {
-    return request({
-        url: '/evaluationquestionnaire/create',
-        method: 'post',
-        params: params
-    })
+  return request({
+    url: '/evaluationquestionnaire/create',
+    method: 'post',
+    params: params
+  })
 }
+
 export function addQuestion(params, data) {
-    return request({
-        url: '/evaluationquestionnaire/question',
-        method: 'post',
-        params: params,
-        data,
-        headers: {
-            "Content-Type": "application/json;"
-        }
-    })
+  return request({
+    url: '/evaluationquestionnaire/question',
+    method: 'post',
+    params: params,
+    data,
+    headers: {
+      "Content-Type": "application/json;"
+    }
+  })
 }
+
 export function addAllQuestion(params, data) {
-    return request({
-        url: '/evaluationquestionnaire/batch/question',
-        method: 'post',
-        params: params,
-        data,
-        headers: {
-            "Content-Type": "application/json;"
-        }
-    })
+  return request({
+    url: '/evaluationquestionnaire/batch/question',
+    method: 'post',
+    params: params,
+    data,
+    headers: {
+      "Content-Type": "application/json;"
+    }
+  })
 }
+
 export function deleteQuestion(params) {
-    return request({
-        url: '/evaluationquestionnaire/question',
-        method: 'delete',
-        params: params
-    })
+  return request({
+    url: '/evaluationquestionnaire/question',
+    method: 'delete',
+    params: params
+  })
 }
+
 export function updateQuestion(params) {
-    return request({
-        url: '/evaluationquestionnaire/question',
-        method: 'put',
-        params: params
-    })
+  return request({
+    url: '/evaluationquestionnaire/question',
+    method: 'put',
+    params: params
+  })
 }
 
 // 发现问卷id
@@ -49,7 +54,7 @@ export function findEvaluationById(evaluationId) {
     url: '/evaluationquestionnaire/question/by/id',
     method: 'get',
     params: {
-      evaluationId:evaluationId
+      evaluationId: evaluationId
     }
   })
 }
@@ -60,19 +65,31 @@ export function findPublishQuestionById(publishId) {
     url: '/publishquestionnaire/findById',
     method: 'get',
     params: {
-      id:publishId
+      id: publishId
     }
   })
 }
 
-export function commitE(params,data) {
-    return request({
-        url: '/publishquestionnaire/writeQuestion',
-        method: 'post',
-        params: params,
-        data,
-        headers: {
-            "Content-Type": "application/json;"
-        }
-    })
+// 老师点击查看发布问卷的问卷详情信息
+export function teacherClieckPublishQuestion(questionId) {
+  console.log("发现请求参数为：",questionId);
+  return request({
+    url: '/publishquestionnaire/teacher/read/publish',
+    method: 'put',
+    params: {
+      publishQuestingId: questionId
+    }
+  })
+}
+
+export function commitE(params, data) {
+  return request({
+    url: '/publishquestionnaire/writeQuestion',
+    method: 'post',
+    params: params,
+    data,
+    headers: {
+      "Content-Type": "application/json;"
+    }
+  })
 }
