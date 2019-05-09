@@ -19,7 +19,7 @@ router.beforeEach((to, from, next) => {
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')
-            next({ path: '/' })
+            next({ path: '/login' })
           })
         })
       } else {
@@ -27,13 +27,13 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    // if (whiteList.indexOf(to.path) !== -1) {
-    //   next()
-    // } else {
-    //   next('/login')
-    //   NProgress.done()
-    // }
-    next()
+    if (whiteList.indexOf(to.path) !== -1) {
+      next()
+    } else {
+      next('/login');
+      NProgress.done()
+    }
+    // next()
   }
 });
 

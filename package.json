@@ -10,13 +10,15 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "ajv": "^6.10.0",
     "axios": "^0.18.0",
-    "echarts": "^4.2.0-rc.2",
+    "echarts": "^4.2.1",
     "element-ui": "^2.6.3",
     "iview": "^3.3.3",
     "js-cookie": "^2.2.0",
     "normalize.css": "^8.0.0",
     "nprogress": "^0.2.0",
+    "sass": "^1.19.0",
     "table": "^5.2.3",
     "v-charts": "^1.19.0",
     "v-distpicker": "^1.0.20",

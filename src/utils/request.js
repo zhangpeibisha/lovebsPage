@@ -10,7 +10,7 @@ const service = axios.create({
 });
 
 export function getBaseUrl(){
-  return "http://localhost:8000";
+  return "/api";
 }
 
 // request拦截器

@@ -12,6 +12,8 @@ import '@/styles/index.scss' // global css
 import App from './App'
 import router from './router'
 import store from './store'
+import axios from 'axios'
+Vue.prototype.$axios=axios
 
 import '@/icons' // icon
 import '@/permission' // permission control
