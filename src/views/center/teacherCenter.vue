@@ -22,14 +22,14 @@
           <template>
             <el-select v-model="blacklist.selectedStudent"
                        placeholder="请选择学生"
-                       @change="handleConfig(blacklist.selectedStudent)">
+                       @change="handleConfig(blacklist.selectedStudent)"
+                       clearable
+                       filterable>
               <el-option
-                v-for="item in blacklist.student"
+                v-for="item in blacklist.viewStudent"
                 :key="item.id"
                 :label="item.name"
-                :value="item"
-                clearable
-                filterable>
+                :value="item">
               </el-option>
             </el-select>
           </template>
@@ -262,7 +262,8 @@
           tempChooseStudent: '',
           // 能够选择的总人数
           canChoose: 0,
-          selectedStudent: {}
+          selectedStudent: {},
+          viewStudent:[]
         }
       };
     },
@@ -364,6 +365,7 @@
           result.data.statisticsJson.students.forEach(row => {
             row.index = this.blacklist.student.length;
             this.blacklist.student.push(row);
+            this.blacklist.viewStudent.push(row);
           })
         });
         console.log("黑名单学生", this.blacklist.chooseStudent);
@@ -371,12 +373,16 @@
       },
       // 老师配置黑名单学生
       handleConfig(index) {
+        console.log("获取的数据为:", index === '');
         const chooseStudent = this.blacklist.chooseStudent;
         // 当选中人数不在选中组里和数量不能超过指定数量
-        if (chooseStudent.indexOf(index) < 0 && chooseStudent.length < this.blacklist.canChoose) {
+        if (chooseStudent.indexOf(index) < 0
+          && chooseStudent.length < this.blacklist.canChoose
+          && index !== undefined
+          && index !== '') {
           this.blacklist.showChooseStudentName = '';
           this.blacklist.chooseStudent.push(index);
-          this.blacklist.student.splice(index.index, 1);
+          this.blacklist.viewStudent.splice(index.index,1);
           this.blacklist.chooseStudent.forEach(row => {
             this.blacklist.showChooseStudentName += row.name + " ";
           })
@@ -386,7 +392,10 @@
       clearBlackListConfig() {
         this.blacklist.showChooseStudentName = '';
         this.blacklist.chooseStudent.length = 0;
-        this.blacklist.dialogVisible = false
+        this.blacklist.viewStudent.length = 0;
+        this.blacklist.student.forEach(row=>{
+          this.blacklist.viewStudent.push(row);
+        })
       },
       handleDelete(index, row) {
 
