@@ -13,24 +13,30 @@
       </el-main>
     </el-container>
 
-    <el-dialog title="选择不统计分数的学生" :visible.sync="blacklist.dialogVisible">
+    <el-dialog :title="'配置不计分学生'+'('+blacklist.canChoose+')'" :visible.sync="blacklist.dialogVisible">
       <el-form :model="blacklist">
-        <el-form-item label="不统计分数的学生" :label-width="blacklist.formLabelWidth">
+        <el-form-item label="不计分学生" :label-width="blacklist.formLabelWidth">
           <el-input v-model="blacklist.showChooseStudentName" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="学生列表" :label-width="blacklist.formLabelWidth">
-          <el-select v-model="blacklist.tempChooseStudent" placeholder="请选择学生" clearable filterable>
-            <el-option
-              v-for="item in blacklist.student"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+          <template>
+            <el-select v-model="blacklist.selectedStudent"
+                       placeholder="请选择学生"
+                       @change="handleConfig(blacklist.selectedStudent)">
+              <el-option
+                v-for="item in blacklist.student"
+                :key="item.id"
+                :label="item.name"
+                :value="item"
+                clearable
+                filterable>
+              </el-option>
+            </el-select>
+          </template>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="blacklist.dialogVisible = false">取 消</el-button>
+        <el-button @click="clearBlackListConfig">取 消</el-button>
         <el-button type="primary" @click="blacklist.dialogVisible = false">确 定</el-button>
       </div>
     </el-dialog>
@@ -73,7 +79,7 @@
 
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" @click="handleConfig(scope.$index, scope.row)" size="mini">配置</el-button>
+              <el-button type="text" @click="findStudentList(scope.$index, scope.row)" size="mini">配置</el-button>
               <el-button size="mini" @click="handleView(scope.$index, scope.row)">详情</el-button>
             </template>
           </el-table-column>
@@ -122,7 +128,7 @@
 
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" @click="blacklist.dialogVisible = true" size="mini">配置</el-button>
+              <el-button type="text" @click="findStudentList(scope.$index, scope.row)" size="mini">配置</el-button>
               <el-button size="mini" @click="handleView(scope.$index, scope.row)">详情</el-button>
             </template>
           </el-table-column>
@@ -249,17 +255,19 @@
           dialogVisible: false,
           // 选中的学生
           chooseStudent: [],
-          showChooseStudentName: '张三，李四',
+          showChooseStudentName: '',
           // 该问卷有的学生
           student: [],
           formLabelWidth: '120px',
-          tempChooseStudent:''
+          tempChooseStudent: '',
+          // 能够选择的总人数
+          canChoose: 0,
+          selectedStudent: {}
         }
       };
     },
     created() {
       this.findUserInfo();
-
     },
     methods: {
       findUserInfo() {
@@ -346,15 +354,39 @@
           }
         })
       },
-      // 老师配置黑名单学生
-      handleConfig(index, row) {
+      // 老师发现哪些学生参与评教
+      findStudentList(index, row) {
         this.blacklist.dialogVisible = true;
         teacherClieckPublishQuestion(row.publishId).then(result => {
-          console.log("查看成功", result)
+          console.log("查看到评卷信息", result);
+          this.blacklist.canChoose = result.data.statisticsJson.canFilters;
+          this.blacklist.student.length = 0;
           result.data.statisticsJson.students.forEach(row => {
-              this.blacklist.student.push(row);
+            row.index = this.blacklist.student.length;
+            this.blacklist.student.push(row);
           })
         });
+        console.log("黑名单学生", this.blacklist.chooseStudent);
+        console.log("参与学生", this.blacklist.student)
+      },
+      // 老师配置黑名单学生
+      handleConfig(index) {
+        const chooseStudent = this.blacklist.chooseStudent;
+        // 当选中人数不在选中组里和数量不能超过指定数量
+        if (chooseStudent.indexOf(index) < 0 && chooseStudent.length < this.blacklist.canChoose) {
+          this.blacklist.showChooseStudentName = '';
+          this.blacklist.chooseStudent.push(index);
+          this.blacklist.student.splice(index.index, 1);
+          this.blacklist.chooseStudent.forEach(row => {
+            this.blacklist.showChooseStudentName += row.name + " ";
+          })
+        }
+      },
+      // 清除选择
+      clearBlackListConfig() {
+        this.blacklist.showChooseStudentName = '';
+        this.blacklist.chooseStudent.length = 0;
+        this.blacklist.dialogVisible = false
       },
       handleDelete(index, row) {
 
@@ -367,6 +399,8 @@
   .personleCenter {
     width: 1200px;
     margin: 0 auto;
+    overflow-y: scroll;
+    height: 600px;
   }
 
   .el-container {
