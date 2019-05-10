@@ -72,12 +72,36 @@ export function findPublishQuestionById(publishId) {
 
 // 老师点击查看发布问卷的问卷详情信息
 export function teacherClieckPublishQuestion(questionId) {
-  console.log("发现请求参数为：",questionId);
+  console.log("发现请求参数为：", questionId);
   return request({
     url: '/publishquestionnaire/teacher/read/publish',
     method: 'put',
     params: {
       publishQuestingId: questionId
+    }
+  })
+}
+
+// 添加黑名单学生
+export function addBlackList(publishId, ids) {
+  return request({
+    url: '/publishquestionnaire/addBlack',
+    method: 'post',
+    params: {
+      publisId: publishId,
+      studentIds: ids
+    }
+  })
+}
+
+// 删除黑名单学生
+export function deleteBlackList(publishId, ids) {
+  return request({
+    url: '/publishquestionnaire/deleteBlack',
+    method: 'delete',
+    params: {
+      publisId: publishId,
+      studentIds: ids
     }
   })
 }

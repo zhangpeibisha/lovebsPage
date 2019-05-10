@@ -16,20 +16,28 @@
     <el-dialog :title="'配置不计分学生'+'('+blacklist.canChoose+')'" :visible.sync="blacklist.dialogVisible">
       <el-form :model="blacklist">
         <el-form-item label="不计分学生" :label-width="blacklist.formLabelWidth">
-          <el-input v-model="blacklist.showChooseStudentName" autocomplete="off"></el-input>
+          <el-tag
+            v-for="(item,index) in blacklist.showChooseStudentName[activeIndex]"
+            :key="item.index"
+            @close="deleteSelect(index)"
+            closable>
+            {{item.name}}
+          </el-tag>
         </el-form-item>
         <el-form-item label="学生列表" :label-width="blacklist.formLabelWidth">
           <template>
-            <el-select v-model="blacklist.selectedStudent"
+            <el-select v-model="selectedStudent"
                        placeholder="请选择学生"
-                       @change="handleConfig(blacklist.selectedStudent)"
+                       @change="handleConfig($event)"
                        clearable
                        filterable>
               <el-option
                 v-for="item in blacklist.viewStudent"
                 :key="item.id"
                 :label="item.name"
-                :value="item">
+                :disabled="blacklist.chooseStudent[activeIndex] &&
+                blacklist.chooseStudent[activeIndex].indexOf(item.index) > -1"
+                :value="item.index">
               </el-option>
             </el-select>
           </template>
@@ -37,7 +45,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="clearBlackListConfig">取 消</el-button>
-        <el-button type="primary" @click="blacklist.dialogVisible = false">确 定</el-button>
+        <el-button type="primary" @click="submitBlackList">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -213,7 +221,7 @@
 
 <script>
   import {findUserInfo, findPublishInfoByids, timestampToTime} from '@/api/center';
-  import {teacherClieckPublishQuestion} from '@/api/question'
+  import {teacherClieckPublishQuestion, addBlackList} from '@/api/question'
 
   export default {
     data() {
@@ -250,12 +258,13 @@
         // 已经查看了的问卷id信息
         completeQuestionIds: [],
         // 已经查看了的问卷信息，为了实现懒加载
+        selectedStudent: {},
         completeQuestionLis: [],
         blacklist: {
           dialogVisible: false,
           // 选中的学生
-          chooseStudent: [],
-          showChooseStudentName: '',
+          chooseStudent: {},
+          showChooseStudentName: {},
           // 该问卷有的学生
           student: [],
           formLabelWidth: '120px',
@@ -263,8 +272,9 @@
           // 能够选择的总人数
           canChoose: 0,
           selectedStudent: {},
-          viewStudent:[]
-        }
+          viewStudent: []
+        },
+        activeIndex:0
       };
     },
     created() {
@@ -282,46 +292,52 @@
       },
       findUserPendingIds() {
         const pendingIds = [];
-        this.qnaireTask.pendingDetail.forEach(row => {
-          pendingIds.push(row.id)
-        });
-        this.pendingQuestionIds = pendingIds;
-        findPublishInfoByids(this.pendingQuestionIds).then(result => {
-          result.data.forEach(row => {
-            const questionnaire = row.questionnaire;
-            questionnaire.publishId = row.id;
-            this.pendingQuestionList.push(questionnaire)
+        if (this.qnaireTask.pendingDetail !== undefined) {
+          this.qnaireTask.pendingDetail.forEach(row => {
+            pendingIds.push(row.id)
           });
-          this.pendingChangePageSize(1);
-        });
+          this.pendingQuestionIds = pendingIds;
+          findPublishInfoByids(this.pendingQuestionIds).then(result => {
+            result.data.forEach(row => {
+              const questionnaire = row.questionnaire;
+              questionnaire.publishId = row.id;
+              this.pendingQuestionList.push(questionnaire)
+            });
+            this.pendingChangePageSize(1);
+          });
+        }
       },
       findUserClickedIds() {
         const clickedIds = [];
-        this.qnaireTask.checkedDetail.forEach(row => {
-          clickedIds.push(row.id)
-        });
-        this.clickedQuestionIds = clickedIds;
-        findPublishInfoByids(this.clickedQuestionIds).then(result => {
-          result.data.forEach(row => {
-            const questionnaire = row.questionnaire;
-            questionnaire.publishId = row.id;
-            this.clickedQuestionList.push(questionnaire)
+        if (this.qnaireTask.checkedDetail !== undefined){
+          this.qnaireTask.checkedDetail.forEach(row => {
+            clickedIds.push(row.id)
           });
-        })
+          this.clickedQuestionIds = clickedIds;
+          findPublishInfoByids(this.clickedQuestionIds).then(result => {
+            result.data.forEach(row => {
+              const questionnaire = row.questionnaire;
+              questionnaire.publishId = row.id;
+              this.clickedQuestionList.push(questionnaire)
+            });
+          })
+        }
       },
       findUserCompleteIds() {
         const completeIds = [];
-        this.qnaireTask.completeDetail.forEach(row => {
-          completeIds.push(row.id)
-        });
-        this.completeQuestionIds = completeIds;
-        findPublishInfoByids(this.completeQuestionIds).then(result => {
-          result.data.forEach(row => {
-            const questionnaire = row.questionnaire;
-            questionnaire.publishId = row.id;
-            this.completeQuestionLis.push(questionnaire)
+        if (this.qnaireTask.completeDetail!==undefined){
+          this.qnaireTask.completeDetail.forEach(row => {
+            completeIds.push(row.id)
           });
-        })
+          this.completeQuestionIds = completeIds;
+          findPublishInfoByids(this.completeQuestionIds).then(result => {
+            result.data.forEach(row => {
+              const questionnaire = row.questionnaire;
+              questionnaire.publishId = row.id;
+              this.completeQuestionLis.push(questionnaire)
+            });
+          })
+        }
       },
       pendingChangePageSize(currPage) {
         const maxLen = this.pendingQuestionList.length;
@@ -357,13 +373,19 @@
       },
       // 老师发现哪些学生参与评教
       findStudentList(index, row) {
+        this.activeIndex = index;
+        this.selectedStudent = "";
         this.blacklist.dialogVisible = true;
+        const cuurPublishId = row.publishId;
         teacherClieckPublishQuestion(row.publishId).then(result => {
           console.log("查看到评卷信息", result);
           this.blacklist.canChoose = result.data.statisticsJson.canFilters;
-          this.blacklist.student.length = 0;
+          this.blacklist.student = [];
+          this.blacklist.viewStudent = [];
           result.data.statisticsJson.students.forEach(row => {
             row.index = this.blacklist.student.length;
+            console.log("获取到的当前发布id:",cuurPublishId);
+            row.currPublishId = cuurPublishId;
             this.blacklist.student.push(row);
             this.blacklist.viewStudent.push(row);
           })
@@ -371,31 +393,69 @@
         console.log("黑名单学生", this.blacklist.chooseStudent);
         console.log("参与学生", this.blacklist.student)
       },
+
+      deleteSelect(index) {
+        this.blacklist.showChooseStudentName[this.activeIndex].splice(index,1);
+        this.blacklist = JSON.parse(JSON.stringify(this.blacklist));
+        this.blacklist.chooseStudent[this.activeIndex].splice(index,1);
+      },
       // 老师配置黑名单学生
-      handleConfig(index) {
-        console.log("获取的数据为:", index === '');
-        const chooseStudent = this.blacklist.chooseStudent;
-        // 当选中人数不在选中组里和数量不能超过指定数量
-        if (chooseStudent.indexOf(index) < 0
-          && chooseStudent.length < this.blacklist.canChoose
-          && index !== undefined
-          && index !== '') {
-          this.blacklist.showChooseStudentName = '';
-          this.blacklist.chooseStudent.push(index);
-          this.blacklist.viewStudent.splice(index.index,1);
-          this.blacklist.chooseStudent.forEach(row => {
-            this.blacklist.showChooseStudentName += row.name + " ";
-          })
-        }
+      handleConfig(e) {
+        console.log("获取的数据为:",e);
+        this.blacklist.showChooseStudentName[this.activeIndex] =
+          (this.blacklist.showChooseStudentName[this.activeIndex] || []).concat(this.blacklist.viewStudent[e]);
+
+
+        this.blacklist.chooseStudent[this.activeIndex] =
+          (this.blacklist.chooseStudent[this.activeIndex] || []).concat(e)
+        // const chooseStudent = this.blacklist.chooseStudent;
+        // // 当选中人数不在选中组里和数量不能超过指定数量
+        // if (chooseStudent.indexOf(index) < 0
+        //   && chooseStudent.length < this.blacklist.canChoose
+        //   && index !== undefined
+        //   && index !== '') {
+        //   this.blacklist.showChooseStudentName = '';
+        //   this.blacklist.chooseStudent.push(this.blacklist.student[index]);
+        //   console.log("获取选中的学生信息", this.blacklist.chooseStudent, this.blacklist.student[index]);
+        //   this.blacklist.chooseStudent.forEach(row => {
+        //     this.blacklist.showChooseStudentName += row.name + " ";
+        //   })
+        // } else {
+        //   this.noticeConfig();
+        // }
+      },
+      // 操作错误通知
+      noticeConfig() {
+        this.$alert('选择不合法，请查看最大人数是否已经达到上线', '添加黑名单失败', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$message({
+              type: 'warning ',
+              message: `action: ${ action }`
+            });
+          }
+        });
       },
       // 清除选择
       clearBlackListConfig() {
-        this.blacklist.showChooseStudentName = '';
         this.blacklist.chooseStudent.length = 0;
         this.blacklist.viewStudent.length = 0;
-        this.blacklist.student.forEach(row=>{
+        this.blacklist.student.forEach(row => {
           this.blacklist.viewStudent.push(row);
         })
+      },
+      // 提交选择
+      submitBlackList() {
+        this.blacklist.dialogVisible = false;
+        console.log("获取到的信息为====submit",);
+        const publishId =  this.blacklist.student[this.blacklist.selectedStudent].currPublishId;
+        var  ids = '';
+        this.blacklist.chooseStudent.forEach(row=>{
+           ids += row.id + ",";
+        });
+        // addBlackList(publishId,ids).then(row => {
+        //   console.log("提交黑名单得到响应", row);
+        // })
       },
       handleDelete(index, row) {
 
