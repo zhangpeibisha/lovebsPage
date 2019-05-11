@@ -265,7 +265,7 @@
           dialogVisible: false,
           showChooseStudentName: {},
           // 该问卷有的学生
-          student: [],
+          teacher: [],
           formLabelWidth: '120px',
           tempChooseStudent: '',
           // 能够选择的总人数
@@ -379,20 +379,20 @@
         teacherClieckPublishQuestion(row.publishId).then(result => {
           console.log("查看到评卷信息", result);
           this.blacklist.canChoose = result.data.statisticsJson.canFilters;
-          this.blacklist.student = [];
+          this.blacklist.teacher = [];
           this.blacklist.viewStudent = [];
           var blackListStudentId =  result.data.statisticsJson.black || [];
           result.data.statisticsJson.students.forEach(row => {
-            row.index = this.blacklist.student.length;
+            row.index = this.blacklist.teacher.length;
             console.log("获取到的当前发布id:", cuurPublishId);
             row.currPublishId = cuurPublishId;
-            this.blacklist.student.push(row);
+            this.blacklist.teacher.push(row);
             this.blacklist.viewStudent.push(row);
           })
           this.blacklist.showChooseStudentName[this.activeIndex] =
             this.blacklist.viewStudent.filter(item => blackListStudentId.indexOf(item.id) > -1);
         });
-        console.log("参与学生", this.blacklist.student)
+        console.log("参与学生", this.blacklist.teacher)
       },
       //删除选中的黑名单
       deleteSelect(index) {
@@ -419,7 +419,7 @@
       // 清除选择
       clearBlackListConfig() {
         this.blacklist.viewStudent = [];
-        this.blacklist.student.forEach(row => {
+        this.blacklist.teacher.forEach(row => {
           this.blacklist.viewStudent.push(row);
         })
       },
