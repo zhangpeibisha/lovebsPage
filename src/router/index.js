@@ -68,7 +68,7 @@ export const constantRouterMap = [
         component: () => import('@/views/student/profession/index'),
         meta: {title: '专业管理', icon: 'product-list'}
       },
-      
+
 
       {
         path: 'class',
@@ -87,12 +87,20 @@ export const constantRouterMap = [
     hidden: false,
     children: [
       {
-      path: 'manger',
-      name: 'manger',
-      component: () => import('@/views/student/teacher/index'),
-      meta: {title: '老师列表', icon: 'example.svg'},
-      hidden: false
-    }]
+        path: 'manger',
+        name: 'manger',
+        component: () => import('@/views/student/teacher/index'),
+        meta: {title: '老师列表', icon: 'example.svg'},
+        hidden: false
+      },
+      {
+        path: 'course',
+        name: 'course',
+        component: () => import('@/views/student/course/index'),
+        meta: {title: '课程列表', icon: 'example.svg'},
+        hidden: false
+      }
+    ]
   },
   {
     path: "/rbac",
