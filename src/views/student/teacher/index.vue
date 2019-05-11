@@ -194,16 +194,22 @@ export default {
       this.listQuery = Object.assign({}, defaultListQuery);
     },
     handleDelete(index, row) {
+      console.log("index=",index,row);
       this.$confirm("是否要进行删除操作?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
         let ids = [];
+        if (row){
+           console.log("index====",index,row)
+          ids.push(row.id)
+        }
         this.multipleSelection.forEach(row => ids.push(row.id))
-        _delete({
+        _delete(
           ids
-        });
+        );
+        this.getList();
       });
     },
     edit() {
