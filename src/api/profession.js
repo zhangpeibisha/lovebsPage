@@ -13,6 +13,15 @@ export function fetchFacultyList(params) {
     params:params
   })
 }
+export function findById(id) {
+  return request({
+    url:'/profession/findById',
+    method:'get',
+    params:{
+      id
+    }
+  })
+}
 export function fetchTeacherList(params) {
   return request({
     url:'/teacher/quire/list',
@@ -36,7 +45,7 @@ export function update(params) {
 }
 export function _delete(params) {
   return request({
-    url:'/profession/deletes',
+    url:'/profession/delete',
     method:'delete',
     params:params
   })
