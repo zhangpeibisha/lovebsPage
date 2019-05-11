@@ -106,7 +106,7 @@ import {
   findCourseList,
   update,
   _delete,
-  createTeacher
+  createCrouse
 } from "@/api/course";
 
 const defaultListQuery = {
@@ -195,10 +195,10 @@ export default {
       }).then(() => {
         let ids = [];
         if (row){
-           console.log("index====",index,row)
+           console.log("index====",index,row);
           ids.push(row.id)
         }
-        this.multipleSelection.forEach(row => ids.push(row.id))
+        this.multipleSelection.forEach(row => ids.push(row.id));
         _delete(
           ids
         );
@@ -208,19 +208,19 @@ export default {
     edit() {
       let teacher = this.course;
       console.log("返回的数据为：==================",teacher);
-      // 编辑老师信息
+      // 编辑课程信息
       if (teacher.id) {
         update(this.course).then(result => {
           console.log("返回的数据为：",result);
           this.getList()
         });
       }
-      // 添加老师
+      // 添加课程
       else {
-        createTeacher([this.course]).then(result => {
+        createCrouse([this.course]).then(result => {
           console.log("返回的数据为：",result);
+          this.getList()
         });
-        this.getList()
       }
       this.editDialog = false
     }

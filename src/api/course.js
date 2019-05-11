@@ -10,29 +10,30 @@ export function findCourseList(params) {
 
 export function update(params) {
   return request({
-    url: '/teacher/update',
+    url: '/course/update',
     method: 'put',
     params: params
   })
 }
 
-export function createTeacher(params) {
+export function createCrouse(params) {
 
   var data = params[0];
   return request({
-    url: '/teacher/create',
+    url: '/course/add',
     method: 'post',
     params: {
-      email: data.email,
-      jobNumber: data.jobnumber,
+      coding: data.coding,
       name: data.name,
-      phone: data.phone
+      description: data.description,
     }
   })
 }
 
 export function _delete(params) {
-  console.log("删除获取到的参数为", params.toString());
+
+  console.log("删除获取到的参数为==========", params);
+
   var str = '';
   if (params){
     params.forEach(row =>{
@@ -40,8 +41,9 @@ export function _delete(params) {
       str += row + ","
     })
   }
+  console.log("删除获取到的参数为", str);
   return request({
-    url: '/teacher/deletes',
+    url: '/course/ids',
     method: 'delete',
     params: {
       ids:str
