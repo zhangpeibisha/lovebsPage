@@ -20,8 +20,6 @@ import Center from '../views/center/student'
   }
  **/
 export const constantRouterMap = [
-  {path: "/teacherCenter", component: () => import('@/views/center/teacherCenter')},
-  {path: "/center", component: Center},
   {path: '/login', component: () => import('@/views/login/index'), hidden: false},
   {path: '/404', component: () => import('@/views/404'), hidden: true},
   {path: '/question/card/edit', component: () => import('@/views/question/card/index'), hidden: true},
@@ -36,6 +34,13 @@ export const constantRouterMap = [
       component: () => import('@/views/home/index'),
       meta: {title: '首页', icon: 'home'}
     },
+      {
+        path: '/teacherCenter',
+        name: 'teacherCenter',
+        component: () => import('@/views/center/teacher'),
+        meta: {title: '个人', icon: 'home'}
+        // hidden: true
+      }
     ]
   },
   {
