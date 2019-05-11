@@ -101,7 +101,7 @@
         </el-form-item>
         <el-form-item label="学院：">
           <el-select
-            v-model="profession.facultyVo.id"
+            v-model="profession.facultyid"
             placeholder="请选择学院"
             clearable
             filterable
@@ -149,8 +149,9 @@ import {
   _delete
 } from "@/api/profession";
 
+import { Message, MessageBox } from 'element-ui'
 const defaultListQuery = {
-  key: null,
+  keyword: null,
   word: null,
   blurry: false,
   page: 1,
@@ -234,6 +235,7 @@ export default {
     handleResetSearch() {
       this.selectProductCateValue = [];
       this.listQuery = Object.assign({}, defaultListQuery);
+      this.getList();
     },
     getTheacher(id) {
         return this.teacherList.filter(t => t.id === id)[0];
@@ -244,21 +246,23 @@ export default {
         cancelButtonText: "取消",
         type: "warning"
       }).then(() => {
-        let ids = [];
+        let ids = row ? [row.id] : [];
         this.multipleSelection.forEach(row => ids.push(row.id));
+        console.log(ids)
         _delete({
-          ids
+          ids: ids.toString()
+        }).then(r => {
+          this.getList();
         });
       });
     },
     edit() {
-      let student = this.student;
-      student.classId = student.class.id;
-      // 编辑学生信息
-      if (student.id) {
-        update(this.student).then(result => {
+      let profession = this.profession;
+      if (profession.id) {
+        update(this.profession).then(result => {
+          this.editDialog = false;
           Message({
-            message: "添加成功",
+            message: "修改成功",
             type: "success",
             duration: 1000
           });
@@ -266,7 +270,9 @@ export default {
       }
       // 添加学生
       else {
-        create(this.student).then(result => {
+        create(this.profession).then(result => {
+          this.editDialog = false;
+          this.getList();
           Message({
             message: "添加成功",
             type: "success",

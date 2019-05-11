@@ -22,7 +22,7 @@ export function fetchTeacherList(params) {
 }
 export function create(params) {
   return request({
-    url:'/profession/create',
+    url:'/profession/add',
     method:'post',
     params:params
   })
@@ -36,7 +36,7 @@ export function update(params) {
 }
 export function _delete(params) {
   return request({
-    url:'/profession/update',
+    url:'/profession/deletes',
     method:'delete',
     params:params
   })

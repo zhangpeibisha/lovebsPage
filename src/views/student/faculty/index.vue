@@ -165,6 +165,7 @@
       handleResetSearch() {
         this.selectProductCateValue = [];
         this.listQuery = Object.assign({}, defaultListQuery);
+        this.getList();
       },
       handleDelete(index, row,batch) {
         console.log("index=", index);
