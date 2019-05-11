@@ -1,7 +1,7 @@
 <template>
   <div>
     <!--删除提示框-->
-    <div>
+    <div style="height: 500px; overflow-y: scroll;">
       <el-dialog
         title="删除角色"
         :visible.sync="deletePopoverView"

@@ -1,6 +1,6 @@
 <template>
 
-  <div>
+  <div style="height: 500px; overflow-y: scroll;">
     <el-row :gutter="20">
       <el-col :span="12" :offset="1">
         <el-carousel :interval="2000" arrow="always" >

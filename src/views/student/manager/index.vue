@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" style="height: 500px; overflow-y: scroll;">
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -28,7 +28,6 @@
               placeholder="请选择学院"
               clearable
               filterable
-              @change="getProfessionList()"
             >
               <el-option
                 v-for="item in facultyList"
@@ -151,7 +150,6 @@
             placeholder="请选择学院"
             clearable
             filterable
-            @change="getProfessionList(student.class.profession.facultyVo.id)"
             :disabled="student.type == 'see'"
           >
             <el-option
@@ -255,16 +253,64 @@ export default {
     this.getFacultyList();
   },
   watch: {
-    student: function(val) {
-      try {
-        if (val && val.class.profession.facultyVo.id) {
-          fetchProfessionList({
-            quire: ` and facultyId = ${val.class.profession.facultyVo.id}`
-          }).then(result => {
-            this.professionList = result.data.data;
-          });
+    'student.class.profession.facultyVo.id': function(val,val2) {
+      if (!val) {
+        this.student.class.profession.id = undefined;
+        return;
+      }
+      fetchProfessionList({
+        quire: ` and facultyId = ${val}`
+      }).then(res => {
+        let professionList = res.data.data;
+        if (professionList && professionList.length > 0) {
+          this.professionList = professionList;
+          this.student.class.profession.id = professionList[0].id;
+        }  else {
+          this.professionList = [{
+            id:undefined
+          }];
+          this.student.class.profession.id = undefined;
         }
-      } catch (e) {}
+      })
+    },
+    'listQuery.facultyId': function(val,val2) {
+      if (!val) {
+        this.professionList = [];
+        return;
+      }
+      fetchProfessionList({
+        quire: ` and facultyId = ${val}`
+      }).then(res => {
+        let professionList = res.data.data;
+        if (professionList && professionList.length > 0) {
+          this.professionList = professionList;
+          this.listQuery.professionId = professionList[0].id;
+        }  else {
+          this.professionList = [{
+            id:undefined
+          }];
+          this.listQuery.professionId = undefined;
+        }
+      })
+    },
+    'student.class.profession.id': function(val,val2) {
+      if (!val) {
+        this.student.class.id = undefined;
+        return;
+      }
+      fetchClassList({
+        quire: ` and professionId = ${val}`
+      }).then(res => {
+        let classes = res.data.data;
+        if (classes && classes.length > 0) {
+          this.student.class.id = classes[0].id;
+        }  else {
+          this.classes = [{
+            id: undefined
+          }]
+          this.student.class.id = undefined;
+        }
+      })
     }
   },
   methods: {
@@ -305,14 +351,6 @@ export default {
         this.listLoading = false;
         this.list = response.data.data;
         this.total = 1;
-      });
-    },
-    getProfessionList(facultyId) {
-      this.professionList = [];
-      fetchProfessionList({
-        quire: ` and facultyId = ${facultyId || this.listQuery.facultyId}`
-      }).then(result => {
-        this.professionList = result.data.data;
       });
     },
     getFacultyList() {
