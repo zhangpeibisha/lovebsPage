@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container">
+  <div class="app-container" style="height: 500px; overflow-y: scroll;">
     <el-card class="filter-container" shadow="never">
       <div>
         <i class="el-icon-search"></i>
@@ -16,35 +16,34 @@
           <el-form-item label="输入搜索：">
             <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="关键字"></el-input>
           </el-form-item>
-          <el-form-item label="学院：">
-            <el-select v-model="listQuery.facultyId" placeholder="请选择学院" clearable filterable>
-              <el-option
-                v-for="item in facultyList"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              ></el-option>
-            </el-select>
+          <el-form-item label="工号：">
+            <el-input style="width: 203px" v-model="listQuery.jobnumber" placeholder="工号"></el-input>
+          </el-form-item>
+          <el-form-item label="姓名：">
+            <el-input style="width: 203px" v-model="listQuery.name" placeholder="姓名"></el-input>
           </el-form-item>
         </el-form>
       </div>
     </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
-      <span>专业数据</span>
+      <span>老师数据</span>
       <el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
       <el-button
         class="btn-add"
-        @click="profession = {
-            facultyVo:{},
-            teacher:{}
+        @click="teacher = {
+        class:{
+          profession: {
+            facultyVo:{}
+          }
+        }
       };editDialog = true;dialogTitle='添加'"
         size="mini"
       >添加</el-button>
     </el-card>
     <div class="table-container">
       <el-table
-        ref="professionTable"
+        ref="studentTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -52,27 +51,32 @@
         border
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
-        <el-table-column label="编号" align="center">
-          <template slot-scope="scope">{{scope.row.coding}}</template>
+        <el-table-column label="头像" width="100" align="center">
+          <template slot-scope="scope">
+            <img style="height: 80px;width:80px;" :src="scope.row.imagerurl">
+          </template>
         </el-table-column>
-        <el-table-column label="专业名称" align="center">
+        <el-table-column label="工号" align="center">
+          <template slot-scope="scope">{{scope.row.jobnumber}}</template>
+        </el-table-column>
+        <el-table-column label="姓名" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
-        <el-table-column label="系主任" align="center">
-          <template slot-scope="scope">{{getTheacher(scope.row.departmentid).name}}</template>
+        <el-table-column label="手机号码" align="center">
+          <template slot-scope="scope">{{scope.row.phone}}</template>
         </el-table-column>
-        <el-table-column label="学院" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
+        <el-table-column label="邮箱" align="center">
+          <template slot-scope="scope">{{scope.row.email}}</template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button
               size="mini"
-              @click="profession = scope.row;editDialog = true;profession.type = 'see';dialogTitle='查看'"
+              @click="teacher = scope.row;editDialog = true;teacher.type = 'see';dialogTitle='查看'"
             >查看</el-button>
             <el-button
               size="mini"
-              @click="profession = scope.row;editDialog = true;dialogTitle='编辑';profession.type='edit'"
+              @click="teacher = scope.row;editDialog = true;dialogTitle='编辑';teacher.type='edit'"
             >编辑</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -93,46 +97,20 @@
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
       <el-form label-width="80px">
-        <el-form-item label="编号">
-          <el-input v-model="profession.coding" :disabled="profession.type == 'see'"></el-input>
+        <el-form-item label="工号">
+          <el-input v-model="teacher.jobnumber" :disabled="teacher.type == 'see'"></el-input>
         </el-form-item>
-        <el-form-item label="专业名称">
-          <el-input v-model="profession.name" :disabled="profession.type == 'see'"></el-input>
+        <el-form-item label="姓名">
+          <el-input v-model="teacher.name" :disabled="teacher.type == 'see'"></el-input>
         </el-form-item>
-        <el-form-item label="学院：">
-          <el-select
-            v-model="profession.facultyVo.id"
-            placeholder="请选择学院"
-            clearable
-            filterable
-            :disabled="profession.type == 'see'"
-          >
-            <el-option
-              v-for="item in facultyList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+        <el-form-item label="手机号码">
+          <el-input v-model="teacher.phone" :disabled="teacher.type == 'see'"></el-input>
         </el-form-item>
-        <el-form-item label="指导老师：">
-          <el-select
-            v-model="profession.departmentid"
-            placeholder="请选指导老师"
-            clearable
-            filterable
-            :disabled="profession.type == 'see'"
-          >
-            <el-option
-              v-for="item in teacherList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id"
-            ></el-option>
-          </el-select>
+        <el-form-item label="邮箱">
+          <el-input v-model="teacher.email" :disabled="teacher.type == 'see'"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer" v-if="profession.type != 'see'">
+      <span slot="footer" class="dialog-footer" v-if="teacher.type != 'see'">
         <el-button @click="editDialog = false">取 消</el-button>
         <el-button type="primary" @click="edit()">确 定</el-button>
       </span>
@@ -141,13 +119,11 @@
 </template>
 <script>
 import {
-  fetchList,
-  fetchFacultyList,
-  fetchTeacherList,
-  create,
+  findTeacherList,
   update,
-  _delete
-} from "@/api/profession";
+  _delete,
+  createTeacher
+} from "@/api/teacher";
 
 const defaultListQuery = {
   key: null,
@@ -157,7 +133,7 @@ const defaultListQuery = {
   limit: 5
 };
 export default {
-  name: "professionList",
+  name: "studentList",
   data() {
     return {
       editSkuInfo: {
@@ -172,51 +148,33 @@ export default {
       selectProductCateValue: null,
       multipleSelection: [],
       facultyList: [],
-      teacherList: [],
+      professionList: [],
+      classes: [],
       editDialog: false,
-      profession: {
-        facultyVo: {},
-        teacher: {}
+      teacher: {
+
       },
-      dialogTitle: "",
+      dialogTitle: ""
     };
   },
   created() {
-    this.getFetchTeacherList();
     this.getList();
-    this.getFacultyList();
   },
-  watch: {},
   methods: {
     getList() {
       this.listLoading = true;
       this.listQuery.quire = "and 1 = 1";
       this.listQuery.keyword
-        ? (this.listQuery.quire += ` and (coding like '%${
-            this.listQuery.keyword
-          }%' or name like '%${this.listQuery.keyword}%') `)
+        ? (this.listQuery.quire +=
+            ` and (name like '%${this.listQuery.keyword}%' or jobNumber like '%${this.listQuery.keyword}%' `
+        +
+            `or phone like '%${this.listQuery.keyword}%'  or email like '%${this.listQuery.keyword}%')`)
         : "";
-      this.listQuery.facultyId
-        ? (this.listQuery.quire += ` and facultyId = ${
-            this.listQuery.facultyId
-          }`)
-        : "";
-      fetchList(this.listQuery).then(response => {
+      findTeacherList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.data;
         this.total = 1;
-      });
-    },
-    getFacultyList() {
-      fetchFacultyList({}).then(result => {
-        this.facultyList = result.data.data;
-      });
-    },
-    getFetchTeacherList() {
-      fetchTeacherList({
-        quire: `and 1 = 1`
-      }).then(result => {
-        this.teacherList = result.data.data;
+        console.log("获取到的数据为：",response)
       });
     },
     handleSizeChange(val) {
@@ -235,9 +193,6 @@ export default {
       this.selectProductCateValue = [];
       this.listQuery = Object.assign({}, defaultListQuery);
     },
-    getTheacher(id) {
-        return this.teacherList.filter(t => t.id === id)[0];
-    },
     handleDelete(index, row) {
       this.$confirm("是否要进行删除操作?", "提示", {
         confirmButtonText: "确定",
@@ -245,37 +200,48 @@ export default {
         type: "warning"
       }).then(() => {
         let ids = [];
-        this.multipleSelection.forEach(row => ids.push(row.id));
+        this.multipleSelection.forEach(row => ids.push(row.id))
         _delete({
           ids
         });
       });
     },
     edit() {
-      let student = this.teacher;
-      student.classId = student.class.id;
-      // 编辑学生信息
-      if (student.id) {
+      let teacher = this.teacher;
+      console.log("返回的数据为：==================",teacher);
+      // 编辑老师信息
+      if (teacher.id) {
         update(this.teacher).then(result => {
-          Message({
-            message: "添加成功",
-            type: "success",
-            duration: 1000
-          });
+          console.log("返回的数据为：",result);
+          this.getList()
         });
       }
-      // 添加学生
+      // 添加老师
       else {
-        create(this.teacher).then(result => {
-          Message({
-            message: "添加成功",
-            type: "success",
-            duration: 1000
-          });
+        createTeacher([this.teacher]).then(result => {
+          console.log("返回的数据为：",result);
         });
+        this.getList()
       }
+      this.editDialog = false
     }
   }
 };
 </script>
+
+<style>
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
+</style>
+
 

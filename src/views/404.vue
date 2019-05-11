@@ -38,12 +38,13 @@
   .app-container {
     width: 80%;
     margin: 120px auto;
+    height: 500px;
   }
 
   .img-style {
     width: auto;
     height: auto;
     max-width: 100%;
-    max-height: 100%;
+    max-height: 500px;
   }
 </style>
