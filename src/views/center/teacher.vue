@@ -35,9 +35,9 @@
                 v-for="item in blacklist.viewStudent"
                 :key="item.id"
                 :label="item.name"
-                :disabled="(blacklist.chooseStudent[activeIndex] &&
-                blacklist.chooseStudent[activeIndex].indexOf(item.index) > -1) ||
-(blacklist.chooseStudent[activeIndex] && blacklist.chooseStudent[activeIndex].length >= blacklist.canChoose)"
+                :disabled="(blacklist.showChooseStudentName[activeIndex] &&
+                blacklist.showChooseStudentName[activeIndex].filter(s => s.id == item.id).length > 0) ||
+(blacklist.showChooseStudentName[activeIndex] && blacklist.showChooseStudentName[activeIndex].length >= blacklist.canChoose)"
                 :value="item.index">
               </el-option>
             </el-select>
@@ -263,8 +263,6 @@
         completeQuestionLis: [],
         blacklist: {
           dialogVisible: false,
-          // 选中的学生
-          chooseStudent: {},
           showChooseStudentName: {},
           // 该问卷有的学生
           student: [],
@@ -394,21 +392,17 @@
           this.blacklist.showChooseStudentName[this.activeIndex] =
             this.blacklist.viewStudent.filter(item => blackListStudentId.indexOf(item.id) > -1);
         });
-        console.log("黑名单学生", this.blacklist.chooseStudent);
         console.log("参与学生", this.blacklist.student)
       },
       //删除选中的黑名单
       deleteSelect(index) {
         this.blacklist.showChooseStudentName[this.activeIndex].splice(index, 1);
         this.blacklist = JSON.parse(JSON.stringify(this.blacklist));
-        this.blacklist.chooseStudent[this.activeIndex].splice(index, 1);
       },
       // 老师配置黑名单学生
       handleConfig(e) {
         this.blacklist.showChooseStudentName[this.activeIndex] =
           (this.blacklist.showChooseStudentName[this.activeIndex] || []).concat(this.blacklist.viewStudent[e]);
-        this.blacklist.chooseStudent[this.activeIndex] =
-          (this.blacklist.chooseStudent[this.activeIndex] || []).concat(e);
       },
       // 操作错误通知
       noticeConfig(title) {
@@ -424,8 +418,7 @@
       },
       // 清除选择
       clearBlackListConfig() {
-        this.blacklist.chooseStudent.length = 0;
-        this.blacklist.viewStudent.length = 0;
+        this.blacklist.viewStudent = [];
         this.blacklist.student.forEach(row => {
           this.blacklist.viewStudent.push(row);
         })
@@ -433,18 +426,15 @@
       // 提交选择
       submitBlackList() {
         this.blacklist.dialogVisible = false;
-        const students = this.blacklist.chooseStudent[this.activeIndex];
+        const students = this.blacklist.showChooseStudentName[this.activeIndex];
         const studentView = this.blacklist.viewStudent;
-        if (students === undefined || students.length === 0 || students.length >= this.canChoose) {
+        if (!students || students.length === 0 || students.length > this.canChoose) {
           this.noticeConfig("提交失败")
         } else {
-          console.log("view", studentView);
-          console.log("获取的学生信息为", studentView[students[0]]);
-          const publishId = studentView[students[0]].currPublishId;
+          const publishId = this.clickedQuestionList[this.activeIndex].id;
           var ids = '';
           students.forEach(row => {
-            console.log("提交row=", studentView[row]);
-            ids += studentView[row].id + ",";
+            ids += row.id + ",";
           });
           addBlackList(publishId, ids).then(row => {
             console.log("提交黑名单得到响应", row);
