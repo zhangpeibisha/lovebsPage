@@ -32,12 +32,7 @@
       <el-button
         class="btn-add"
         @click="teacher = {
-        class:{
-          profession: {
-            facultyVo:{}
-          }
-        }
-      };editDialog = true;dialogTitle='添加'"
+       };editDialog = true;dialogTitle='添加'"
         size="mini"
       >添加</el-button>
     </el-card>
@@ -169,6 +164,14 @@ export default {
             ` and (name like '%${this.listQuery.keyword}%' or jobNumber like '%${this.listQuery.keyword}%' `
         +
             `or phone like '%${this.listQuery.keyword}%'  or email like '%${this.listQuery.keyword}%')`)
+        : "";
+      this.listQuery.jobnumber
+        ? (this.listQuery.quire += ` and jobnumber = ${
+          this.listQuery.jobnumber
+          }`)
+        : "";
+      this.listQuery.name
+        ? (this.listQuery.quire += ` and name = '${this.listQuery.name}'`)
         : "";
       findTeacherList(this.listQuery).then(response => {
         this.listLoading = false;
