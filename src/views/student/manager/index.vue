@@ -115,7 +115,7 @@
             >查看</el-button>
             <el-button
               size="mini"
-              @click="student = scope.row;editDialog = true;dialogTitle='编辑';student.type='edit'"
+              @click="student = scope.row;editDialog = true;dialogTitle='编辑';student.type='edit';getClasses(scope.row.class.profession.id)"
             >编辑</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
@@ -273,15 +273,17 @@ export default {
       this.listQuery.quire = "and 1 = 1";
       this.listQuery.keyword
         ? (this.listQuery.quire +=
-            ` and (name like '%${this.listQuery.keyword}%' or studentId like '%${
+            ` and (name like '%${
               this.listQuery.keyword
-            }%' ` +
-            `or studentId like '%${
+            }%' or studentId like '%${this.listQuery.keyword}%' ` +
+            `or studentId like '%${this.listQuery.keyword}%'  or email like '%${
               this.listQuery.keyword
-            }%'  or email like '%${this.listQuery.keyword}%')`)
+            }%')`)
         : "";
       this.listQuery.studentId
-        ? (this.listQuery.quire += ` and studentId = ${this.listQuery.studentId}`)
+        ? (this.listQuery.quire += ` and studentId = ${
+            this.listQuery.studentId
+          }`)
         : "";
       this.listQuery.name
         ? (this.listQuery.quire += ` and name = '${this.listQuery.name}'`)
@@ -349,7 +351,7 @@ export default {
         type: "warning"
       }).then(() => {
         let ids = [];
-        this.multipleSelection.forEach(row => ids.push(row.id))
+        this.multipleSelection.forEach(row => ids.push(row.id));
         _delete({
           ids
         });
@@ -357,10 +359,15 @@ export default {
     },
     edit() {
       let student = this.student;
-      student.classId = student.class.id;
       // 编辑学生信息
       if (student.id) {
-        update(this.student).then(result => {
+        update({
+          classid: student.class.id,
+          studentid: student.studentId,
+          name: student.name,
+          phone: student.phone,
+          id:student.id
+        }).then(result => {
           Message({
             message: "添加成功",
             type: "success",
@@ -370,7 +377,12 @@ export default {
       }
       // 添加学生
       else {
-        create([this.student]).then(result => {
+        create([{
+          classid: student.class.id,
+          studentid: student.studentId,
+          name: student.name,
+          phone: student.phone
+        }]).then(result => {
           Message({
             message: "添加成功",
             type: "success",
