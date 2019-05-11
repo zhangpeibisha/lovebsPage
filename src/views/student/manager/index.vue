@@ -167,7 +167,6 @@
             clearable
             filterable
             :disabled="student.type == 'see'"
-            @change="getClasses(student.class.profession.id)"
           >
             <el-option
               v-for="item in professionList"
@@ -254,8 +253,14 @@ export default {
   },
   watch: {
     'student.class.profession.facultyVo.id': function(val,val2) {
-      if (!val) {
+      let clear = () => {
+        this.professionList = [{
+          id:undefined
+        }];
         this.student.class.profession.id = undefined;
+      };
+      if (!val) {
+        clear();
         return;
       }
       fetchProfessionList({
@@ -266,16 +271,19 @@ export default {
           this.professionList = professionList;
           this.student.class.profession.id = professionList[0].id;
         }  else {
-          this.professionList = [{
-            id:undefined
-          }];
-          this.student.class.profession.id = undefined;
+          clear();
         }
       })
     },
     'listQuery.facultyId': function(val,val2) {
+      let clear = () => {
+        this.professionList = [{
+          id:undefined
+        }];
+        this.listQuery.professionId = undefined;
+      }
       if (!val) {
-        this.professionList = [];
+        clear();
         return;
       }
       fetchProfessionList({
@@ -286,16 +294,19 @@ export default {
           this.professionList = professionList;
           this.listQuery.professionId = professionList[0].id;
         }  else {
-          this.professionList = [{
-            id:undefined
-          }];
-          this.listQuery.professionId = undefined;
+          clear();
         }
       })
     },
-    'student.class.profession.id': function(val,val2) {
-      if (!val) {
+    'student.class.profession.id': function(val) {
+      let clear = () => {
+        this.classes = [{
+          id: undefined
+        }];
         this.student.class.id = undefined;
+      };
+      if (!val) {
+        clear();
         return;
       }
       fetchClassList({
@@ -305,10 +316,7 @@ export default {
         if (classes && classes.length > 0) {
           this.student.class.id = classes[0].id;
         }  else {
-          this.classes = [{
-            id: undefined
-          }]
-          this.student.class.id = undefined;
+          clear();
         }
       })
     }
