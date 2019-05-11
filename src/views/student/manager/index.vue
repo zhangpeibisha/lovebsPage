@@ -9,7 +9,8 @@
           style="float: right;margin-right: 15px"
           @click="handleResetSearch()"
           size="small"
-        >重置</el-button>
+        >重置
+        </el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
@@ -43,7 +44,6 @@
               placeholder="请选择专业"
               clearable
               filterable
-              @change="getClasses(listQuery.professionId)"
             >
               <el-option
                 v-for="item in professionList"
@@ -75,12 +75,16 @@
         @click="student = {
         class:{
           profession: {
-            facultyVo:{}
-          }
+            facultyVo:{
+            },
+            id:undefined
+          },
+          id:undefined
         }
       };editDialog = true;dialogTitle='添加'"
         size="mini"
-      >添加</el-button>
+      >添加
+      </el-button>
     </el-card>
     <div class="table-container">
       <el-table
@@ -111,11 +115,13 @@
             <el-button
               size="mini"
               @click="student = scope.row;editDialog = true;student.type = 'see';dialogTitle='查看'"
-            >查看</el-button>
+            >查看
+            </el-button>
             <el-button
               size="mini"
               @click="student = scope.row;editDialog = true;dialogTitle='编辑';student.type='edit';getClasses(scope.row.class.profession.id)"
-            >编辑</el-button>
+            >编辑
+            </el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -201,259 +207,287 @@
   </div>
 </template>
 <script>
-import {
-  fetchList,
-  fetchProfessionList,
-  fetchFacultyList,
-  fetchClassList,
-  create,
-  update,
-  _delete
-} from "@/api/student";
+  import {
+    fetchList,
+    fetchProfessionList,
+    fetchFacultyList,
+    fetchClassList,
+    create,
+    update,
+    _delete
+  } from "@/api/student";
 
-const defaultListQuery = {
-  key: null,
-  word: null,
-  blurry: false,
-  page: 1,
-  limit: 5
-};
-export default {
-  name: "studentList",
-  data() {
-    return {
-      editSkuInfo: {
-        dialogVisible: false,
-        keyword: null
-      },
-      operateType: null,
-      listQuery: Object.assign({}, defaultListQuery),
-      list: null,
-      total: null,
-      listLoading: true,
-      selectProductCateValue: null,
-      multipleSelection: [],
-      facultyList: [],
-      professionList: [],
-      classes: [],
-      editDialog: false,
-      student: {
-        class: {
-          profession: {
-            facultyVo: {}
+  const defaultListQuery = {
+    key: null,
+    word: null,
+    blurry: false,
+    page: 1,
+    limit: 5,
+    professionId: undefined
+  };
+  export default {
+    name: "studentList",
+    data() {
+      return {
+        editSkuInfo: {
+          dialogVisible: false,
+          keyword: null
+        },
+        operateType: null,
+        listQuery: Object.assign({}, defaultListQuery),
+        list: null,
+        total: null,
+        listLoading: true,
+        selectProductCateValue: null,
+        multipleSelection: [],
+        facultyList: [],
+        professionList: [],
+        classes: [],
+        editDialog: false,
+        student: {
+          class: {
+            profession: {
+              facultyVo: {}
+            }
           }
+        },
+        dialogTitle: ""
+      };
+    },
+    created() {
+      this.getList();
+      this.getFacultyList();
+    },
+    watch: {
+      'student.class.profession.facultyVo.id': function (val, val2) {
+        let clear = () => {
+          this.professionList = [{
+            id: undefined
+          }];
+          this.student.class.profession.id = undefined;
+        };
+        if (!val) {
+          clear();
+          return;
         }
+        fetchProfessionList({
+          quire: ` and facultyId = ${val}`
+        }).then(res => {
+          let professionList = res.data.data;
+          if (professionList && professionList.length > 0) {
+            this.professionList = professionList;
+            this.student.class.profession.id = professionList[0].id;
+          } else {
+            clear();
+          }
+        })
       },
-      dialogTitle: ""
-    };
-  },
-  created() {
-    this.getList();
-    this.getFacultyList();
-  },
-  watch: {
-    'student.class.profession.facultyVo.id': function(val,val2) {
-      let clear = () => {
-        this.professionList = [{
-          id:undefined
-        }];
-        this.student.class.profession.id = undefined;
-      };
-      if (!val) {
-        clear();
-        return;
-      }
-      fetchProfessionList({
-        quire: ` and facultyId = ${val}`
-      }).then(res => {
-        let professionList = res.data.data;
-        if (professionList && professionList.length > 0) {
-          this.professionList = professionList;
-          this.student.class.profession.id = professionList[0].id;
-        }  else {
+      'listQuery.facultyId': function (val, val2) {
+        let clear = () => {
+          this.professionList = [{
+            id: undefined
+          }];
+          this.listQuery.professionId = undefined;
+        };
+        if (!val) {
           clear();
+          return;
         }
-      })
+        fetchProfessionList({
+          quire: ` and facultyId = ${val}`
+        }).then(res => {
+          let professionList = res.data.data;
+          if (professionList && professionList.length > 0) {
+            this.professionList = professionList;
+            this.listQuery.professionId = professionList[0].id;
+          } else {
+            clear();
+          }
+        })
+      },
+      'listQuery.professionId': function (val, val2) {
+        console.log("查询到的数据为=======||||||=====：", val, val2);
+        let clear = () => {
+          this.classes = [{
+            id: undefined
+          }];
+          this.student.class.id = undefined;
+        };
+        if (!val) {
+          clear();
+          return;
+        }
+        fetchClassList({
+          quire: ` and professionId = ${val}`
+        }).then(res => {
+          let classes = res.data.data;
+          if (classes && classes.length > 0) {
+            this.classes = classes;
+            this.listQuery.classId = classes[0].id;
+          } else {
+            clear();
+          }
+        })
+      },
+      'student.class.profession.id': function (val) {
+        let clear = () => {
+          this.classes = [{
+            id: undefined
+          }];
+          this.student.class.id = undefined;
+        };
+        if (!val) {
+          clear();
+          return;
+        }
+        fetchClassList({
+          quire: ` and professionId = ${val}`
+        }).then(res => {
+          let classes = res.data.data;
+          if (classes && classes.length > 0) {
+            this.student.class.id = classes[0].id;
+            this.classes = classes;
+          } else {
+            clear();
+          }
+        })
+      }
     },
-    'listQuery.facultyId': function(val,val2) {
-      let clear = () => {
-        this.professionList = [{
-          id:undefined
-        }];
-        this.listQuery.professionId = undefined;
-      }
-      if (!val) {
-        clear();
-        return;
-      }
-      fetchProfessionList({
-        quire: ` and facultyId = ${val}`
-      }).then(res => {
-        let professionList = res.data.data;
-        if (professionList && professionList.length > 0) {
-          this.professionList = professionList;
-          this.listQuery.professionId = professionList[0].id;
-        }  else {
-          clear();
-        }
-      })
-    },
-    'student.class.profession.id': function(val) {
-      let clear = () => {
-        this.classes = [{
-          id: undefined
-        }];
-        this.student.class.id = undefined;
-      };
-      if (!val) {
-        clear();
-        return;
-      }
-      fetchClassList({
-        quire: ` and professionId = ${val}`
-      }).then(res => {
-        let classes = res.data.data;
-        if (classes && classes.length > 0) {
-          this.student.class.id = classes[0].id;
-        }  else {
-          clear();
-        }
-      })
-    }
-  },
-  methods: {
-    getList() {
-      this.listLoading = true;
-      this.listQuery.quire = "and 1 = 1";
-      this.listQuery.keyword
-        ? (this.listQuery.quire +=
-            ` and (name like '%${
-              this.listQuery.keyword
+    methods: {
+      getList() {
+        this.listLoading = true;
+        this.listQuery.quire = "and 1 = 1";
+        this.listQuery.keyword
+          ? (this.listQuery.quire +=
+          ` and (name like '%${
+            this.listQuery.keyword
             }%' or studentId like '%${this.listQuery.keyword}%' ` +
-            `or studentId like '%${this.listQuery.keyword}%'  or email like '%${
-              this.listQuery.keyword
+          `or studentId like '%${this.listQuery.keyword}%'  or email like '%${
+            this.listQuery.keyword
             }%')`)
-        : "";
-      this.listQuery.studentId
-        ? (this.listQuery.quire += ` and studentId = ${
+          : "";
+        this.listQuery.studentId
+          ? (this.listQuery.quire += ` and studentId = ${
             this.listQuery.studentId
-          }`)
-        : "";
-      this.listQuery.name
-        ? (this.listQuery.quire += ` and name = '${this.listQuery.name}'`)
-        : "";
-      this.listQuery.facultyId && !this.listQuery.professionId
-        ? (this.listQuery.quire += ` and classId in (select id from class where professionId in (select id from profession where facultyId = ${
+            }`)
+          : "";
+        this.listQuery.name
+          ? (this.listQuery.quire += ` and name = '${this.listQuery.name}'`)
+          : "";
+        this.listQuery.facultyId && !this.listQuery.professionId
+          ? (this.listQuery.quire += ` and classId in (select id from class where professionId in (select id from profession where facultyId = ${
             this.listQuery.facultyId
-          }))`)
-        : "";
-      this.listQuery.professionId && !this.listQuery.classId
-        ? (this.listQuery.quire += ` and classId in (select id from class where professionId = ${
+            }))`)
+          : "";
+        this.listQuery.professionId && !this.listQuery.classId
+          ? (this.listQuery.quire += ` and classId in (select id from class where professionId = ${
             this.listQuery.professionId
-          })`)
-        : "";
-      this.listQuery.classId
-        ? (this.listQuery.quire += ` and classId = ${this.listQuery.classId}`)
-        : "";
-      fetchList(this.listQuery).then(response => {
-        this.listLoading = false;
-        this.list = response.data.data;
-        this.total = 1;
-      });
-    },
-    getFacultyList() {
-      fetchFacultyList({}).then(result => {
-        this.facultyList = result.data.data;
-      });
-    },
-    getClasses(professionId) {
-      fetchClassList({
-        quire: `and professionId = ${professionId ||
+            })`)
+          : "";
+        this.listQuery.classId
+          ? (this.listQuery.quire += ` and classId = ${this.listQuery.classId}`)
+          : "";
+        fetchList(this.listQuery).then(response => {
+          this.listLoading = false;
+          this.list = response.data.data;
+          this.total = 1;
+        });
+      },
+      getFacultyList() {
+        fetchFacultyList({}).then(result => {
+          this.facultyList = result.data.data;
+        });
+      },
+      getClasses(professionId) {
+        fetchClassList({
+          quire: `and professionId = ${professionId ||
           this.listQuery.professionId}`
-      }).then(result => {
-        this.classes = result.data.data;
-      });
-    },
-    handleSizeChange(val) {
-      this.listQuery.page = 1;
-      this.listQuery.limit = val;
-      this.getList();
-    },
-    handleCurrentChange(val) {
-      this.listQuery.page = val;
-      this.getList();
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    handleResetSearch() {
-      this.selectProductCateValue = [];
-      this.listQuery = Object.assign({}, defaultListQuery);
-    },
-    handleDelete(index, row) {
-      this.$confirm("是否要进行删除操作?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        let ids = [];
-        this.multipleSelection.forEach(row => ids.push(row.id));
-        _delete({
-          ids
-        });
-      });
-    },
-    edit() {
-      let student = this.student;
-      // 编辑学生信息
-      if (student.id) {
-        update({
-          classid: student.class.id,
-          studentid: student.studentId,
-          name: student.name,
-          phone: student.phone,
-          id:student.id
         }).then(result => {
-          Message({
-            message: "添加成功",
-            type: "success",
-            duration: 1000
+          this.classes = result.data.data;
+        });
+      },
+      handleSizeChange(val) {
+        this.listQuery.page = 1;
+        this.listQuery.limit = val;
+        this.getList();
+      },
+      handleCurrentChange(val) {
+        this.listQuery.page = val;
+        this.getList();
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      handleResetSearch() {
+        this.selectProductCateValue = [];
+        this.listQuery = Object.assign({}, defaultListQuery);
+      },
+      handleDelete(index, row) {
+        this.$confirm("是否要进行删除操作?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          let ids = [];
+          this.multipleSelection.forEach(row => ids.push(row.id));
+          _delete({
+            ids
           });
         });
-      }
-      // 添加学生
-      else {
-        create([{
-          classid: student.class.id,
-          studentid: student.studentId,
-          name: student.name,
-          phone: student.phone
-        }]).then(result => {
-          Message({
-            message: "添加成功",
-            type: "success",
-            duration: 1000
+      },
+      edit() {
+        let student = this.student;
+        // 编辑学生信息
+        if (student.id) {
+          update({
+            classid: student.class.id,
+            studentid: student.studentId,
+            name: student.name,
+            phone: student.phone,
+            id: student.id
+          }).then(result => {
+            Message({
+              message: "添加成功",
+              type: "success",
+              duration: 1000
+            });
           });
-        });
+        }
+        // 添加学生
+        else {
+          create([{
+            classid: student.class.id,
+            studentid: student.studentId,
+            name: student.name,
+            phone: student.phone
+          }]).then(result => {
+            Message({
+              message: "添加成功",
+              type: "success",
+              duration: 1000
+            });
+          });
+        }
       }
     }
-  }
-};
+  };
 </script>
 
 <style>
-.demo-table-expand {
-  font-size: 0;
-}
-.demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
-}
+  .demo-table-expand {
+    font-size: 0;
+  }
+
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
 </style>
 
 
