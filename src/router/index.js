@@ -71,6 +71,22 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: "/teacher",
+    name: "teacher",
+    component: Layout,
+    alwaysShow: true,
+    meta: {title: "老师管理", icon: 'example'},
+    hidden: false,
+    children: [
+      {
+      path: 'manger',
+      name: 'manger',
+      component: () => import('@/views/student/teacher/index'),
+      meta: {title: '老师列表', icon: 'example.svg'},
+      hidden: false
+    }]
+  },
+  {
     path: "/rbac",
     name: "rbac",
     component: Layout,
