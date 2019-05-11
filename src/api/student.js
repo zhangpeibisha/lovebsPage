@@ -39,7 +39,7 @@ export function create(params) {
 }
 export function update(params) {
   return request({
-    url:'/student/update',
+    url:'/student/info',
     method:'put',
     params:params
   })
