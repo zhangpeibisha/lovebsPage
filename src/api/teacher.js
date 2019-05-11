@@ -38,4 +38,3 @@ export function _delete(params) {
     params:params
   })
 }
-

@@ -13,6 +13,15 @@ export function fetchFacultyList(params) {
     params:params
   })
 }
+export function findById(id) {
+  return request({
+    url:'/profession/findById',
+    method:'get',
+    params:{
+      id
+    }
+  })
+}
 export function fetchTeacherList(params) {
   return request({
     url:'/teacher/quire/list',
@@ -22,7 +31,7 @@ export function fetchTeacherList(params) {
 }
 export function create(params) {
   return request({
-    url:'/profession/create',
+    url:'/profession/add',
     method:'post',
     params:params
   })
@@ -36,7 +45,7 @@ export function update(params) {
 }
 export function _delete(params) {
   return request({
-    url:'/profession/update',
+    url:'/profession/delete',
     method:'delete',
     params:params
   })

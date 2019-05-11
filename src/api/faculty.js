@@ -24,6 +24,16 @@ export function update(params) {
   })
 }
 
+export function findById(id) {
+  return request({
+    url:'/faculty/findById',
+    method:'get',
+    params:{
+      id
+    }
+  })
+}
+
 export function _delete(ids) {
   console.log("获取到的参数为:", ids);
   var str = '';

@@ -67,6 +67,14 @@ export const constantRouterMap = [
         name: 'profession',
         component: () => import('@/views/student/profession/index'),
         meta: {title: '专业管理', icon: 'product-list'}
+      },
+      
+
+      {
+        path: 'class',
+        name: 'class',
+        component: () => import('@/views/student/class/index'),
+        meta: {title: '班级管理', icon: 'product-list'}
       }
     ]
   },
