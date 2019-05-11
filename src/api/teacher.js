@@ -49,6 +49,12 @@ export function _delete(params) {
   })
 }
 
-export function findById() {
-
+export function findById(id) {
+  return request({
+    url:'/teacher/findById',
+    method:'get',
+    params:{
+      id
+    }
+  })
 }

@@ -76,10 +76,10 @@
           <template slot-scope="scope">{{scope.row.classid}}</template>
         </el-table-column>
         <el-table-column label="指导老师" align="center">
-          <template slot-scope="scope">{{scope.row.teacher.name}}</template>
+          <template slot-scope="scope">{{scope.row.teacher ? scope.row.teacher.name : "-"}}</template>
         </el-table-column>
         <el-table-column label="专业" align="center">
-          <template slot-scope="scope">{{scope.row.profession.name}}</template>
+          <template slot-scope="scope">{{scope.row.profession ? scope.row.profession.name : "-"}}</template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -332,6 +332,7 @@ export default {
     },
     edit() {
       let classModel = this.classModel;
+      // 修改班级信息
       if (classModel.id) {
         update(classModel).then(result => {
           this.editDialog = false;
@@ -343,8 +344,9 @@ export default {
           });
         });
       }
-      // 添加学生
+      // 添加班级
       else {
+        console.log("需要添加的班级信息为：",this.classModel);
         create(this.classModel).then(result => {
           this.editDialog = false;
           this.getList();
