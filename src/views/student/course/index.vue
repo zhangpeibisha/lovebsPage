@@ -16,11 +16,11 @@
           <el-form-item label="输入搜索：">
             <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="关键字"></el-input>
           </el-form-item>
-          <el-form-item label="工号：">
-            <el-input style="width: 203px" v-model="listQuery.jobnumber" placeholder="工号"></el-input>
+          <el-form-item label="课程编码：">
+            <el-input style="width: 203px" v-model="listQuery.coding" placeholder="课程编码"></el-input>
           </el-form-item>
-          <el-form-item label="姓名：">
-            <el-input style="width: 203px" v-model="listQuery.name" placeholder="姓名"></el-input>
+          <el-form-item label="课程名字：">
+            <el-input style="width: 203px" v-model="listQuery.name" placeholder="课程名字"></el-input>
           </el-form-item>
         </el-form>
       </div>
