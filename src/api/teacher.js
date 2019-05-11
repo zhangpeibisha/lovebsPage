@@ -58,3 +58,14 @@ export function findById(id) {
     }
   })
 }
+
+export function addCourse(courseTeacher) {
+  return request({
+    url:'/teacherCourse/add',
+    method:'post',
+    params:{
+      teacherid:courseTeacher.teacherId,
+      courseid:courseTeacher.course.id
+    }
+  })
+}

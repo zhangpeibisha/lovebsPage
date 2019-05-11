@@ -55,7 +55,7 @@
         <el-table-column label="课程描述" align="center">
           <template slot-scope="scope">{{scope.row.description}}</template>
         </el-table-column>
-        <el-table-column label="操作">
+        <el-table-column label="操作" style="width: 600px">
           <template slot-scope="scope">
             <el-button
               size="mini"
@@ -65,6 +65,7 @@
               size="mini"
               @click="course = scope.row;editDialog = true;dialogTitle='编辑';course.type='edit'"
             >编辑</el-button>
+            <el-button size="mini" type="success" @click="addTeacher(scope.$index, scope.row)">添加老师</el-button>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
           </template>
         </el-table-column>
@@ -99,6 +100,35 @@
         <el-button type="primary" @click="edit()">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog title="添加老师" :visible.sync="addTeacherView">
+      <el-form :model="courseTeacher" inline>
+        <el-form-item label="课程名字" :label-width="formLabelWidth" >
+          <el-input v-model="courseTeacher.course.name" autocomplete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="老师">
+          <el-select
+            v-model="teacherId"
+            placeholder="请选择老师"
+            clearable
+            filterable
+            @change="chooseTeacher"
+          >
+            <el-option
+              v-for="item in teacherList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addTeacherView = false">取 消</el-button>
+        <el-button type="primary" @click="submitAddTeacher">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -108,6 +138,11 @@ import {
   _delete,
   createCrouse
 } from "@/api/course";
+
+import {
+  findTeacherList,
+  addCourse
+} from "@/api/teacher"
 
 const defaultListQuery = {
   key: null,
@@ -138,11 +173,21 @@ export default {
       course: {
 
       },
+      courseTeacher:{
+        course: {
+           name:''
+        }
+      },
+      teacherList:[],
+      teacherId:'',
+      addTeacherView:false,
+      formLabelWidth: '120px',
       dialogTitle: ""
     };
   },
   created() {
     this.getList();
+    this.getTeacherList();
   },
   methods: {
     getList() {
@@ -174,6 +219,12 @@ export default {
       this.listQuery.page = 1;
       this.listQuery.limit = val;
       this.getList();
+    },
+    getTeacherList(){
+      findTeacherList().then(result=>{
+        console.log("获取老师信息为",result);
+         this.teacherList = result.data.data;
+      })
     },
     handleCurrentChange(val) {
       this.listQuery.page = val;
@@ -223,6 +274,21 @@ export default {
         });
       }
       this.editDialog = false
+    },
+    addTeacher(index, row){
+      console.log("addTeacher获取的数据为：",index,row,this.teacherId);
+      this.courseTeacher.course = row;
+
+      this.addTeacherView = true;
+    },
+    chooseTeacher(){
+      this.courseTeacher.teacherId = this.teacherId;
+    },
+    submitAddTeacher(){
+      addCourse(this.courseTeacher).then(result=>{
+        this.addTeacherView = false;
+        console.log("获取结果",result)
+      })
     }
   }
 };
