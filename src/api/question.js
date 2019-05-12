@@ -117,3 +117,11 @@ export function commitE(params, data) {
     }
   })
 }
+
+export function fetchPublish(params) {
+  return request({
+    url: '/publishquestionnaire/answers',
+    method: 'get',
+    params: params
+  })
+}

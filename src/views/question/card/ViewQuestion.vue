@@ -51,44 +51,6 @@ export default {
     }
   },
   methods: {
-    // 问题题目
-    changeQuestionTitle (qIndex, e) {
-      this.$dispatch('change-question-title', qIndex, e.target.textContent)
-    },
-    // 问题位置
-    questionPositionFront (oldIndex) {
-      this.$dispatch('question-pos-change', oldIndex, oldIndex - 1)
-    },
-    questionPositionBack (oldIndex) {
-      this.$dispatch('question-pos-change', oldIndex, oldIndex + 1)
-    },
-    deleteQuestion (qIndex) {
-      this.$dispatch('delete-question', qIndex)
-    },
-    // 选项值
-    changeOptionValue (qIndex, oIndex, e) {
-      this.$dispatch('change-option-value', qIndex, oIndex, e.target.textContent)
-    },
-    // 添加选项
-    addOption (qIndex) {
-      this.$dispatch('add-option', qIndex)
-    },
-    // 删除选项
-    deleteOption (qIndex, oIndex) {
-      this.$dispatch('delete-option', qIndex, oIndex)
-    },
-    copyQuestion (qIndex) {
-      this.$dispatch('copy-question', qIndex)
-    },
-    changeTextRequired (qIndex, e) {
-      this.$dispatch('change-text-required', qIndex, e.target.checked)
-    },
-    optionPositionFront (qIndex, oIndex) {
-      this.$dispatch('option-pos-change', qIndex, oIndex, oIndex - 1)
-    },
-    optionPositionBack (qIndex, oIndex) {
-      this.$dispatch('option-pos-change', qIndex, oIndex, oIndex + 1)
-    }
   }
 }
 </script>

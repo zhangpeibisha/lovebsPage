@@ -59,14 +59,13 @@
   import Calendar from "../common/Calendar";
   import Alert from "../common/Alert";
   import Modal from "../common/Modal";
-  import {findEvaluationById} from "@/api/question"
+  import {fetchPublish} from "@/api/question"
 
   export default {
     data() {
       return {
         title: '',
         questions: [],
-        evaluationId: -1,
         author: {
           id: -1,
           jobNumber: '',
@@ -80,12 +79,15 @@
         isLoading: false,
         dialogViewAuthorInfo: false,
         formLabelWidth: '120px',
-        qAnswers:[]
+        qAnswers:[],
+        evaluationId:0,
+        publishId:0
       }
     },
     created: function () {
       this.getParams();
-      this.findEvaluationById();
+      // this.findEvaluationById();
+      this.getPublish();
     },
     methods: {
       transposition(arr, oldIndex, newIndex) {
@@ -104,22 +106,35 @@
          })
       },
       getAnswer(q) {
-        return (this.qAnswers.filter(a => a.id == q.id) || [{}])[0];
+        return (this.qAnswers.filter(a => a.id === q.id) || [{}])[0];
       },
-      findEvaluationById() {
-        findEvaluationById(this.evaluationId).then(result => {
-          console.log("查询问卷信息", result)
-          if (result.code === 200) {
-            var data = result.data;
-            this.questions = data.content.questions;
-            this.title = data.title;
-            this.author = data.author;
-            console.log("获取到作者的信息为", this.author)
-          }
-        })
-      }, getParams: function () {
+      // findEvaluation() {
+      //   if (!this.evaluationId) return;
+      //   findEvaluationById(this.evaluationId).then(result => {
+      //     console.log("查询问卷信息", result)
+      //     if (result.code === 200) {
+      //       var data = result.data;
+      //       this.questions = data.content.questions;
+      //       this.title = data.title;
+      //       this.author = data.author;
+      //       console.log("获取到作者的信息为", this.author)
+      //     }
+      //   })
+      // },
+      getParams: function () {
         // 取到路由带过来的参数
         this.evaluationId = this.$route.query.evaluationId;
+        this.publishId = this.$route.query.publishId;
+      },
+      getPublish() {
+        console.log("----",this.publishId)
+        if (!this.publishId) return;
+        fetchPublish({
+          publishId: this.publishId
+        }).then(r => {
+          this.questions = r.data.evaluationquestionnaire.content;
+          this.qAnswers = r.data.answers.questionReplies;
+        })
       }
     },
     components: {
