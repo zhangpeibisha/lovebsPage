@@ -38,7 +38,14 @@ export const constantRouterMap = [
         path: '/teacherCenter',
         name: 'teacherCenter',
         component: () => import('@/views/center/teacher'),
-        meta: {title: '个人', icon: 'home'}
+        meta: {title: '个人中心', icon: 'home'}
+        // hidden: true
+      },
+      {
+        path: '/studentCenter',
+        name: 'studentCenter',
+        component: () => import('@/views/center/student'),
+        meta: {title: '个人中心', icon: 'home'}
         // hidden: true
       }
     ]

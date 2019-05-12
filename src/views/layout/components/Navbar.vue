@@ -8,7 +8,7 @@
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/center" v-if="student==='STUDENT'">
+        <router-link class="inlineBlock" to="/studentCenter" v-if="student==='STUDENT'">
           <el-dropdown-item>
             个人中心
           </el-dropdown-item>
