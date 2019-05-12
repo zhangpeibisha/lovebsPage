@@ -45,7 +45,7 @@
 
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
+              <el-button size="mini" @click="handleView(scope.$index, scope.row)">详情</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -161,10 +161,14 @@
       findUserInfo() {
         findUserInfo().then((res) => {
           var userInfo = res.data.userInfo;
+          this.userInfo = userInfo;
           var userTask = userInfo.task;
           var userQuestionTask = userTask.qnaireTask;
           if (userTask && userQuestionTask) {
+            console.log("数据进来", userTask, userQuestionTask);
             this.configUserTask(userQuestionTask);
+          } else {
+            console.log("数据没有进来", userTask, userQuestionTask);
           }
         })
       },
@@ -173,7 +177,6 @@
         var userQuestionCheckTask = userQuestionTask.checkedDetail;
         var userQuestionCompleteTask = userQuestionTask.completeDetail;
 
-        this.userInfo = userInfo;
         this.findQuestionTaskIds(userQuestionPendingTask, this.pendingIds, this.pendingList);
         this.findQuestionTaskIds(userQuestionCheckTask, this.checkedIds, this.checkedList);
         this.findQuestionTaskIds(userQuestionCompleteTask, this.completeIds, this.completeList);
@@ -185,11 +188,28 @@
           });
           console.log("====获取到的id为:", idsArr);
           findPublishInfoByids(idsArr).then(res => {
-            detailArr = res;
-          })
+            var resData = res.data;
+            if (resData) {
+              resData.forEach(row => {
+                detailArr.push(row);
+              });
+            }
+          });
         }
       },
-
+      // 学生查看问卷信息
+      handleView(index, row) {
+        console.log("查看问卷点击了", index, row);
+        // teacherClieckPublishQuestion(row.publishId).then(result => {
+        //
+        // });
+        this.$router.push({
+          path: "/questionnaire/edit",
+          query: {
+            publishEvaluationId: row.id
+          }
+        })
+      },
       handleClick(tab, event) {
         console.log(tab, event);
       },

@@ -1,28 +1,19 @@
 <template lang="html">
   <div class="layout">
 
-
-    <div style="width: 100%;float: right">
-      <!--查看作者信息-->
-      <el-button type="success"
-                 @click="dialogViewAuthorInfo = true"
-                 style="position: relative;right: 20px;">查看作者信息</el-button>
-    </div>
-
-
     <el-dialog title="作者信息" :visible.sync="dialogViewAuthorInfo">
       <el-form :model="author">
         <el-form-item label="名字" :label-width="formLabelWidth">
-          <el-input v-model="author.name" autocomplete="off"></el-input>
+          <el-input v-model="author.name" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="工号" :label-width="formLabelWidth">
-          <el-input v-model="author.jobNumber" autocomplete="off"></el-input>
+          <el-input v-model="author.jobNumber" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="手机" :label-width="formLabelWidth">
-          <el-input v-model="author.correspondence.phone" autocomplete="off"></el-input>
+          <el-input v-model="author.correspondence.phone" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="邮件" :label-width="formLabelWidth">
-          <el-input v-model="author.correspondence.email" autocomplete="off"></el-input>
+          <el-input v-model="author.correspondence.email" autocomplete="off" disabled></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -55,6 +46,7 @@
           </div>
           <div class="operation">
             <span class="btn" :class="{ disabled: isLoading }" @click="editEvaluation">编辑问卷</span>
+            <span class="btn" :class="{ disabled: isLoading }" @click="dialogViewAuthorInfo = true">查看作者信息</span>
           </div>
         </footer>
       </div>
@@ -104,7 +96,12 @@
         this.saveData();
       },
        editEvaluation() {
-
+         this.$router.push({
+           path: "/questionnaire/edit",
+           query: {
+             evaluationId: this.evaluationId
+           }
+         })
       },
       getAnswer(q) {
         return (this.qAnswers.filter(a => a.id == q.id) || [{}])[0];

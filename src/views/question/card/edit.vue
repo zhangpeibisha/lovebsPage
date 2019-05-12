@@ -95,7 +95,8 @@ export default {
     },
     getParams: function() {
       // 取到路由带过来的参数,这个是发布问卷的id
-      this.publishId = this.$route.query.publishId;
+      this.publishId = this.$route.query.publishEvaluationId;
+      console.log("获取到的发布id为==========", this.publishId)
     },
     findEvaluationById(evaluationId) {
       findEvaluationById(evaluationId).then(result => {
@@ -109,6 +110,7 @@ export default {
       });
     },
     findPublishQuestionById(){
+      console.log("获取到的发布id为",this.publishId);
       findPublishQuestionById(this.publishId).then(result=>{
         const data = result.data;
         this.findEvaluationById(data.questionnaireid);
