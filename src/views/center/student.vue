@@ -3,70 +3,21 @@
     <p class="mine">我的个人主页</p>
     <el-container>
       <el-aside width="200px">
-        <img :src="list.userInfo.imageUrl"/>
+        <img :src="userInfo.imageUrl"/>
       </el-aside>
       <el-main>
-        <p>姓名：{{list.userInfo.name}}</p>
-        <p>学号：{{list.userInfo.studentId}}</p>
-        <p>电话：{{list.userInfo.phone}}</p>
-        <p>邮箱：{{list.userInfo.email}}</p>
+        <p>姓名：{{userInfo.name}}</p>
+        <p>学号：{{userInfo.studentId}}</p>
+        <p>电话：{{userInfo.phone}}</p>
+        <p>邮箱：{{userInfo.email}}</p>
       </el-main>
     </el-container>
 
     <el-tabs v-model="activeName" @tab-click="handleClick">
-      <el-tab-pane :label="'已完成问卷'+'('+task.qnaireTask.complete+')'" name="first">
 
-        <el-table :data="datalist" style="width: 100%">
+      <el-tab-pane :label="'待查看问卷'+'('+pendingIds.length+')'" name="first">
 
-          <el-table-column label="创建时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{scope.row.startRespondTime}}</span>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="更新时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{scope.row.releaseTime}}</span>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="描述" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{scope.row.description}}</span>
-            </template>
-          </el-table-column>
-
-          <el-table-column label="老师名" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{scope.row.questionnaire.author.name}}</span>
-            </template>
-          </el-table-column>
-
-          <!--<el-table-column label="姓名" width="180">
-                        <template slot-scope="scope">
-                            <el-popover trigger="hover" placement="top">
-                                <p>姓名: {{ scope.row.courseid }}</p>
-                                <p>住址: {{ scope.row.courseid }}</p>
-                                <div slot="reference" class="name-wrapper">
-                                    <el-tag size="medium">{{ scope.row.courseid }}</el-tag>
-                                </div>
-                            </el-popover>
-                        </template>
-                    </el-table-column>-->
-
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-tab-pane>
-
-
-      <el-tab-pane :label="'未完成问卷'+'('+task.qnaireTask.pending+')'" name="second">
-
-        <el-table :data="datalist" style="width: 100%">
+        <el-table :data="pendingList" style="width: 100%">
 
           <el-table-column label="创建时间" width="180">
             <template slot-scope="scope">
@@ -92,102 +43,97 @@
             </template>
           </el-table-column>
 
-          <!--<el-table-column label="姓名" width="180">
-                        <template slot-scope="scope">
-                            <el-popover trigger="hover" placement="top">
-                                <p>姓名: {{ scope.row.courseid }}</p>
-                                <p>住址: {{ scope.row.courseid }}</p>
-                                <div slot="reference" class="name-wrapper">
-                                    <el-tag size="medium">{{ scope.row.courseid }}</el-tag>
-                                </div>
-                            </el-popover>
-                        </template>
-                    </el-table-column>-->
-
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
             </template>
           </el-table-column>
         </el-table>
       </el-tab-pane>
 
-      <el-tab-pane :label="'待查看问卷'+'('+task.qnaireTask.checked+')'" name="third">
-        <el-table :data="datalist" style="width: 100%">
+      <!--<el-tab-pane :label="'未完成问卷'+'('+checkedIds.length+')'" name="second">-->
 
-          <el-table-column label="创建时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{scope.row.startRespondTime}}</span>
-            </template>
-          </el-table-column>
+      <!--<el-table :data="datalist" style="width: 100%">-->
 
-          <el-table-column label="更新时间" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{scope.row.endRespondTime}}</span>
-            </template>
-          </el-table-column>
+      <!--<el-table-column label="创建时间" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{scope.row.startRespondTime}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <el-table-column label="描述" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{scope.row.description}}</span>
-            </template>
-          </el-table-column>
+      <!--<el-table-column label="更新时间" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{scope.row.endRespondTime}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <el-table-column label="老师名" width="180">
-            <template slot-scope="scope">
-              <span style="margin-left: 10px">{{scope.row.questionnaire.author.name}}</span>
-            </template>
-          </el-table-column>
+      <!--<el-table-column label="描述" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{scope.row.description}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <!--<el-table-column label="姓名" width="180">
-                        <template slot-scope="scope">
-                            <el-popover trigger="hover" placement="top">
-                                <p>姓名: {{ scope.row.courseid }}</p>
-                                <p>住址: {{ scope.row.courseid }}</p>
-                                <div slot="reference" class="name-wrapper">
-                                    <el-tag size="medium">{{ scope.row.courseid }}</el-tag>
-                                </div>
-                            </el-popover>
-                        </template>
-                    </el-table-column>-->
+      <!--<el-table-column label="老师名" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{scope.row.questionnaire.author.name}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
 
-          <el-table-column label="操作">
-            <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+
+      <!--<el-table-column label="操作">-->
+      <!--<template slot-scope="scope">-->
+      <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>-->
+      <!--<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
+      <!--</el-table>-->
+      <!--</el-tab-pane>-->
+
+      <!--<el-tab-pane :label="'已完成问卷'+'('+completeIds.length+')'" name="third">-->
+
+      <!--<el-table :data="datalist" style="width: 100%">-->
+
+      <!--<el-table-column label="创建时间" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{scope.row.startRespondTime}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--<el-table-column label="更新时间" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{scope.row.releaseTime}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--<el-table-column label="描述" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{scope.row.description}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--<el-table-column label="老师名" width="180">-->
+      <!--<template slot-scope="scope">-->
+      <!--<span style="margin-left: 10px">{{scope.row.questionnaire.author.name}}</span>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
+
+      <!--<el-table-column label="操作">-->
+      <!--<template slot-scope="scope">-->
+      <!--<el-button size="mini" @click="handleEdit(scope.$index, scope.row)">详情</el-button>-->
+      <!--<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
+      <!--</template>-->
+      <!--</el-table-column>-->
+      <!--</el-table>-->
+      <!--</el-tab-pane>-->
+
+
+      <el-tab-pane label="选课">
+        <el-row>
+          <el-button type="success" plain>选课</el-button>
+        </el-row>
       </el-tab-pane>
 
-      <el-tab-pane label="编辑信息" name="fouth">
-        <el-form ref="form" :model="form" label-width="80px">
-          <el-form-item label="姓名">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>
-          <el-form-item label="电话">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱">
-            <el-input v-model="form.name"></el-input>
-          </el-form-item>
-          <!--<el-form-item label="活动时间">
-                        <el-col :span="11">
-                            <el-date-picker type="date" placeholder="选择日期" v-model="form.date1" style="width: 100%;"></el-date-picker>
-                        </el-col>
-                        <el-col class="line" :span="2">-</el-col>
-                        <el-col :span="11">
-                            <el-time-picker placeholder="选择时间" v-model="form.date2" style="width: 100%;"></el-time-picker>
-                        </el-col>
-                    </el-form-item>-->
 
-          <el-form-item>
-            <el-button type="primary" @click="onSubmit">确定</el-button>
-            <el-button>取消</el-button>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -198,76 +144,50 @@
   export default {
     data() {
       return {
-        datalist: "",
-        id: "",
-        list: [],
-        task: [],
-        tasks: [],
-        activeName: 'second',
-//				tableData: [{
-//					title: '问卷名称',
-//					date: '2016-05-02',
-//					name: '王小虎',
-//					address: '上海市普陀区金沙江路 1518 弄'
-//				}, {
-//					title: '问卷名称',
-//					date: '2016-05-04',
-//					name: '王大虎',
-//					address: '上海市普陀区金沙江路 1517 弄'
-//				}, {
-//					title: '问卷名称',
-//					date: '2016-05-01',
-//					name: '王小虎',
-//					address: '上海市普陀区金沙江路 1519 弄'
-//				}, {
-//					title: '问卷名称',
-//					date: '2016-05-03',
-//					name: '王小虎',
-//					address: '上海市普陀区金沙江路 1516 弄'
-//				}],
-        form: {
-          name: '',
-          region: '',
-          date1: '',
-          date2: '',
-          delivery: false,
-          type: [],
-          resource: '',
-          desc: ''
-        }
+        userInfo: {},
+        pendingIds: [],
+        checkedIds: [],
+        completeIds: [],
+        pendingList: [],
+        checkedList: [],
+        completeList: [],
+        activeName: 'first',
       };
     },
-
-
     created() {
-      this.getList()
+      this.findUserInfo()
     },
     methods: {
-      getList() {
+      findUserInfo() {
         findUserInfo().then((res) => {
-          this.list = res.data
-          console.log(this.list)
-          this.task = res.data.userInfo.task
-          this.tasks = this.task.qnaireTask.pendingDetail
-//					console.log(this.tasks)
-          for (var i = 1; i < this.tasks.length; i++) {
-            var temp = this.tasks[i].id;
-            this.id += temp + ",";
+          var userInfo = res.data.userInfo;
+          var userTask = userInfo.task;
+          var userQuestionTask = userTask.qnaireTask;
+          if (userTask && userQuestionTask) {
+            this.configUserTask(userQuestionTask);
           }
-          console.log(this.id)
-          this.getPublishInfo()
         })
       },
-      getPublishInfo() {
-        findPublishInfoByids(this.id).then((res) => {
-          console.log(res)
-          this.datalist = res.data
-//					console.log(this.datalist)
-          for (var i = 0; i < this.datalist.length; i++) {
-            this.datalist[i].endRespondTime = timestampToTime(this.datalist[i].endRespondTime)
-            this.datalist[i].startRespondTime = timestampToTime(this.datalist[i].startRespondTime)
-          }
-        })
+      configUserTask(userQuestionTask) {
+        var userQuestionPendingTask = userQuestionTask.pendingDetail;
+        var userQuestionCheckTask = userQuestionTask.checkedDetail;
+        var userQuestionCompleteTask = userQuestionTask.completeDetail;
+
+        this.userInfo = userInfo;
+        this.findQuestionTaskIds(userQuestionPendingTask, this.pendingIds, this.pendingList);
+        this.findQuestionTaskIds(userQuestionCheckTask, this.checkedIds, this.checkedList);
+        this.findQuestionTaskIds(userQuestionCompleteTask, this.completeIds, this.completeList);
+      },
+      findQuestionTaskIds(task, idsArr, detailArr) {
+        if (task) {
+          task.forEach(row => {
+            idsArr.push(row.id);
+          });
+          console.log("====获取到的id为:", idsArr);
+          findPublishInfoByids(idsArr).then(res => {
+            detailArr = res;
+          })
+        }
       },
 
       handleClick(tab, event) {
@@ -290,6 +210,8 @@
   .personleCenter {
     width: 1200px;
     margin: 0 auto;
+    overflow-y: scroll;
+    height: 500px;
   }
 
   .el-container {

@@ -8,8 +8,10 @@
         <el-button
           style="float: right;margin-right: 15px"
           @click="handleResetSearch()"
+          @selection-change="handleSelectionChange"
           size="small"
-        >重置</el-button>
+        >重置
+        </el-button>
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
@@ -28,13 +30,20 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>课程数据</span>
-      <el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
       <el-button
+        v-if="userType === 'TEACHER'"
+        class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
+      <el-button
+        v-if="userType === 'TEACHER'"
         class="btn-add"
         @click="course = {
        };editDialog = true;dialogTitle='添加'"
         size="mini"
-      >添加</el-button>
+      >添加
+      </el-button>
+      <el-button
+        v-if="userType === 'STUDENT'"
+        class="btn-add" type="danger" @click="chooseCourse()" size="mini">选课</el-button>
     </el-card>
     <div class="table-container">
       <el-table
@@ -60,13 +69,25 @@
             <el-button
               size="mini"
               @click="course = scope.row;editDialog = true;course.type = 'see';dialogTitle='查看'"
-            >查看</el-button>
+            >查看
+            </el-button>
             <el-button
+              v-if="userType === 'TEACHER'"
               size="mini"
-              @click="course = scope.row;editDialog = true;dialogTitle='编辑';course.type='edit'"
-            >编辑</el-button>
-            <el-button size="mini" type="success" @click="addTeacher(scope.$index, scope.row)">添加老师</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+              @click="course = scope.row;editDialog = true;dialogTitle='编辑';course.type='edit'">编辑
+            </el-button>
+            <el-button
+              v-if="userType === 'TEACHER'"
+              size="mini" type="success" @click="addTeacher(scope.$index, scope.row)">添加老师
+            </el-button>
+            <el-button
+              v-if="userType === 'TEACHER'"
+              size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
+            </el-button>
+            <el-button
+              v-if="userType === 'STUDENT'"
+              size="mini" type="danger" @click="chooseCourse(scope.$index, scope.row)">选课
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -103,7 +124,7 @@
 
     <el-dialog title="添加老师" :visible.sync="addTeacherView">
       <el-form :model="courseTeacher" inline>
-        <el-form-item label="课程名字" :label-width="formLabelWidth" >
+        <el-form-item label="课程名字" :label-width="formLabelWidth">
           <el-input v-model="courseTeacher.course.name" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="老师">
@@ -132,181 +153,203 @@
   </div>
 </template>
 <script>
-import {
-  findCourseList,
-  update,
-  _delete,
-  createCrouse
-} from "@/api/course";
+  import {
+    findCourseList,
+    update,
+    _delete,
+    createCrouse
+  } from "@/api/course";
 
-import {
-  findTeacherList,
-  addCourse
-} from "@/api/teacher"
+  import {
+    findTeacherList,
+    addCourse
+  } from "@/api/teacher"
 
-const defaultListQuery = {
-  key: null,
-  word: null,
-  blurry: false,
-  page: 1,
-  limit: 5
-};
-export default {
-  name: "studentList",
-  data() {
-    return {
-      editSkuInfo: {
-        dialogVisible: false,
-        keyword: null
+  import {findUserInfo} from '@/api/center';
+
+  import {chooseCourse} from '@/api/student';
+
+  const defaultListQuery = {
+    key: null,
+    word: null,
+    blurry: false,
+    page: 1,
+    limit: 5
+  };
+
+  export default {
+    name: "studentList",
+    data() {
+      return {
+        editSkuInfo: {
+          dialogVisible: false,
+          keyword: null
+        },
+        operateType: null,
+        listQuery: Object.assign({}, defaultListQuery),
+        list: null,
+        total: null,
+        listLoading: true,
+        selectProductCateValue: null,
+        multipleSelection: [],
+        facultyList: [],
+        professionList: [],
+        classes: [],
+        editDialog: false,
+        course: {},
+        courseTeacher: {
+          course: {
+            name: ''
+          }
+        },
+        teacherList: [],
+        teacherId: '',
+        addTeacherView: false,
+        formLabelWidth: '120px',
+        dialogTitle: "",
+        userType: ''
+      };
+    },
+    created() {
+      this.getList();
+      this.getTeacherList();
+      this.findUserType();
+    },
+    methods: {
+      findUserType() {
+        findUserInfo().then((res) => {
+          this.userType = res.data.userType;
+        })
       },
-      operateType: null,
-      listQuery: Object.assign({}, defaultListQuery),
-      list: null,
-      total: null,
-      listLoading: true,
-      selectProductCateValue: null,
-      multipleSelection: [],
-      facultyList: [],
-      professionList: [],
-      classes: [],
-      editDialog: false,
-      course: {
-
+      getList() {
+        this.listLoading = true;
+        this.listQuery.quire = "and 1 = 1";
+        this.listQuery.keyword
+          ? (this.listQuery.quire +=
+          ` and (name like '%${this.listQuery.keyword}%' or coding like '%${this.listQuery.keyword}%' `
+          +
+          `or description like '%${this.listQuery.keyword}%')`)
+          : "";
+        this.listQuery.coding
+          ? (this.listQuery.quire += ` and coding = ${
+            this.listQuery.coding
+            }`)
+          : "";
+        this.listQuery.name
+          ? (this.listQuery.quire += ` and name = '${this.listQuery.name}'`)
+          : "";
+        console.log("5656ddddd获取到的数据为：==========");
+        findCourseList(this.listQuery).then(response => {
+          this.listLoading = false;
+          this.list = response.data.data;
+          this.total = 1;
+          console.log("565656asdsa获取到的数据为：", list)
+        });
       },
-      courseTeacher:{
-        course: {
-           name:''
+      handleSizeChange(val) {
+        this.listQuery.page = 1;
+        this.listQuery.limit = val;
+        this.getList();
+      },
+      getTeacherList() {
+        findTeacherList().then(result => {
+          console.log("获取老师信息为", result);
+          this.teacherList = result.data.data;
+        })
+      },
+      handleCurrentChange(val) {
+        this.listQuery.page = val;
+        this.getList();
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val;
+      },
+      handleResetSearch() {
+        this.selectProductCateValue = [];
+        this.listQuery = Object.assign({}, defaultListQuery);
+      },
+      handleDelete(index, row) {
+        console.log("index=", index, row);
+        this.$confirm("是否要进行删除操作?", "提示", {
+          confirmButtonText: "确定",
+          cancelButtonText: "取消",
+          type: "warning"
+        }).then(() => {
+          let ids = [];
+          if (row) {
+            console.log("index====", index, row);
+            ids.push(row.id)
+          }
+          this.multipleSelection.forEach(row => ids.push(row.id));
+          _delete(
+            ids
+          );
+          this.getList();
+        });
+      },
+      edit() {
+        let teacher = this.course;
+        console.log("返回的数据为：==================", teacher);
+        // 编辑课程信息
+        if (teacher.id) {
+          update(this.course).then(result => {
+            console.log("返回的数据为：", result);
+            this.getList()
+          });
         }
+        // 添加课程
+        else {
+          createCrouse([this.course]).then(result => {
+            console.log("返回的数据为：", result);
+            this.getList()
+          });
+        }
+        this.editDialog = false
       },
-      teacherList:[],
-      teacherId:'',
-      addTeacherView:false,
-      formLabelWidth: '120px',
-      dialogTitle: ""
-    };
-  },
-  created() {
-    this.getList();
-    this.getTeacherList();
-  },
-  methods: {
-    getList() {
-      this.listLoading = true;
-      this.listQuery.quire = "and 1 = 1";
-      this.listQuery.keyword
-        ? (this.listQuery.quire +=
-            ` and (name like '%${this.listQuery.keyword}%' or coding like '%${this.listQuery.keyword}%' `
-        +
-            `or description like '%${this.listQuery.keyword}%')`)
-        : "";
-      this.listQuery.coding
-        ? (this.listQuery.quire += ` and coding = ${
-          this.listQuery.coding
-          }`)
-        : "";
-      this.listQuery.name
-        ? (this.listQuery.quire += ` and name = '${this.listQuery.name}'`)
-        : "";
-      console.log("5656ddddd获取到的数据为：==========");
-      findCourseList(this.listQuery).then(response => {
-        this.listLoading = false;
-        this.list = response.data.data;
-        this.total = 1;
-        console.log("565656asdsa获取到的数据为：",list)
-      });
-    },
-    handleSizeChange(val) {
-      this.listQuery.page = 1;
-      this.listQuery.limit = val;
-      this.getList();
-    },
-    getTeacherList(){
-      findTeacherList().then(result=>{
-        console.log("获取老师信息为",result);
-         this.teacherList = result.data.data;
-      })
-    },
-    handleCurrentChange(val) {
-      this.listQuery.page = val;
-      this.getList();
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    handleResetSearch() {
-      this.selectProductCateValue = [];
-      this.listQuery = Object.assign({}, defaultListQuery);
-    },
-    handleDelete(index, row) {
-      console.log("index=",index,row);
-      this.$confirm("是否要进行删除操作?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
+      addTeacher(index, row) {
+        console.log("addTeacher获取的数据为：", index, row, this.teacherId);
+        this.courseTeacher.course = row;
+
+        this.addTeacherView = true;
+      },
+      chooseTeacher() {
+        this.courseTeacher.teacherId = this.teacherId;
+      },
+      submitAddTeacher() {
+        addCourse(this.courseTeacher).then(result => {
+          this.addTeacherView = false;
+          console.log("获取结果", result)
+        })
+      },
+      chooseCourse(index, row) {
         let ids = [];
-        if (row){
-           console.log("index====",index,row);
-          ids.push(row.id)
+        if (row) {
+          ids.push(row.id);
         }
         this.multipleSelection.forEach(row => ids.push(row.id));
-        _delete(
-          ids
-        );
-        this.getList();
-      });
-    },
-    edit() {
-      let teacher = this.course;
-      console.log("返回的数据为：==================",teacher);
-      // 编辑课程信息
-      if (teacher.id) {
-        update(this.course).then(result => {
-          console.log("返回的数据为：",result);
-          this.getList()
-        });
+        chooseCourse(ids).then(res => {
+          console.log("加课结果为：", res)
+        })
       }
-      // 添加课程
-      else {
-        createCrouse([this.course]).then(result => {
-          console.log("返回的数据为：",result);
-          this.getList()
-        });
-      }
-      this.editDialog = false
-    },
-    addTeacher(index, row){
-      console.log("addTeacher获取的数据为：",index,row,this.teacherId);
-      this.courseTeacher.course = row;
-
-      this.addTeacherView = true;
-    },
-    chooseTeacher(){
-      this.courseTeacher.teacherId = this.teacherId;
-    },
-    submitAddTeacher(){
-      addCourse(this.courseTeacher).then(result=>{
-        this.addTeacherView = false;
-        console.log("获取结果",result)
-      })
     }
-  }
-};
+  };
 </script>
 
 <style>
-.demo-table-expand {
-  font-size: 0;
-}
-.demo-table-expand label {
-  width: 90px;
-  color: #99a9bf;
-}
-.demo-table-expand .el-form-item {
-  margin-right: 0;
-  margin-bottom: 0;
-  width: 50%;
-}
+  .demo-table-expand {
+    font-size: 0;
+  }
+
+  .demo-table-expand label {
+    width: 90px;
+    color: #99a9bf;
+  }
+
+  .demo-table-expand .el-form-item {
+    margin-right: 0;
+    margin-bottom: 0;
+    width: 50%;
+  }
 </style>
 
 
