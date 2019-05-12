@@ -12,7 +12,7 @@
           class="answer">
           <!-- 选择框 -->
           <input class="select" :type="question.questionnaireType" :name="question.id" :value="answer.id" disabled
-           :checked="qAnwser.chooseId && qAnwser.chooseId.spilt(',').indexOf(answer.id) >= 0">
+           :checked="qAnwser.chooseId.split(',').indexOf(answer.id) >= 0">
           <!-- 选项内容 -->
           <div class="option">
             <div class="input-fix">
@@ -52,7 +52,7 @@ export default {
   },
   methods: {
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -61,7 +61,7 @@ export default {
 .question {
   @include clearfix;
   padding: 1rem;
-  border-radius: .4rem;
+  border-radius: 0.4rem;
   list-style: none;
   .side {
     float: left;
@@ -75,7 +75,7 @@ export default {
       line-height: 2.4rem;
     }
     .opertions {
-      margin-top: .3rem;
+      margin-top: 0.3rem;
       list-style: none;
       padding: 0;
       visibility: hidden;
@@ -99,7 +99,7 @@ export default {
       line-height: 1.5;
       width: 100%;
       max-width: 100%;
-      border-radius: .3rem;
+      border-radius: 0.3rem;
       line-height: 2.4rem;
     }
     .answers {
@@ -108,11 +108,11 @@ export default {
       line-height: 2;
       font-size: $font-size-sm;
       color: $light-black;
-      margin-top: .4rem;
+      margin-top: 0.4rem;
       .answer {
         display: flex;
         align-items: flex-start;
-        margin-bottom: .4rem;
+        margin-bottom: 0.4rem;
         @include clearfix;
         .select {
           display: inline-block;
@@ -162,24 +162,24 @@ export default {
       display: inline-block;
       line-height: 2;
       text-align: center;
-      border-radius: .4rem;
+      border-radius: 0.4rem;
       visibility: hidden;
       .iconfont {
-        margin-right: .6rem;
+        margin-right: 0.6rem;
       }
     }
     .option {
       .textarea {
         width: 100%;
         height: 10rem;
-        margin-top: .8rem;
+        margin-top: 0.8rem;
         border: 1px solid $light-black;
       }
       [for="isRequired"] {
         margin-top: 1rem;
         display: block;
         .required {
-          margin-right: .4rem;
+          margin-right: 0.4rem;
         }
       }
     }

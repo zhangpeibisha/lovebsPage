@@ -35,7 +35,7 @@
                 track-by="$index"
                 :qIndex="q"
                 :question="qIndex"
-                :qAnswer="getAnswer(q)"
+                :qAnwser="getAnswer(qIndex)"
                 class="question">
               </li>
             </ol>
@@ -55,219 +55,219 @@
 </template>
 
 <script>
-  import Question from "./ViewQuestion";
-  import Calendar from "../common/Calendar";
-  import Alert from "../common/Alert";
-  import Modal from "../common/Modal";
-  import {fetchPublish} from "@/api/question"
+import Question from "./ViewQuestion";
+import Calendar from "../common/Calendar";
+import Alert from "../common/Alert";
+import Modal from "../common/Modal";
+import { fetchPublish, findEvaluationById } from "@/api/question";
 
-  export default {
-    data() {
-      return {
-        title: '',
-        questions: [],
-        author: {
-          id: -1,
-          jobNumber: '',
-          name: '',
-          imageUrl: '',
-          correspondence: {
-            phone: '',
-            email: ''
-          }
-        },
-        isLoading: false,
-        dialogViewAuthorInfo: false,
-        formLabelWidth: '120px',
-        qAnswers:[],
-        evaluationId:0,
-        publishId:0
-      }
+export default {
+  data() {
+    return {
+      title: "",
+      questions: [],
+      author: {
+        id: -1,
+        jobNumber: "",
+        name: "",
+        imageUrl: "",
+        correspondence: {
+          phone: "",
+          email: ""
+        }
+      },
+      isLoading: false,
+      dialogViewAuthorInfo: false,
+      formLabelWidth: "120px",
+      qAnswers: [],
+      evaluationId: 0,
+      publishId: 0
+    };
+  },
+  created: function() {
+    this.getParams();
+    this.getPublish();
+  },
+  methods: {
+    transposition(arr, oldIndex, newIndex) {
+      let value = arr.splice(oldIndex, 1)[0];
+      arr.splice(newIndex, 0, value);
     },
-    created: function () {
-      this.getParams();
-      // this.findEvaluationById();
-      this.getPublish();
+    saveBtnHandler() {
+      this.saveData();
     },
-    methods: {
-      transposition(arr, oldIndex, newIndex) {
-        let value = arr.splice(oldIndex, 1)[0];
-        arr.splice(newIndex, 0, value);
-      },
-      saveBtnHandler() {
-        this.saveData();
-      },
-       editEvaluation() {
-         this.$router.push({
-           path: "/questionnaire/edit",
-           query: {
-             evaluationId: this.evaluationId
-           }
-         })
-      },
-      getAnswer(q) {
-        return (this.qAnswers.filter(a => a.id === q.id) || [{}])[0];
-      },
-      // findEvaluation() {
-      //   if (!this.evaluationId) return;
-      //   findEvaluationById(this.evaluationId).then(result => {
-      //     console.log("查询问卷信息", result)
-      //     if (result.code === 200) {
-      //       var data = result.data;
-      //       this.questions = data.content.questions;
-      //       this.title = data.title;
-      //       this.author = data.author;
-      //       console.log("获取到作者的信息为", this.author)
-      //     }
-      //   })
-      // },
-      getParams: function () {
-        // 取到路由带过来的参数
-        this.evaluationId = this.$route.query.evaluationId;
-        this.publishId = this.$route.query.publishId;
-      },
-      getPublish() {
-        console.log("----",this.publishId)
-        if (!this.publishId) return;
-        fetchPublish({
-          publishId: this.publishId
-        }).then(r => {
-          this.questions = r.data.evaluationquestionnaire.content;
-          this.qAnswers = r.data.answers.questionReplies;
-        })
-      }
+    editEvaluation() {
+      this.$router.push({
+        path: "/questionnaire/edit",
+        query: {
+          evaluationId: this.evaluationId
+        }
+      });
     },
-    components: {
-      Question,
-      Calendar,
-      Alert,
-      Modal
+    getAnswer(q) {
+      return (this.qAnswers.filter(a => a.questionId === q.id) || [{}])[0];
+    },
+    findEvaluation() {
+      if (!this.evaluationId) return;
+      findEvaluationById(this.evaluationId).then(result => {
+        console.log("查询问卷信息", result);
+        if (result.code === 200) {
+          var data = result.data;
+          this.questions = data.content.questions;
+          this.title = data.title;
+          this.author = data.author;
+          console.log("获取到作者的信息为", this.author);
+        }
+      });
+    },
+    getParams: function() {
+      // 取到路由带过来的参数
+      this.evaluationId = this.$route.query.evaluationId;
+      this.publishId = this.$route.query.publishId;
+    },
+    getPublish() {
+      console.log("----", this.publishId);
+      if (!this.publishId) return;
+      fetchPublish({
+        publishId: this.publishId
+      }).then(r => {
+        this.evaluationId = r.data.evaluationquestionnaire.id;
+        this.qAnswers = r.data.answers.questionReplies;
+        this.findEvaluation();
+      });
     }
-  };
+  },
+  components: {
+    Question,
+    Calendar,
+    Alert,
+    Modal
+  }
+};
 </script>
 <style lang="scss">
-  @import "../css/base";
-  @import "../css/helpers/mixins";
+@import "../css/base";
+@import "../css/helpers/mixins";
 
-  .disabled {
-    @include btn-disabled;
-  }
+.disabled {
+  @include btn-disabled;
+}
 
-  .qn-wrap {
-    padding: 3rem 6rem;
-    border-top: 1px solid $line-color;
-    background: $bg-gray;
-    height: 500px;
-    overflow: auto;
-    @at-root {
-      .qn {
-        background-color: #fff;
-        border-radius: 0.4rem;
-        box-shadow: 0.1rem 0.1rem 0.4rem 0 #aaa;
-        display: inline-block;
-        width: 100%;
-        .header {
-          @include placeholder-style {
-            text-align: center;
-          }
+.qn-wrap {
+  padding: 3rem 6rem;
+  border-top: 1px solid $line-color;
+  background: $bg-gray;
+  height: 500px;
+  overflow: auto;
+  @at-root {
+    .qn {
+      background-color: #fff;
+      border-radius: 0.4rem;
+      box-shadow: 0.1rem 0.1rem 0.4rem 0 #aaa;
+      display: inline-block;
+      width: 100%;
+      .header {
+        @include placeholder-style {
           text-align: center;
-          .title {
-            text-align: center;
-            width: 80%;
-            outline: none;
-            padding: 0 1rem;
-            margin: 2rem auto;
-            border: 1px solid transparent;
-            font-size: $font-size-lg;
-            line-height: 3rem;
-            &:focus {
-              border-color: $light-black;
-              background: $bg-yellow;
-            }
-          }
         }
-        .body {
+        text-align: center;
+        .title {
+          text-align: center;
+          width: 80%;
+          outline: none;
           padding: 0 1rem;
-          .body-wrap {
-            border-top: 1px solid $line-color;
-            border-bottom: 1px solid $line-color;
-            margin-bottom: 2rem;
-            @at-root .questions {
-              padding: 2rem 0;
+          margin: 2rem auto;
+          border: 1px solid transparent;
+          font-size: $font-size-lg;
+          line-height: 3rem;
+          &:focus {
+            border-color: $light-black;
+            background: $bg-yellow;
+          }
+        }
+      }
+      .body {
+        padding: 0 1rem;
+        .body-wrap {
+          border-top: 1px solid $line-color;
+          border-bottom: 1px solid $line-color;
+          margin-bottom: 2rem;
+          @at-root .questions {
+            padding: 2rem 0;
+          }
+          .tools {
+            text-align: center;
+            border-radius: 0;
+            margin: 1rem auto;
+            border: 1px solid $gray;
+            &:hover {
+              .toolbar {
+                height: 4.4rem;
+              }
+              .add-btn {
+                background: $light-gray;
+              }
             }
-            .tools {
-              text-align: center;
-              border-radius: 0;
-              margin: 1rem auto;
-              border: 1px solid $gray;
-              &:hover {
-                .toolbar {
-                  height: 4.4rem;
-                }
-                .add-btn {
-                  background: $light-gray;
-                }
-              }
-              @at-root .toolbar {
-                height: 0;
-                overflow: hidden;
-                transition: height 0.3s ease;
-                .btn {
-                  @include button(0.5rem, 0.2rem, $light-black);
-                  margin: 1rem 0.5rem;
-                  display: inline-block;
-                  line-height: 1.8rem;
-                  .iconfont {
-                    margin-right: 0.3rem;
-                  }
-                }
-              }
-              @at-root .add-btn {
+            @at-root .toolbar {
+              height: 0;
+              overflow: hidden;
+              transition: height 0.3s ease;
+              .btn {
+                @include button(0.5rem, 0.2rem, $light-black);
+                margin: 1rem 0.5rem;
+                display: inline-block;
+                line-height: 1.8rem;
                 .iconfont {
-                  margin-right: 0.5rem;
+                  margin-right: 0.3rem;
                 }
-
-                background: $bg-gray;
-                cursor: pointer;
-                font-size: $font-size-default;
-                color: $light-black;
-                line-height: 3;
-                width: 100%;
               }
+            }
+            @at-root .add-btn {
+              .iconfont {
+                margin-right: 0.5rem;
+              }
+
+              background: $bg-gray;
+              cursor: pointer;
+              font-size: $font-size-default;
+              color: $light-black;
+              line-height: 3;
+              width: 100%;
             }
           }
         }
-        .footer {
-          padding: 0 1.5rem 1.5rem;
-        }
+      }
+      .footer {
+        padding: 0 1.5rem 1.5rem;
       }
     }
-    .footer {
-      display: flex;
-      .pick-date {
-        display: inline-block;
-        .msg {
-          margin-right: 1rem;
-        }
+  }
+  .footer {
+    display: flex;
+    .pick-date {
+      display: inline-block;
+      .msg {
+        margin-right: 1rem;
       }
-      .operation {
-        flex-grow: 1;
-        text-align: right;
-        .btn {
-          border: 1px solid $light-black;
-          padding: 0.2rem 1rem;
-          border-radius: 0.4rem;
-          cursor: pointer;
-          margin-left: 1rem;
-          &:last-child {
-            margin-right: 10rem;
-          }
-          &:hover {
-            background-color: $blue;
-            color: #fff;
-          }
+    }
+    .operation {
+      flex-grow: 1;
+      text-align: right;
+      .btn {
+        border: 1px solid $light-black;
+        padding: 0.2rem 1rem;
+        border-radius: 0.4rem;
+        cursor: pointer;
+        margin-left: 1rem;
+        &:last-child {
+          margin-right: 10rem;
+        }
+        &:hover {
+          background-color: $blue;
+          color: #fff;
         }
       }
     }
   }
+}
 </style>
