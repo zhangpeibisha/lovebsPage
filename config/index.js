@@ -12,12 +12,12 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
     		"/api":{
-      		 		"target":"http://127.0.0.1:8080",
+      		 		"target":"http://zp.xx11.top",
       		 		"changeOrigin":true,
       		 		"pathRewrite":{
       		 		"^/api":""
-      		 }   		
-      	 }  
+      		 }
+      	 }
     },
 
     // Various Dev Server settings

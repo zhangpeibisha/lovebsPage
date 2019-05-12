@@ -10,7 +10,7 @@ const service = axios.create({
 });
 
 export function getBaseUrl(){
-  return "/api";
+  return process.env.NODE_ENV == 'dev' ? "/api" : "/";
 }
 
 // request拦截器
