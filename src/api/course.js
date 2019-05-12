@@ -35,9 +35,9 @@ export function _delete(params) {
   console.log("删除获取到的参数为==========", params);
 
   var str = '';
-  if (params){
-    params.forEach(row =>{
-      console.log("444444",row);
+  if (params) {
+    params.forEach(row => {
+      console.log("444444", row);
       str += row + ","
     })
   }
@@ -46,11 +46,27 @@ export function _delete(params) {
     url: '/course/ids',
     method: 'delete',
     params: {
-      ids:str
+      ids: str
     }
   })
 }
 
-export function findById() {
+export function findById(id) {
+  return request({
+    url: '/course/id',
+    method: 'get',
+    params: {
+      ids: id
+    }
+  })
+}
 
+export function findTeacherByCourseId(courseId) {
+  return request({
+    url: '/studentCourse/findTeacher',
+    method: 'get',
+    params: {
+      courseId: courseId
+    }
+  })
 }

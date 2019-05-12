@@ -41,9 +41,6 @@
         size="mini"
       >添加
       </el-button>
-      <el-button
-        v-if="userType === 'STUDENT'"
-        class="btn-add" type="danger" @click="chooseCourse()" size="mini">选课</el-button>
     </el-card>
     <div class="table-container">
       <el-table
@@ -139,7 +136,7 @@
               v-for="item in teacherList"
               :key="item.id"
               :label="item.name"
-              :value="item.id"
+              :value="item.accountid"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -150,6 +147,35 @@
       </div>
     </el-dialog>
 
+
+    <el-dialog title="选择老师" :visible.sync="addCourseView">
+      <el-form :model="courseTeacher" inline>
+        <el-form-item label="课程名字" :label-width="formLabelWidth">
+          <el-input v-model="courseTeacher.course.name" autocomplete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="老师">
+          <el-select
+            v-model="teacherId"
+            placeholder="请选择老师"
+            clearable
+            filterable
+            @change="chooseTeacher"
+          >
+            <el-option
+              v-for="item in teacherListByCourseId"
+              :key="item.id"
+              :label="item.name"
+              :value="item.accountid"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="addCourseView = false">取 消</el-button>
+        <el-button type="primary" @click="submitChooseCourse">确 定</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 <script>
@@ -157,7 +183,8 @@
     findCourseList,
     update,
     _delete,
-    createCrouse
+    createCrouse,
+    findTeacherByCourseId
   } from "@/api/course";
 
   import {
@@ -207,7 +234,9 @@
         addTeacherView: false,
         formLabelWidth: '120px',
         dialogTitle: "",
-        userType: ''
+        userType: '',
+        teacherListByCourseId:[],
+        addCourseView:false
       };
     },
     created() {
@@ -322,13 +351,22 @@
         })
       },
       chooseCourse(index, row) {
-        let ids = [];
-        if (row) {
-          ids.push(row.id);
+        if (row){
+          this.courseTeacher.course = row;
+          this.findCourseTeacher(row.id);
         }
-        this.multipleSelection.forEach(row => ids.push(row.id));
-        chooseCourse(ids).then(res => {
+        this.addCourseView = true;
+      },
+      submitChooseCourse(){
+        console.log("提交结果为：",this.teacherId,this.courseTeacher.course);
+        chooseCourse(this.courseTeacher.course.id,this.teacherId).then(res => {
           console.log("加课结果为：", res)
+          this.addCourseView = false;
+        })
+      },
+      findCourseTeacher(courseId){
+        findTeacherByCourseId(courseId).then(res=>{
+           this.teacherListByCourseId = res.data;
         })
       }
     }

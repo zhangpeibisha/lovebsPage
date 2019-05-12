@@ -59,18 +59,13 @@ export function _delete(params) {
   })
 }
 
-export function chooseCourse(courseids) {
-  var str = '';
-  if (courseids) {
-    courseids.forEach(row => {
-      str += row + ",";
-    });
-  }
+export function chooseCourse(courseId,teacherId) {
   return request({
     url: '/studentCourse/course',
     method: 'post',
     params: {
-      courseIds:str
+      courseId:courseId,
+      teacherAccountId:teacherId
     }
   })
 }
