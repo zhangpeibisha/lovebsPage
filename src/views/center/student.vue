@@ -45,7 +45,8 @@
 
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button size="mini" @click="handleView(scope.$index, scope.row)">详情</el-button>
+              <el-button size="mini" @click="handleView(scope.$index, scope.row)">查看</el-button>
+              <el-button size="mini" @click="answerSheet(scope.$index, scope.row)">答卷</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -200,9 +201,14 @@
       // 学生查看问卷信息
       handleView(index, row) {
         console.log("查看问卷点击了", index, row);
-        // teacherClieckPublishQuestion(row.publishId).then(result => {
-        //
-        // });
+        this.$router.push({
+          path: "/questionnaire/view",
+          query: {
+            publishId: row.id
+          }
+        })
+      },
+      answerSheet(index, row){
         this.$router.push({
           path: "/questionnaire/edit",
           query: {

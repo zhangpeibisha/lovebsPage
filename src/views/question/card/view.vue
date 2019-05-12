@@ -132,7 +132,9 @@ export default {
         publishId: this.publishId
       }).then(r => {
         this.evaluationId = r.data.evaluationquestionnaire.id;
-        this.qAnswers = r.data.answers.questionReplies;
+        if (r.data.answers && r.data.answers.questionReplies) {
+          this.qAnswers = r.data.answers.questionReplies;
+        }
         this.findEvaluation();
       });
     }
