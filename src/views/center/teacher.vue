@@ -435,19 +435,23 @@
       submitBlackList() {
         this.blacklist.dialogVisible = false;
         const students = this.blacklist.showChooseStudentName[this.activeIndex];
-        const studentView = this.blacklist.viewStudent;
-        if (!students || students.length === 0 || students.length > this.canChoose) {
+
+        if (students.length > this.canChoose) {
           this.noticeConfig("提交失败")
-        } else {
-          const publishId = this.clickedQuestionList[this.activeIndex].publishId;
-          var ids = '';
+          return;
+        }
+
+        const publishId = this.clickedQuestionList[this.activeIndex].publishId;
+        var ids = '';
+        if (students) {
           students.forEach(row => {
             ids += row.id + ",";
           });
-          addBlackList(publishId, ids).then(row => {
-            console.log("提交黑名单得到响应", row);
-          })
         }
+        addBlackList(publishId, ids).then(row => {
+          console.log("提交黑名单得到响应", row);
+        })
+
       },
       handleDelete(index, row) {
 
