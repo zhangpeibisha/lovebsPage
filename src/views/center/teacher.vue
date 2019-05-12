@@ -90,7 +90,6 @@
 
           <el-table-column label="操作">
             <template slot-scope="scope">
-              <el-button type="text" @click="findStudentList(scope.$index, scope.row)" size="mini">配置</el-button>
               <el-button size="mini" @click="handleView(scope.$index, scope.row)">详情</el-button>
             </template>
           </el-table-column>
@@ -440,7 +439,7 @@
         if (!students || students.length === 0 || students.length > this.canChoose) {
           this.noticeConfig("提交失败")
         } else {
-          const publishId = this.clickedQuestionList[this.activeIndex].id;
+          const publishId = this.clickedQuestionList[this.activeIndex].publishId;
           var ids = '';
           students.forEach(row => {
             ids += row.id + ",";
