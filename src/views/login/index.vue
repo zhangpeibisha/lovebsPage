@@ -20,9 +20,9 @@
 
       <el-form-item label="验证码" prop="text">
         <el-row :gutter="10">
-          <el-input class="input" maxlength="4"
-                    placeholder="请输入验证码" style="width: 100px;" clearable></el-input>
-          <img id="imgIdentifyingCode" alt="点击更换"
+          <el-input class="qxs-ic_user" type="text" v-model="loginForm.image"
+                    autocomplete="off" style="width: 100px;height: 28px" clearable></el-input>
+          <img id="imgIdentifyingCode" alt="点击更换" style="width: 100px;height: 28px"
                title="点击更换" @click="getIdentifyingCode"/>
         </el-row>
       </el-form-item>
