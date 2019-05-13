@@ -29,14 +29,6 @@
         </div>
       </div>
       <footer class="footer">
-        <div class="pick-date">
-          <span class="msg">问卷截止日期</span>
-          <el-date-picker
-            v-model="expires"
-            type="date"
-            placeholder="选择日期">
-          </el-date-picker>
-        </div>
         <div class="operation">
           <span class="btn" :class="{ disabled: isLoading }" @click="saveData()">保存问卷</span>
           <span class="btn" :class="{ disabled: isLoading }" @click="publishBtnHandler">发布问卷</span>

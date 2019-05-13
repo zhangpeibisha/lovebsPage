@@ -22,7 +22,7 @@ export function addQuestion(params, data) {
 
 export function addAllQuestion(params, data) {
   return request({
-    url: '/evaluationquestionnaire/batch/question',
+    url: '/evaluationquestionnaire/batch/add/question',
     method: 'post',
     params: params,
     data,
