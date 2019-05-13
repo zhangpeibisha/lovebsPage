@@ -127,7 +127,10 @@ export default {
     },
     getPublish() {
       console.log("----", this.publishId);
-      if (!this.publishId) return;
+      if (!this.publishId &&  this.evaluationId) {
+        this.findEvaluation();
+        return;
+      }
       fetchPublish({
         publishId: this.publishId
       }).then(r => {

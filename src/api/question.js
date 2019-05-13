@@ -125,3 +125,12 @@ export function fetchPublish(params) {
     params: params
   })
 }
+
+// 按条件查询问卷
+export function findQuireQuestion(params) {
+  return request({
+    url: '/evaluationquestionnaire/all/list',
+    method: 'get',
+    params: params
+  })
+}
