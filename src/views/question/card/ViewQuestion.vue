@@ -12,7 +12,7 @@
           class="answer">
           <!-- 选择框 -->
           <input class="select" :type="question.questionnaireType" :name="question.id" :value="answer.id" disabled
-           :checked="qAnwser.chooseId.split(',').indexOf(answer.id) >= 0">
+           :checked="qAnwser.chooseId && qAnwser.chooseId.split(',').indexOf(answer.id) >= 0">
           <!-- 选项内容 -->
           <div class="option">
             <div class="input-fix">
