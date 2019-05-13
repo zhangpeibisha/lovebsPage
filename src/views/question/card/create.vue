@@ -4,7 +4,7 @@
   <div class="qn-wrap">
     <div class="qn">
       <header class="header">
-        <input type="text" class="title" placeholder="填写问卷标题" v-modal="title" @change="createE()">
+        <input type="text" class="title" placeholder="填写问卷标题" v-model="title" @change="updateQuestionName">
       </header>
       <div class="body">
         <div class="body-wrap">
@@ -30,26 +30,12 @@
       </div>
       <footer class="footer">
         <div class="operation">
-          <span class="btn" :class="{ disabled: isLoading }" @click="saveData()">保存问卷</span>
+          <span class="btn" :class="{ disabled: isLoading }" @click="createE()">保存问卷</span>
           <span class="btn" :class="{ disabled: isLoading }" @click="publishBtnHandler">发布问卷</span>
         </div>
       </footer>
     </div>
   </div>
-  <alert :show.sync="showAlert" placement="top" duration="3000" type="warning" width="400px" dismissable>
-    <strong>您正在离开当前页面 ...</strong>
-    <p>需要先保存问卷吗？</p>
-  </alert>
-  <modal
-    :show.sync="showModal"
-    cancel-text="取消"
-    ok-text="确定"
-    :callback="modalCallback"
-    title="提示" >
-    <div slot="modal-body">
-      <div>你的问卷尚未保存，确定要放弃保存此问卷吗？</div>
-    </div>
-  </modal>
 </div>
 </template>
 
@@ -111,7 +97,15 @@ export default {
           evaluationId: this.evaluationId
         },
         this.questions
-      ).then(r => {});
+      ).then(r => {
+        this.$message({
+          message: '恭喜你，成功创建了一个问卷',
+          type: 'success'
+        });
+        this.$router.push({
+          path: "/questionnaire/listView",
+        });
+      });
     },
     addQuestion(type) {
       let option = {
@@ -193,7 +187,12 @@ export default {
         title: this.title
       }).then(r => {
         this.evaluationId = r.data.id;
+        this.saveData();
       });
+    },
+    updateQuestionName(v1,v2,v3){
+      console.log("改变的数据为：",v1.target.value,v1,v3,this.title)
+
     }
   },
   created() {},
