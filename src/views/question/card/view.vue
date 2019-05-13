@@ -45,7 +45,7 @@
           <div class="pick-date">
           </div>
           <div class="operation">
-            <span class="btn" :class="{ disabled: isLoading }" @click="editEvaluation">编辑问卷</span>
+            <span class="btn" :class="{ disabled: isLoading }" @click="editEvaluation">回答问卷</span>
             <span class="btn" :class="{ disabled: isLoading }" @click="dialogViewAuthorInfo = true">查看作者信息</span>
           </div>
         </footer>
@@ -100,7 +100,7 @@ export default {
       this.$router.push({
         path: "/questionnaire/edit",
         query: {
-          evaluationId: this.evaluationId
+          publishEvaluationId:  this.publishId
         }
       });
     },

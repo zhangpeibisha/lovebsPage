@@ -130,7 +130,7 @@
 
       <el-tab-pane label="选课">
         <el-row>
-          <el-button type="success" plain>选课</el-button>
+          <el-button @click="chooseCourse" type="success" plain>选课</el-button>
         </el-row>
       </el-tab-pane>
 
@@ -207,6 +207,12 @@
             publishId: row.id
           }
         })
+      },
+      chooseCourse(){
+        console.log("点击选课========")
+        this.$router.push({
+          path: "/teacher/course",
+        });
       },
       answerSheet(index, row){
         this.$router.push({

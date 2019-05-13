@@ -76,7 +76,14 @@ export default {
       commitE({
         publisId: this.publishId
       },this.answers).then(result => {
-        // 提交问卷成功
+        console.log("提交返回结果",result);
+        this.$message({
+          message: '恭喜你，提交问卷成功',
+          type: 'success'
+        });
+        this.$router.push({
+          path: "/home",
+        })
       })
     },
     answer(answer) {
@@ -113,6 +120,7 @@ export default {
       console.log("获取到的发布id为",this.publishId);
       findPublishQuestionById(this.publishId).then(result=>{
         const data = result.data;
+        console.log("获取到的data为",result);
         this.findEvaluationById(data.questionnaireid);
       });
     }
