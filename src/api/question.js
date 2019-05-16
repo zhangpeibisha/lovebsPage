@@ -134,3 +134,12 @@ export function findQuireQuestion(params) {
     params: params
   })
 }
+
+// 按条件查询问卷
+export function publishQuestionnaireByCourseIds(params) {
+  return request({
+    url: '/publishquestionnaire/publish/by/courseIds',
+    method: 'post',
+    params: params
+  })
+}

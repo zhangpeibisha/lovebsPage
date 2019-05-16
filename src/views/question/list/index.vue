@@ -69,7 +69,7 @@
               size="mini" @click="viewQuestion(scope.row.id)">查看
             </el-button>
             <el-button
-              size="mini" @click="publishQuestionConfig(scope.row.id)">发布问卷
+              size="mini" @click="publishQuestionConfig(scope.row)">发布问卷
             </el-button>
           </template>
         </el-table-column>
@@ -93,7 +93,7 @@
     <el-dialog title="发布问卷配置" :visible.sync="publishQuestionVisible">
       <el-form :model="publishInfo">
         <el-form-item label="问卷名字" :label-width="formLabelWidth">
-          <el-input v-model="chooseQuestion.name" autocomplete="off" disabled></el-input>
+          <el-input v-model="chooseQuestion.title" autocomplete="off" disabled></el-input>
         </el-form-item>
         <el-form-item label="选择课程" :label-width="formLabelWidth">
           <el-select
@@ -117,6 +117,7 @@
         <el-form-item label="选择时间" :label-width="formLabelWidth">
           <div class="block">
             <el-date-picker
+              value-format="timestamp"
               v-model="answerTime"
               type="daterange"
               range-separator="至"
@@ -126,6 +127,18 @@
           </div>
         </el-form-item>
 
+        <el-form-item label="为什么发布" :label-width="formLabelWidth">
+          <el-input
+            type="textarea"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            placeholder="请输入内容"
+            v-model="publishDescription">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="黑名单数量" :label-width="formLabelWidth">
+          <el-input-number v-model="blackNumber" @change="handleBlackNumberChange"
+                           :min="0" :max="5" label="不计入统计分学生数量"></el-input-number>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="publishQuestionVisible = false">取 消</el-button>
@@ -142,6 +155,9 @@
   import {
     findCourseList
   } from "@/api/course";
+  import {
+    publishQuestionnaireByCourseIds
+  } from "@/api/question"
 
   const defaultListQuery = {
     query: null,
@@ -168,7 +184,7 @@
         editDialog: false,
         dialogTitle: "",
         publishInfo: {},
-        formLabelWidth:'120px',
+        formLabelWidth: '120px',
         // 弹出发布框
         publishQuestionVisible: false,
         // 回答时间
@@ -177,11 +193,11 @@
         courseIds: [],
         // 返回所有的课程信息
         courseInfo: [],
-        chooseQuestion:{
-          id:1212,
-          name:"计算机测试"
-        },
-        courseLoding:false
+        chooseQuestion: {},
+        courseLoding: false,
+        publishDescription: '',
+        blackNumber: 0,
+        submitPublishQuestionConfigQuery: {}
       };
     },
     created() {
@@ -233,16 +249,41 @@
             evaluationId: questionId
           }
         })
-      },publishQuestionConfig(questionId) {
+      }, publishQuestionConfig(questionId) {
         this.publishQuestionVisible = true;
+        this.chooseQuestion = questionId;
+        console.log("获取到选中的问卷信息", questionId)
       },
-      submitPublishQuestionConfig(){
-        console.log("获取到时间",this.answerTime);
-        console.log("获取到课程",this.courseIds);
-        console.log("获取到时间",this.answerTime[0],this.answerTime[1]);
+      submitPublishQuestionConfig() {
+        console.log("获取到时间", this.answerTime);
+        console.log("获取到课程", this.courseIds);
+        console.log("获取到时间", this.answerTime[0], this.answerTime[1]);
         this.publishQuestionVisible = false;
-      },queryCourse(query){
-        console.log("获取的查询参数为",query);
+
+        if (!this.courseIds && this.courseIds.length == 0){
+          this.$message({
+            message: '请选择课程',
+            type: 'warning'
+          });
+          return;
+        }
+        var courseIdsStr = '';
+        this.courseIds.forEach(row => {
+           courseIdsStr += row + ",";
+        });
+
+        this.submitPublishQuestionConfigQuery.courseIds = courseIdsStr;
+        this.submitPublishQuestionConfigQuery.questionnaireId = this.chooseQuestion.id;
+        this.submitPublishQuestionConfigQuery.description = this.publishDescription;
+        this.submitPublishQuestionConfigQuery.startRespondTime = this.answerTime[0];
+        this.submitPublishQuestionConfigQuery.endRespondTime = this.answerTime[1];
+        this.submitPublishQuestionConfigQuery.blacks = this.blackNumber;
+
+        publishQuestionnaireByCourseIds(this.submitPublishQuestionConfigQuery).then(res=>{
+          console.log("返回结果为",res);
+        })
+      }, queryCourse(query) {
+        console.log("获取的查询参数为", query);
         this.listQuery.keyword = query;
         this.listQuery.quire = "and 1 = 1";
         this.listQuery.keyword
@@ -254,15 +295,17 @@
         this.listQuery.limit = 15;
         this.courseInfo = [];
         this.courseLoding = true;
-        findCourseList(this.listQuery).then(result=>{
-             console.log("获取到的返回结果",result)
-             if (result.data.data) {
-                result.data.data.forEach(row=>{
-                  this.courseInfo.push(row);
-                })
-             }
+        findCourseList(this.listQuery).then(result => {
+          console.log("获取到的返回结果", result)
+          if (result.data.data) {
+            result.data.data.forEach(row => {
+              this.courseInfo.push(row);
+            })
+          }
           this.courseLoding = false;
         })
+      }, handleBlackNumberChange(value) {
+        console.log("获取改变的数字", value)
       }
     },
   };
