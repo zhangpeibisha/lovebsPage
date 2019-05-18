@@ -159,7 +159,7 @@ export const constantRouterMap = [
         path: 'edit',
         name: 'edit',
         component: () => import('@/views/question/card/edit'),
-        meta: {title: '问卷编辑', icon: 'product-add'}
+        meta: {title: '问卷回答', icon: 'product-add'}
       }, {
         path: 'listView',
         name: 'listView',
