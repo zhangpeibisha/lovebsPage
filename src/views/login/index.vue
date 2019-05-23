@@ -42,8 +42,10 @@
     data() {
       return {
         loginForm: {
-          username: 'XS001',
-          password: 'XS001',
+          // username: 'XS001',
+          // password: 'XS001',
+          username: '70355955',
+          password: '70355955',
           image: ""
         }
       }
