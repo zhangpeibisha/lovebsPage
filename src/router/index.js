@@ -14,7 +14,6 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/home',
     meta: {title: '首页', icon: 'home'},
-    hidden: true,
     children: [{
       path: 'home',
       name: 'home',

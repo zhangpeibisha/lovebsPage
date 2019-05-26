@@ -10,12 +10,14 @@ router.beforeEach((to, from, next) => {
   if (getToken()) {
     if (to.path === '/login') {
       next({path: '/home'});
-    } else {
+    }else if (to.path === '//home'){
+      next({path: '/home'});
+    }
+    else {
       const aysnRouter = store.state.user.aysnRouter;
       if (store.getters.roles.length === 0 || !aysnRouter) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           console.log("路由拉取用户数据为：", res);
-          // turnTo(to, res.roles, next)
           const aysnRouter = canTurnTo(to, res.roles, asyncRouterMap);
           store.state.user.aysnRouter = aysnRouter;
           if (aysnRouter) {
@@ -35,7 +37,6 @@ router.beforeEach((to, from, next) => {
       } else {
         console.log("路由信息：", aysnRouter);
         console.log("constantRouterMap路由信息：", constantRouterMap);
-        // turnTo(to, roles, next)
         next();
       }
     }
@@ -89,11 +90,6 @@ export const canTurnTo = (name, access, routers) => {
   console.log("结束", "name=>", name, "access=>", access, "routers=>", routers);
   return tempRouters;
 };
-
-// const turnTo = (to, access, next) => {
-//   if (canTurnTo(to.name, access, constantRouterMap)) next();// 有权限，可访问
-//   else next({replace: true, name: '404'}) // 无权限，重定向到404页面
-// };
 
 function hasPermission(roles, route) {
   console.log("判断权限,角色==", roles, "路由===", route);
