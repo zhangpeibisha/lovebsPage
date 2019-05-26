@@ -1,24 +1,31 @@
 import router from './router'
 import store from './store'
-import NProgress from 'nprogress' // Progress 进度条
-import 'nprogress/nprogress.css'// Progress 进度条样式
 import {Message} from 'element-ui'
 import {getToken} from '@/utils/auth' // 验权
-import {constantRouterMap} from '@/router/index'
+import {constantRouterMap, asyncRouterMap} from '@/router/index'
 
 const whiteList = ['/login']; // 不重定向白名单
 router.beforeEach((to, from, next) => {
-  NProgress.start();
+  console.log("before===>to", to, "from===>", from, "next==>", next);
   if (getToken()) {
     if (to.path === '/login') {
       next({path: '/home'});
-      NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
-      const roles = store.state.user.roles;
-      if (store.getters.roles.length === 0) {
+      const aysnRouter = store.state.user.aysnRouter;
+      if (store.getters.roles.length === 0 || !aysnRouter) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           console.log("路由拉取用户数据为：", res);
-          turnTo(to, res.roles, next)
+          // turnTo(to, res.roles, next)
+          const aysnRouter = canTurnTo(to, res.roles, asyncRouterMap);
+          store.state.user.aysnRouter = aysnRouter;
+          if (aysnRouter) {
+            aysnRouter.forEach(res => {
+              constantRouterMap.push(res);
+            })
+          }
+          console.log("获取到的路由为：", aysnRouter);
+          router.addRoutes(aysnRouter);
+          next();
         }).catch((err) => {
           store.dispatch('FedLogOut').then(() => {
             Message.error(err || 'Verification failed, please login again')
@@ -26,7 +33,10 @@ router.beforeEach((to, from, next) => {
           })
         })
       } else {
-        turnTo(to, roles, next)
+        console.log("路由信息：", aysnRouter);
+        console.log("constantRouterMap路由信息：", constantRouterMap);
+        // turnTo(to, roles, next)
+        next();
       }
     }
   } else {
@@ -34,13 +44,12 @@ router.beforeEach((to, from, next) => {
       next()
     } else {
       next('/login');
-      NProgress.done()
     }
   }
 });
 
 router.afterEach(() => {
-  NProgress.done() // 结束Progress
+
 });
 
 
@@ -52,34 +61,45 @@ router.afterEach(() => {
  * @description 用户是否可跳转到该页
  */
 export const canTurnTo = (name, access, routers) => {
-  console.log("开始","name=>", name, "access=>", access, "routers=>", routers);
-  let c = (obj) => {
-    if (typeof obj.role === typeof []) {
-      if (access) {
-        // 包含了用户的所有角色
-        access.forEach(res => {
-          // 只要用户拥有一个角色就给他展示出来
-          if (obj.role.includes(res.name)) {
-            if (obj.children) {
-              obj.children.forEach(child => c(child));
-            }
-            obj.hidden = false;
-          } else {
-            obj.hidden = true;
+  console.log("开始", "name=>", name, "access=>", access, "routers=>", routers);
+  if (!access) {
+    return [];
+  }
+  const roles = [];
+  access.forEach(role => {
+    roles.push(role.name);
+  });
+
+  const tempRouters = routers.filter(v => {
+    if (hasPermission(roles, v)) {
+      if (v.children && v.children.length > 0) {
+        v.children = v.children.filter(child => {
+          if (hasPermission(roles, child)) {
+            return child
           }
+          return false;
         });
-      }else {
-        obj.hidden = true;
+        return v
+      } else {
+        return v
       }
     }
-  };
-  routers.forEach(a => c(a));
-
-  console.log("结束","name=>", name, "access=>", access, "routers=>", routers);
-  return true;
+    return false;
+  });
+  console.log("结束", "name=>", name, "access=>", access, "routers=>", routers);
+  return tempRouters;
 };
 
-const turnTo = (to, access, next) => {
-  if (canTurnTo(to.name, access, constantRouterMap)) next();// 有权限，可访问
-  else next({replace: true, name: 'error_401'}) // 无权限，重定向到401页面
-};
+// const turnTo = (to, access, next) => {
+//   if (canTurnTo(to.name, access, constantRouterMap)) next();// 有权限，可访问
+//   else next({replace: true, name: '404'}) // 无权限，重定向到404页面
+// };
+
+function hasPermission(roles, route) {
+  console.log("判断权限,角色==", roles, "路由===", route);
+  if (route.role) {
+    return roles.some(role => route.role.indexOf(role) >= 0)
+  } else {
+    return true
+  }
+}

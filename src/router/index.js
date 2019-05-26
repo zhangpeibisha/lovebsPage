@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import iView from 'iview'
-import Cookies from 'js-cookie'
 
 Vue.use(Router)
 
@@ -10,7 +8,6 @@ import Layout from '../views/layout/Layout'
 
 export const constantRouterMap = [
   {path: '/login', component: () => import('@/views/login/index'), hidden: false},
-  {path: '/404', component: () => import('@/views/404'), hidden: true},
   {path: '/question/card/edit', component: () => import('@/views/question/card/index'), hidden: true},
   {
     path: '/',
@@ -25,7 +22,22 @@ export const constantRouterMap = [
       role: ['MANGER', 'TEACHER', 'STUDENT'],
       meta: {title: '首页', icon: 'home'}
     }]
-  },
+  }
+];
+
+
+const router = new Router({
+  mode: 'hash', //后端支持可开
+  scrollBehavior: () => ({y: 0}),
+  routes: constantRouterMap
+});
+
+export default router
+
+//异步挂载的路由
+//动态需要根据权限加载的路由表
+export const asyncRouterMap = [
+
   {
     path: '/center',
     component: Layout,
@@ -45,8 +57,7 @@ export const constantRouterMap = [
         name: 'student',
         component: () => import('@/views/center/student'),
         role: ['STUDENT'],
-        meta: {title: '个人中心(学生)', icon: 'home'},
-        hidden: true
+        meta: {title: '个人中心(学生)', icon: 'home'}
       }
     ]
   },
@@ -124,16 +135,13 @@ export const constantRouterMap = [
     path: "/rbac",
     name: "rbac",
     component: Layout,
-    alwaysShow: true,
     meta: {title: "权限管理", icon: 'example'},
-    hidden: false,
     role: ['MANGER'],
     children: [{
       path: 'resource',
       name: 'resource',
       component: () => import('@/views/rbac/resource/resourceList'),
-      meta: {title: '资源列表', icon: 'product-list'},
-      hidden: false
+      meta: {title: '资源列表', icon: 'product-list'}
     }, {
       path: 'role',
       name: '/role',
@@ -142,11 +150,9 @@ export const constantRouterMap = [
     }
     ]
   },
-  {path: '*', redirect: '/404', hidden: true},
   {
     path: '/questionnaire',
     component: Layout,
-    alwaysShow: true,
     name: 'questionnaire',
     meta: {title: '教学质量评测', icon: 'product'},
     role: ['MANGER'],
@@ -162,30 +168,23 @@ export const constantRouterMap = [
         path: 'view',
         name: 'view',
         component: () => import('@/views/question/card/view'),
-        meta: {title: '查看评教表', icon: 'product-list'},
-        hidden: true
+        meta: {title: '查看评教表', icon: 'product-list'}
       },
       {
         path: 'reply',
         name: 'reply',
         component: () => import('@/views/question/card/edit'),
-        meta: {title: '回答评教表', icon: 'product-list'},
-        hidden: true
+        meta: {title: '回答评教表', icon: 'product-list'}
       }, {
         path: 'listView',
         name: 'listView',
         component: () => import('@/views/question/list/index'),
         meta: {title: '评教表列表', icon: 'product-add'},
         role: ['MANGER']
-      }
+      },
+      {path: '/404', component: () => import('@/views/404'), hidden: true},
+      {path: '*', redirect: '/404', hidden: true},
     ]
-  },
+  }
+
 ];
-const router = new Router({
-  mode: 'hash', //后端支持可开
-  scrollBehavior: () => ({y: 0}),
-  routes: constantRouterMap
-});
-
-export default router
-
