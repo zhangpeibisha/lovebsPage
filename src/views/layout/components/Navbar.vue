@@ -1,7 +1,8 @@
 <template>
   <el-menu class="navbar" mode="horizontal">
-    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
-    <breadcrumb></breadcrumb>
+    <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened">
+
+    </hamburger>
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
         <img class="user-avatar" :src="imageUrl">

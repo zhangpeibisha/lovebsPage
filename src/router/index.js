@@ -17,7 +17,6 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/home',
     meta: {title: '首页', icon: 'home'},
-    role: ['MANGER', 'TEACHER', 'STUDENT'],
     hidden: true,
     children: [{
       path: 'home',
@@ -97,27 +96,26 @@ export const constantRouterMap = [
     path: "/task",
     name: "task",
     component: Layout,
-    alwaysShow: true,
     meta: {title: "教学任务", icon: 'example'},
-    hidden: false,
+    role: ['MANGER', 'TEACHER', 'STUDENT'],
     children: [
       {
         path: 'course',
         name: 'course',
         component: () => import('@/views/student/course/index'),
-        meta: {title: '课程信息', icon: 'example.svg'},
+        meta: {title: '课程信息', icon: 'product-list'},
         role: ['MANGER']
       }, {
         path: 'teachTask',
         name: 'course',
         component: () => import('@/views/student/course/index'),
-        meta: {title: '教学任务', icon: 'example.svg'},
+        meta: {title: '教学任务', icon: 'product-list'},
         role: ['TEACHER']
       }, {
         path: 'attendClass',
         name: 'course',
         component: () => import('@/views/student/course/index'),
-        meta: {title: '课程表', icon: 'example.svg'},
+        meta: {title: '课程表', icon: 'product-list'},
         role: ['STUDENT']
       }
     ]
@@ -134,13 +132,13 @@ export const constantRouterMap = [
       path: 'resource',
       name: 'resource',
       component: () => import('@/views/rbac/resource/resourceList'),
-      meta: {title: '资源列表', icon: 'example.svg'},
+      meta: {title: '资源列表', icon: 'product-list'},
       hidden: false
     }, {
       path: 'role',
       name: '/role',
       component: () => import('@/views/rbac/resource/roleList'),
-      meta: {title: '角色列表', icon: 'example.svg'}
+      meta: {title: '角色列表', icon: 'product-list'}
     }
     ]
   },
@@ -151,26 +149,27 @@ export const constantRouterMap = [
     alwaysShow: true,
     name: 'questionnaire',
     meta: {title: '教学质量评测', icon: 'product'},
+    role: ['MANGER'],
     children: [
       {
         path: 'create',
         name: 'create',
         component: () => import('@/views/question/card/create'),
-        meta: {title: '创建评教表', icon: 'product-add'},
+        meta: {title: '创建评教表', icon: 'product-list'},
         role: ['MANGER']
       },
       {
         path: 'view',
         name: 'view',
         component: () => import('@/views/question/card/view'),
-        meta: {title: '查看评教表', icon: 'product-add'},
+        meta: {title: '查看评教表', icon: 'product-list'},
         hidden: true
       },
       {
-        path: 'edit',
-        name: 'edit',
+        path: 'reply',
+        name: 'reply',
         component: () => import('@/views/question/card/edit'),
-        meta: {title: '回答评教表', icon: 'product-add'},
+        meta: {title: '回答评教表', icon: 'product-list'},
         hidden: true
       }, {
         path: 'listView',

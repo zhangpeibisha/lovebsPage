@@ -66,11 +66,11 @@ const user = {
           commit('SET_AVATAR', principal.image);
           commit('SET_TOKEN', principal.enabled);
           commit('SET_ROLES', principal.roleModels);
-          resolve()
+          resolve(this.state.user)
         }).catch(error => {
           reject(error)
         })
-      })
+      });
     },
     // 登出
     LogOut({commit, state}) {
