@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import iView from 'iview'
+import Cookies from 'js-cookie'
 Vue.use(Router)
 
 /* Layout */
@@ -162,42 +163,126 @@ const router =  new Router({
   scrollBehavior: () => ({y: 0}),
   routes: constantRouterMap
 });
-
-const turnTo = (to, access, next) => {
-  if (canTurnTo(to.name, access, routes)) next() // 有权限，可访问
-  else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
+const TOKEN_KEY = "SESSION";
+export const getToken = () => {
+  const token = Cookies.get(TOKEN_KEY)
+  if (token) return token
+  else return true
+}
+/**
+ * 权鉴
+ * @param {*} name 即将跳转的路由name
+ * @param {*} access 用户权限数组
+ * @param {*} routes 路由列表
+ * @description 用户是否可跳转到该页
+ */
+export const canTurnTo = (name, access, routes) => {
+  // const routePermissionJudge = (list) => {
+  //   return list.some(item => {
+  //     if (item.children && item.children.length) {
+  //       return routePermissionJudge(item.children)
+  //     } else if (item.name === name) {
+  //       return hasAccess(access, item)
+  //     }
+  //   })
+  // }
+  // return routePermissionJudge(routes)
+  routes.splice(3,1);
+  console.log("name:",name);
+  return true;
+}
+/**
+ * @description 根据当前跳转的路由设置显示在浏览器标签的title
+ * @param {Object} routeItem 路由对象
+ * @param {Object} vm Vue实例
+ */
+const title = '毕业设计题目征集系统'
+export const setTitle = (routeItem, vm) => {
+  const handledRoute = getRouteTitleHandled(routeItem)
+  const pageTitle = showTitle(handledRoute, vm)
+  const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
+  window.document.title = resTitle
 }
 
+
+export const getRouteTitleHandled = (route) => {
+  let router = { ...route }
+  let meta = { ...route.meta }
+  let title = ''
+  if (meta.title) {
+    if (typeof meta.title === 'function') {
+      meta.__titleIsFunction__ = true
+      title = meta.title(router)
+    } else title = meta.title
+  }
+  meta.title = title
+  router.meta = meta
+  return router
+}
+export const showTitle = (item, vm) => {
+  let { title, __titleIsFunction__ } = item.meta
+  if (!title) return
+  if (useI18n) {
+    if (title.includes('{{') && title.includes('}}') && useI18n) title = title.replace(/({{[\s\S]+?}})/, (m, str) => str.replace(/{{([\s\S]*)}}/, (m, _) => vm.$t(_.trim())))
+    else if (__titleIsFunction__) title = item.meta.title
+    else title = vm.$t(item.name)
+  } else title = (item.meta && item.meta.title) || item.name
+  return title
+}
+const turnTo = (to, access, next) => {
+  if (canTurnTo(to.name, access, constantRouterMap)) next() // 有权限，可访问
+  else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
+}
+const LOGIN_PAGE_NAME = 'login'
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
-  const token = getToken()
-  if (!token && to.name !== LOGIN_PAGE_NAME) {
+  const token = getToken();
+  console.log(to)
+  if (!token && (to.name !== LOGIN_PAGE_NAME && to.fullPath != "/login") ) {
+    console.log(11111)
     // 未登录且要跳转的页面不是登录页
     next({
       name: LOGIN_PAGE_NAME // 跳转到登录页
     })
-  } else if (!token && to.name === LOGIN_PAGE_NAME) {
+    // next() // 跳转
+  } else 
+  if (!token && (to.name === LOGIN_PAGE_NAME || to.fullPath === "/login")) {
+    console.log(22222)
     // 未登陆且要跳转的页面是登录页
     next() // 跳转
-  } else if (token && to.name === LOGIN_PAGE_NAME) {
+  }
+   else if (token &&  (to.name === LOGIN_PAGE_NAME || to.fullPath === "/login")) {
+    console.log(3333)
     // 已登录且要跳转的页面是登录页
     next({
       name: homeName // 跳转到homeName页
     })
   } else {
-    if (store.state.user.hasGetInfo) {
-      turnTo(to, store.state.user.access, next)
-    } else {
-      store.dispatch('getUserInfo').then(user => {
-        // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
-        turnTo(to, user.access, next)
-      }).catch(() => {
-        setToken('')
-        next({
-          name: 'login'
-        })
-      })
-    }
+    // if (store.state.user.hasGetInfo) {
+    //   console.log(4444)
+    //   turnTo(to, store.state.user.access, next)
+    // } else {
+      console.log(55555)
+      // store.dispatch('getInfo').then(user => {
+      //   user = {
+      //     access : "student"
+      //   }
+      //   console.log("info",user)
+      //   // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
+      //   turnTo(to, user.access, next)
+      // }).catch(() => {
+      //   setToken('')
+      //   next({
+      //     name: 'login'
+      //   })
+      // })
+      let user = {
+        access : "student"
+      }
+      console.log("info",user)
+      // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
+      turnTo(to, user.access, next)
+    // }
   }
 })
 
