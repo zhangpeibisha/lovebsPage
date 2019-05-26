@@ -15,8 +15,6 @@ router.beforeEach((to, from, next) => {
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
       const roles = store.state.user.roles;
-      console.log("roles111111",roles);
-      console.log("roles222222",store.getters.roles);
       if (store.getters.roles.length === 0) {
         store.dispatch('GetInfo').then(res => { // 拉取用户信息
           console.log("路由拉取用户数据为：",res);
@@ -54,17 +52,20 @@ router.afterEach(() => {
  * @description 用户是否可跳转到该页
  */
 export const canTurnTo = (name, access, routers) => {
-  console.log("name",name,"access",access,"routers",routers);
-  access = 'S';
+  console.log("name=>",name,"access=>",access,"routers=>",routers);
   let c = (obj) => {
     if ( typeof obj.role=== typeof []) {
-      if (obj.role.includes(access)) {
-        if (obj.children) {
-          obj.children.forEach(child => c(child));
-        }
-        obj.hidden = false;
-      } else {
-        obj.hidden = true;
+      if (access){
+        access.forEach(ac=>{
+          if (obj.role.includes(ac.name)) {
+            if (obj.children) {
+              obj.children.forEach(child => c(child));
+            }
+            obj.hidden = false;
+          } else {
+            obj.hidden = true;
+          }
+        });
       }
     }
   };
