@@ -8,17 +8,6 @@
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/studentCenter" v-if="roles.includes('STUDENT')">
-          <el-dropdown-item>
-            个人中心
-          </el-dropdown-item>
-        </router-link>
-
-        <router-link class="inlineBlock" to="/teacherCenter" v-if="roles.includes('TEACHER')">
-          <el-dropdown-item>
-            个人中心
-          </el-dropdown-item>
-        </router-link>
         <el-dropdown-item divided>
           <span @click="logout" style="display:block;">退出</span>
         </el-dropdown-item>

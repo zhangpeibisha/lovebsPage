@@ -18,6 +18,7 @@ export const constantRouterMap = [
     redirect: '/home',
     meta: {title: '首页', icon: 'home'},
     role: ['MANGER', 'TEACHER', 'STUDENT'],
+    hidden: true,
     children: [{
       path: 'home',
       name: 'home',
@@ -32,22 +33,16 @@ export const constantRouterMap = [
     name: 'center',
     meta: {title: '个人信息中心', icon: 'product'},
     role: ['MANGER', 'TEACHER', 'STUDENT'],
-    children: [{
-      path: 'home',
-      name: 'home',
-      component: () => import('@/views/home/index'),
-      role: ['MANGER', 'TEACHER', 'STUDENT'],
-      meta: {title: '首页', icon: 'home'}
-    },
+    children: [
       {
-        path: '/teacher',
+        path: 'teacher',
         name: 'teacher',
         component: () => import('@/views/center/teacher'),
         meta: {title: '个人中心(老师)', icon: 'home'},
         role: ['TEACHER', 'MANGER']
       },
       {
-        path: '/student',
+        path: 'student',
         name: 'student',
         component: () => import('@/views/center/student'),
         role: ['STUDENT'],
@@ -59,7 +54,6 @@ export const constantRouterMap = [
   {
     path: '/school',
     component: Layout,
-    redirect: '/school/manager',
     name: 'student',
     meta: {title: '学校信息', icon: 'product'},
     role: ['MANGER'],
@@ -95,12 +89,11 @@ export const constantRouterMap = [
         path: 'manger',
         name: 'manger',
         component: () => import('@/views/student/teacher/index'),
-        meta: {title: '老师列表', icon: 'example.svg'},
+        meta: {title: '老师列表', icon: 'product-list'},
         role: ['MANGER']
       },
     ]
-  },
-  {
+  }, {
     path: "/task",
     name: "task",
     component: Layout,
@@ -115,12 +108,18 @@ export const constantRouterMap = [
         meta: {title: '课程信息', icon: 'example.svg'},
         role: ['MANGER']
       }, {
-        path: '/teachTask',
+        path: 'teachTask',
         name: 'course',
         component: () => import('@/views/student/course/index'),
         meta: {title: '教学任务', icon: 'example.svg'},
         role: ['TEACHER']
-      },
+      }, {
+        path: 'attendClass',
+        name: 'course',
+        component: () => import('@/views/student/course/index'),
+        meta: {title: '课程表', icon: 'example.svg'},
+        role: ['STUDENT']
+      }
     ]
   },
   {
@@ -132,19 +131,17 @@ export const constantRouterMap = [
     hidden: false,
     role: ['MANGER'],
     children: [{
-      path: 'resourceList',
-      name: 'resourceList',
+      path: 'resource',
+      name: 'resource',
       component: () => import('@/views/rbac/resource/resourceList'),
       meta: {title: '资源列表', icon: 'example.svg'},
       hidden: false
+    }, {
+      path: 'role',
+      name: '/role',
+      component: () => import('@/views/rbac/resource/roleList'),
+      meta: {title: '角色列表', icon: 'example.svg'}
     }
-      ,
-      {
-        path: 'roleList',
-        name: 'roleList',
-        component: () => import('@/views/rbac/resource/roleList'),
-        meta: {title: '角色列表', icon: 'example.svg'}
-      }
     ]
   },
   {path: '*', redirect: '/404', hidden: true},
@@ -159,7 +156,8 @@ export const constantRouterMap = [
         path: 'create',
         name: 'create',
         component: () => import('@/views/question/card/create'),
-        meta: {title: '创建评教表', icon: 'product-add'}
+        meta: {title: '创建评教表', icon: 'product-add'},
+        role: ['MANGER']
       },
       {
         path: 'view',
@@ -178,7 +176,8 @@ export const constantRouterMap = [
         path: 'listView',
         name: 'listView',
         component: () => import('@/views/question/list/index'),
-        meta: {title: '评教表列表', icon: 'product-add'}
+        meta: {title: '评教表列表', icon: 'product-add'},
+        role: ['MANGER']
       }
     ]
   },
