@@ -8,13 +8,13 @@
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <router-link class="inlineBlock" to="/studentCenter" v-if="student==='STUDENT'">
+        <router-link class="inlineBlock" to="/studentCenter" v-if="roles.includes('STUDENT')">
           <el-dropdown-item>
             个人中心
           </el-dropdown-item>
         </router-link>
 
-        <router-link class="inlineBlock" to="/teacherCenter" v-if="student==='TEACHER'">
+        <router-link class="inlineBlock" to="/teacherCenter" v-if="roles.includes('TEACHER')">
           <el-dropdown-item>
             个人中心
           </el-dropdown-item>
@@ -32,12 +32,13 @@
   import Breadcrumb from '@/components/Breadcrumb'
   import Hamburger from '@/components/Hamburger'
   import {findUserInfo} from '@/api/center';
+  import store from '@/store'
 
   export default {
     data() {
       return {
-        teacher: "",
-        imageUrl:''
+        imageUrl: '',
+        roles: []
       }
     },
     components: {
@@ -55,11 +56,20 @@
     },
     methods: {
       getList() {
-        findUserInfo().then((res) => {
-          this.student = res.data.userType;
-          this.imageUrl = res.data.userInfo.imageUrl;
-          console.log("获取到用户信息：", this.userInfo)
-        })
+        const user = store.state.user;
+        console.log("主页用户信息获取到：", user);
+        const roles = user.roles;
+        this.insertRole(roles);
+        console.log("主页角色信息获取到：", this.roles);
+        this.imageUrl = user.avatar;
+        console.log("主页角色信息获取到imageUrl：", this.imageUrl);
+      },
+      insertRole(roles) {
+        if (roles) {
+          roles.forEach(res => {
+            this.roles.push(res.name);
+          })
+        }
       },
       toggleSideBar() {
         this.$store.dispatch('ToggleSideBar')

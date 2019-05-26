@@ -37,15 +37,14 @@
 
 
 <script>
+
   export default {
     name: 'login',
     data() {
       return {
         loginForm: {
-          // username: 'XS001',
-          // password: 'XS001',
-          username: '70355955',
-          password: '70355955',
+          username: '826416790',
+          password: '826416790',
           image: ""
         }
       }

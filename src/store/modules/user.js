@@ -31,39 +31,55 @@ const user = {
       return new Promise((resolve, reject) => {
         login(username, userInfo.password, userInfo.image).then(response => {
           const data = response.data;
-          const tokenStr = data.details.sessionId;
+          const tokenStr = data.authenticated;
+          const principal = data.principal;
+          const roles = principal.roleModels;
+          const name = data.name;
+          const image = principal.image;
           console.log("登陆获取的信息",data);
+          console.log("获取到的token",tokenStr);
+          console.log("获取到的角色信息",roles);
+          console.log("获取到的名字信息",roles);
+          console.log("获取到的头像信息",image);
           setToken(tokenStr);
           commit('SET_TOKEN', tokenStr);
+          commit('SET_ROLES', roles);
+          commit('SET_NAME', name);
+          commit('SET_AVATAR', image);
           resolve()
         }).catch(error => {
           reject(error)
         })
       })
     },
-
     // 获取用户信息
     GetInfo({commit, state}) {
+      console.log("state",state);
       return new Promise((resolve, reject) => {
         getInfo().then(response => {
           console.log("获取用户信息为：",response);
           const data = response.data;
-          const userInfo = data.userInfo;
-          commit('SET_NAME', userInfo.name);
-          commit('SET_AVATAR', userInfo.imageUrl);
-          resolve(response)
+          const principal = data.principal;
+          console.log("获取用户信息为===principal：",principal);
+          console.log("获取用户信息为===roleModels：",principal.roleModels);
+          commit('SET_NAME', data.name);
+          commit('SET_AVATAR', principal.image);
+          commit('SET_TOKEN', principal.enabled);
+          commit('SET_ROLES', principal.roleModels);
+          resolve()
         }).catch(error => {
           reject(error)
         })
       })
     },
-
     // 登出
     LogOut({commit, state}) {
       return new Promise((resolve, reject) => {
         logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
+          commit('SET_TOKEN', '');
+          commit('SET_ROLES', []);
+          commit('SET_NAME', '');
+          commit('SET_AVATAR', '');
           removeToken();
           resolve()
         }).catch(error => {
@@ -71,7 +87,6 @@ const user = {
         })
       })
     },
-
     // 前端 登出
     FedLogOut({commit}) {
       return new Promise(resolve => {
@@ -81,6 +96,6 @@ const user = {
       })
     }
   }
-}
+};
 
 export default user
