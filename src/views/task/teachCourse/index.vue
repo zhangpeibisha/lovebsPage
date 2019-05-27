@@ -65,7 +65,6 @@
         <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
       </el-upload>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="showImportTask = false">取 消</el-button>
         <el-button type="primary" @click="showImportTask = false">确 定</el-button>
       </span>
     </el-dialog>
@@ -132,6 +131,7 @@
     page: 1,
     limit: 5
   };
+  import {uploadTeachTaskUrl} from '@/config/config'
 
   export default {
     name: "teachCourse",
@@ -150,7 +150,7 @@
         roles: [],
         total: 0,
         showImportTask: false,
-        uploadUrl:"/api/teacherCourse/teachTask"
+        uploadUrl:uploadTeachTaskUrl
       };
     },
     created() {
