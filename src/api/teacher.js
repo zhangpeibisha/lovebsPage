@@ -50,11 +50,12 @@ export function _delete(params) {
 }
 
 export function findById(id) {
+  console.log("查询老师信息的参数未：",id);
   return request({
     url:'/teacher/findById',
     method:'get',
     params:{
-      id
+      id:id
     }
   })
 }

@@ -1,52 +1,60 @@
 import request from '@/utils/request'
+
 export function fetchList(params) {
   return request({
-    url:'/profession/quire/list',
-    method:'get',
-    params:params
+    url: '/profession/quire/list',
+    method: 'get',
+    params: params
   })
 }
+
 export function fetchFacultyList(params) {
   return request({
-    url:'/faculty/quire/list',
-    method:'get',
-    params:params
+    url: '/faculty/quire/list',
+    method: 'get',
+    params: params
   })
 }
+
 export function findById(id) {
+  console.log("查询专业的id信息的参数未：", id);
   return request({
-    url:'/profession/findById',
-    method:'get',
-    params:{
-      id
+    url: '/profession/findById',
+    method: 'get',
+    params: {
+      id: id
     }
   })
 }
+
 export function fetchTeacherList(params) {
   return request({
-    url:'/teacher/quire/list',
-    method:'get',
-    params:params
+    url: '/teacher/quire/list',
+    method: 'get',
+    params: params
   })
 }
+
 export function create(params) {
   return request({
-    url:'/profession/add',
-    method:'post',
-    params:params
+    url: '/profession/add',
+    method: 'post',
+    params: params
   })
 }
+
 export function update(params) {
   return request({
-    url:'/profession/update',
-    method:'put',
-    params:params
+    url: '/profession/update',
+    method: 'put',
+    params: params
   })
 }
+
 export function _delete(params) {
   return request({
-    url:'/profession/delete',
-    method:'delete',
-    params:params
+    url: '/profession/delete',
+    method: 'delete',
+    params: params
   })
 }

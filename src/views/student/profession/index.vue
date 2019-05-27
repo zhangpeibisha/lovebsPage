@@ -59,7 +59,7 @@
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
         <el-table-column label="系主任" align="center">
-          <template slot-scope="scope">{{getTheacher(scope.row.departmentid).name}}</template>
+          <template slot-scope="scope">{{getTheacher(scope.row.departmentId).name}}</template>
         </el-table-column>
         <el-table-column label="学院" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
@@ -101,7 +101,7 @@
         </el-form-item>
         <el-form-item label="学院：">
           <el-select
-            v-model="profession.facultyid"
+            v-model="profession.facultyId"
             placeholder="请选择学院"
             clearable
             filterable
@@ -117,7 +117,7 @@
         </el-form-item>
         <el-form-item label="指导老师：">
           <el-select
-            v-model="profession.departmentid"
+            v-model="profession.departmentId"
             placeholder="请选指导老师"
             clearable
             filterable
@@ -205,7 +205,7 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.data;
-        this.total = 1;
+        this.total = response.data.total;
       });
     },
     getFacultyList() {
@@ -238,7 +238,14 @@ export default {
       this.getList();
     },
     getTheacher(id) {
-        return this.teacherList.filter(t => t.id === id)[0];
+      var teacherList = this.teacherList.filter(t => t.id === id)[0];
+      if (teacherList) {
+        return teacherList;
+      }
+      var tempTeacher = {
+        name:'无'
+      };
+      return tempTeacher;
     },
     handleDelete(index, row) {
       this.$confirm("是否要进行删除操作?", "提示", {
@@ -268,7 +275,7 @@ export default {
           });
         });
       }
-      // 添加学生
+      // 添加专业
       else {
         create(this.profession).then(result => {
           this.editDialog = false;

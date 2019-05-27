@@ -73,7 +73,7 @@
       >
         <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="编号" align="center">
-          <template slot-scope="scope">{{scope.row.classid}}</template>
+          <template slot-scope="scope">{{scope.row.classCoding}}</template>
         </el-table-column>
         <el-table-column label="指导老师" align="center">
           <template slot-scope="scope">{{scope.row.teacher ? scope.row.teacher.name : "-"}}</template>
@@ -110,8 +110,8 @@
     </div>
     <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
       <el-form label-width="80px">
-        <el-form-item label="编号">
-          <el-input v-model="classModel.classid" :disabled="classModel.type == 'see'"></el-input>
+        <el-form-item label="班级编号">
+          <el-input v-model="classModel.classCoding" :disabled="classModel.type == 'see'"></el-input>
         </el-form-item>
         <el-form-item label="学院：">
           <el-select
@@ -148,7 +148,7 @@
         </el-form-item>
         <el-form-item label="指导老师：">
           <el-select
-            v-model="classModel.teacherid"
+            v-model="classModel.teacherId"
             placeholder="请选指导老师"
             clearable
             filterable
@@ -229,11 +229,11 @@ export default {
   methods: {
     getList() {
       this.listLoading = true;
-      this.listQuery.quire = "and 1 = 1";
+      this.listQuery.quire = " and 1 = 1";
       this.listQuery.keyword
-        ? (this.listQuery.quire += `and name like '%${
+        ? (this.listQuery.quire += ` and  classCoding like '%${
             this.listQuery.keyword
-          }%') `)
+          }%'`)
         : "";
       this.listQuery.facultyId && !this.listQuery.professionId
         ? (this.listQuery.quire += ` and professionId in (select id from profession where facultyId = ${
@@ -250,19 +250,28 @@ export default {
         this.list = [];
         let list = response.data.data;
         list.forEach(item => {
+
           item.profession = {};
           item.teacher = {};
-          professionFindById(item.professionid).then(res => {
+          professionFindById(item.professionId).then(res => {
             let profession = res.data;
-            facultyFindById(profession.facultyid).then(res1 => {
-              profession.faculty = res1.data;
-              item.profession = profession;
-              this.list = list;
-            });
+            if (profession){
+              facultyFindById(profession.facultyId).then(res1 => {
+                profession.faculty = res1.data;
+                item.profession = profession;
+                this.list = list;
+              });
+            }
           });
-          teacherFindById(item.teacherid).then(t => (item.teacher = t.data));
+          console.log("获取到的班级信息为",item);
+          if (item.teacherId) {
+            teacherFindById(item.teacherId).then(t => (item.teacher = t.data));
+          }else {
+             item.teacher.name = '无';
+          }
+
         });
-        this.total = 1;
+        this.total = response.data.total;
       });
     },
     getFacultyList() {
