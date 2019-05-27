@@ -17,7 +17,7 @@
             <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="关键字"></el-input>
           </el-form-item>
           <el-form-item label="工号：">
-            <el-input style="width: 203px" v-model="listQuery.jobnumber" placeholder="工号"></el-input>
+            <el-input style="width: 203px" v-model="listQuery.jobNumber" placeholder="工号"></el-input>
           </el-form-item>
           <el-form-item label="姓名：">
             <el-input style="width: 203px" v-model="listQuery.name" placeholder="姓名"></el-input>
@@ -48,11 +48,11 @@
         <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="头像" width="100" align="center">
           <template slot-scope="scope">
-            <img style="height: 80px;width:80px;" :src="scope.row.imagerurl">
+            <img style="height: 80px;width:80px;" :src="scope.row.imageUrl">
           </template>
         </el-table-column>
         <el-table-column label="工号" align="center">
-          <template slot-scope="scope">{{scope.row.jobnumber}}</template>
+          <template slot-scope="scope">{{scope.row.jobNumber}}</template>
         </el-table-column>
         <el-table-column label="姓名" align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
@@ -165,9 +165,9 @@ export default {
         +
             `or phone like '%${this.listQuery.keyword}%'  or email like '%${this.listQuery.keyword}%')`)
         : "";
-      this.listQuery.jobnumber
+      this.listQuery.jobNumber
         ? (this.listQuery.quire += ` and jobnumber = ${
-          this.listQuery.jobnumber
+          this.listQuery.jobNumber
           }`)
         : "";
       this.listQuery.name
@@ -176,7 +176,7 @@ export default {
       findTeacherList(this.listQuery).then(response => {
         this.listLoading = false;
         this.list = response.data.data;
-        this.total = 1;
+        this.total = response.data.total;
         console.log("获取到的数据为：",response)
       });
     },

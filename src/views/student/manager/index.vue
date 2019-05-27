@@ -58,7 +58,7 @@
               <el-option
                 v-for="item in classes"
                 :key="item.id"
-                :label="item.classid"
+                :label="item.classCoding"
                 :value="item.id"
               ></el-option>
             </el-select>
@@ -390,7 +390,7 @@
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.data;
-          this.total = 1;
+          this.total = response.data.total;
         });
       },
       getFacultyList() {
