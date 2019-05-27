@@ -271,7 +271,7 @@
         findCourseList(this.listQuery).then(response => {
           this.listLoading = false;
           this.list = response.data.data;
-          this.total = 1;
+          this.total = response.data.total;
           console.log("565656asdsa获取到的数据为：", list)
         });
       },

@@ -120,7 +120,7 @@ export const asyncRouterMap = [
         name: 'course',
         component: () => import('@/views/student/course/index'),
         meta: {title: '教学任务', icon: 'product-list'},
-        role: ['TEACHER']
+        role: ['TEACHER','MANGER']
       }, {
         path: 'attendClass',
         name: 'course',
