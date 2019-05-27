@@ -4,7 +4,7 @@
       <div>
         <i class="el-icon-search"></i>
         <span>筛选搜索</span>
-        <el-button style="float: right" @click="getList()" type="primary" size="small">查询结果</el-button>
+        <el-button style="float: right" @click="findTeachCourseList()" type="primary" size="small">查询结果</el-button>
         <el-button
           style="float: right;margin-right: 15px"
           @click="handleResetSearch()"
@@ -15,11 +15,8 @@
       </div>
       <div style="margin-top: 15px">
         <el-form :inline="true" :model="listQuery" size="small" label-width="140px">
-          <el-form-item label="输入搜索：">
-            <el-input style="width: 203px" v-model="listQuery.keyword" placeholder="关键字"></el-input>
-          </el-form-item>
           <el-form-item label="学年：">
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="listQuery.year" placeholder="请选择">
               <el-option
                 v-for="item in schoolYear"
                 :key="item"
@@ -29,7 +26,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="学期：">
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="listQuery.semester" placeholder="请选择">
               <el-option
                 v-for="item in semester"
                 :key="item.type"
@@ -45,9 +42,35 @@
       <i class="el-icon-tickets"></i>
       <span>教学任务</span>
       <el-button
-        class="btn-add" type="success" @click="handleDelete()" size="mini">导入课程任务
+        class="btn-add" type="success" @click="showImportTask=true" size="mini">导入教学任务
       </el-button>
     </el-card>
+
+
+    <el-dialog
+      title="上传教学任务"
+      :visible.sync="showImportTask"
+      width="30%">
+      <el-upload
+        class="upload-demo"
+        drag
+        :on-success="uploadTaskSuccess"
+        :on-error="uploadTaskError"
+        :action='uploadUrl'
+        multiple
+        headers="{'Content-Type':'application/x-www-form-urlencoded'}"
+        name="teachTask">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="showImportTask = false">取 消</el-button>
+        <el-button type="primary" @click="showImportTask = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+
     <div class="table-container">
       <el-table
         :data="teachCourseList"
@@ -103,7 +126,6 @@
   import store from '@/store'
   import {fetchListAll, findSchoolYearList} from '@/api/task'
 
-
   const defaultListQuery = {
     year: null,
     semester: null,
@@ -125,9 +147,10 @@
           name: '第二学期',
           type: 'SECOND'
         }],
-        listLoading: false,
         roles: [],
-        total: 0
+        total: 0,
+        showImportTask: false,
+        uploadUrl:"/api/teacherCourse/teachTask"
       };
     },
     created() {
@@ -171,7 +194,17 @@
       handleCurrentChange(val) {
         this.listQuery.page = val;
         this.getList();
-      },
+      },uploadTaskSuccess(){
+        this.$message({
+          message: '教学任务上传成功',
+          type: 'success'
+        });
+      },uploadTaskError(){
+        this.$message({
+          message: '教学任务上传失败',
+          type: 'error'
+        });
+      }
     }
   };
 </script>
