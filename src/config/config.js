@@ -4,3 +4,9 @@ export const perUrl = "/api";
  * @type {string}
  */
 export const uploadTeachTaskUrl = perUrl + "/teacherCourse/excel/teachTask";
+
+/**
+ * 上传老师信息
+ * @type {string}
+ */
+export const uploadTeacherUrl = perUrl + "/teacher/excel";
