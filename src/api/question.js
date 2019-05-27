@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function createQuestion(params) {
   return request({
-    url: '/evaluationquestionnaire/create',
+    url: '/evaluationQuestionnaire/create',
     method: 'post',
     params: params
   })
@@ -10,7 +10,7 @@ export function createQuestion(params) {
 
 export function addQuestion(params, data) {
   return request({
-    url: '/evaluationquestionnaire/question',
+    url: '/evaluationQuestionnaire/question',
     method: 'post',
     params: params,
     data,
@@ -22,7 +22,7 @@ export function addQuestion(params, data) {
 
 export function addAllQuestion(params, data) {
   return request({
-    url: '/evaluationquestionnaire/batch/add/question',
+    url: '/evaluationQuestionnaire/batch/add/question',
     method: 'post',
     params: params,
     data,
@@ -34,7 +34,7 @@ export function addAllQuestion(params, data) {
 
 export function deleteQuestion(params) {
   return request({
-    url: '/evaluationquestionnaire/question',
+    url: '/evaluationQuestionnaire/question',
     method: 'delete',
     params: params
   })
@@ -42,7 +42,7 @@ export function deleteQuestion(params) {
 
 export function updateQuestion(params) {
   return request({
-    url: '/evaluationquestionnaire/question',
+    url: '/evaluationQuestionnaire/question',
     method: 'put',
     params: params
   })
@@ -51,7 +51,7 @@ export function updateQuestion(params) {
 // 发现问卷id
 export function findEvaluationById(evaluationId) {
   return request({
-    url: '/evaluationquestionnaire/question/by/id',
+    url: '/evaluationQuestionnaire/question/by/id',
     method: 'get',
     params: {
       evaluationId: evaluationId
@@ -62,7 +62,7 @@ export function findEvaluationById(evaluationId) {
 // 发现发布问卷id
 export function findPublishQuestionById(publishId) {
   return request({
-    url: '/publishquestionnaire/findById',
+    url: '/publishQuestionnaire/findById',
     method: 'get',
     params: {
       id: publishId
@@ -74,7 +74,7 @@ export function findPublishQuestionById(publishId) {
 export function teacherClieckPublishQuestion(questionId) {
   console.log("发现请求参数为：", questionId);
   return request({
-    url: '/publishquestionnaire/teacher/read/publish',
+    url: '/publishQuestionnaire/teacher/read/publish',
     method: 'put',
     params: {
       publishQuestingId: questionId
@@ -85,7 +85,7 @@ export function teacherClieckPublishQuestion(questionId) {
 // 添加黑名单学生
 export function addBlackList(publishId, ids) {
   return request({
-    url: '/publishquestionnaire/addBlack',
+    url: '/publishQuestionnaire/addBlack',
     method: 'post',
     params: {
       publisId: publishId,
@@ -97,7 +97,7 @@ export function addBlackList(publishId, ids) {
 // 删除黑名单学生
 export function deleteBlackList(publishId, ids) {
   return request({
-    url: '/publishquestionnaire/deleteBlack',
+    url: '/publishQuestionnaire/deleteBlack',
     method: 'delete',
     params: {
       publisId: publishId,
@@ -108,7 +108,7 @@ export function deleteBlackList(publishId, ids) {
 
 export function commitE(params, data) {
   return request({
-    url: '/publishquestionnaire/writeQuestion',
+    url: '/publishQuestionnaire/writeQuestion',
     method: 'post',
     params: params,
     data,
@@ -120,7 +120,7 @@ export function commitE(params, data) {
 
 export function fetchPublish(params) {
   return request({
-    url: '/publishquestionnaire/answers',
+    url: '/publishQuestionnaire/answers',
     method: 'get',
     params: params
   })
@@ -129,7 +129,7 @@ export function fetchPublish(params) {
 // 按条件查询问卷
 export function findQuireQuestion(params) {
   return request({
-    url: '/evaluationquestionnaire/all/list',
+    url: '/evaluationQuestionnaire/all/list',
     method: 'get',
     params: params
   })
@@ -138,7 +138,7 @@ export function findQuireQuestion(params) {
 // 按条件查询问卷
 export function publishQuestionnaireByCourseIds(params) {
   return request({
-    url: '/publishquestionnaire/publish/by/courseIds',
+    url: '/publishQuestionnaire/publish/by/courseIds',
     method: 'post',
     params: params
   })

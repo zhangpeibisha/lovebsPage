@@ -209,7 +209,7 @@
         this.listQuery.query = "where 1 = 1";
         this.listQuery.keyword
           ? (this.listQuery.query +=
-          ` and (title like '%${this.listQuery.keyword}%' or descritption like '%${this.listQuery.keyword}%' `
+          ` and (title like '%${this.listQuery.keyword}%' or description like '%${this.listQuery.keyword}%' `
           +
           `or content like '%${this.listQuery.keyword}%')`)
           : "";

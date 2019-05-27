@@ -167,13 +167,15 @@ export const asyncRouterMap = [
         path: 'view',
         name: 'view',
         component: () => import('@/views/question/card/view'),
-        meta: {title: '查看评教表', icon: 'product-list'}
+        meta: {title: '查看评教表', icon: 'product-list'},
+        hidden:true
       },
       {
         path: 'reply',
         name: 'reply',
         component: () => import('@/views/question/card/edit'),
-        meta: {title: '回答评教表', icon: 'product-list'}
+        meta: {title: '回答评教表', icon: 'product-list'},
+        hidden:true
       }, {
         path: 'listView',
         name: 'listView',
