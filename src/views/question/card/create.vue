@@ -223,7 +223,7 @@ export default {
   padding: 3rem 6rem;
   border-top: 1px solid $line-color;
   background: $bg-gray;
-  height: 700px;
+  height: 500px;
   overflow: auto;
   @at-root {
     .qn {
