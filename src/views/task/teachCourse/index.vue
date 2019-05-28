@@ -101,7 +101,7 @@
         </el-table-column>
         <el-table-column label="操作" style="width: 600px">
           <template slot-scope="scope">
-
+            <el-button size="mini" @click="viewTeachTaskQuestion(scope.row)">评教卷</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -204,6 +204,16 @@
           message: '教学任务上传失败',
           type: 'error'
         });
+      },viewTeachTaskQuestion(row){
+        console.log("获取到的信息为：",row)
+        console.log("获取到的信息为,发布评教卷id：",row.publishQuestionnaireId);
+        console.log("获取到的信息为,评教卷id：",row.questionnaireId);
+        this.$router.push({
+          path: "/questionnaire/view",
+          query: {
+            evaluationId: row.questionnaireId
+          }
+        })
       }
     }
   };
