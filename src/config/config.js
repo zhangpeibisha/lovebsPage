@@ -12,6 +12,12 @@ export const uploadTeachTaskUrl = perUrl + "/teacherCourse/excel/teachTask";
 export const uploadTeacherUrl = perUrl + "/teacher/excel";
 
 /**
+ * 为班级、专业、学院分配老师
+ * @type {string}
+ */
+export const uploadConfigTeacherUrl = perUrl + "/teacher/excel/config";
+
+/**
  * 上传学生课程分数url
  * @type {string}
  */

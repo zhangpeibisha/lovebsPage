@@ -66,9 +66,9 @@
         <el-table-column label="系主任" align="center">
           <template slot-scope="scope">{{getTheacher(scope.row.departmentId).name}}</template>
         </el-table-column>
-        <el-table-column label="学院" align="center">
-          <template slot-scope="scope">{{scope.row.name}}</template>
-        </el-table-column>
+        <!--<el-table-column label="学院" align="center">-->
+          <!--<template slot-scope="scope">{{scope.row.name}}</template>-->
+        <!--</el-table-column>-->
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button

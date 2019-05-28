@@ -40,6 +40,10 @@
       <el-button
         class="btn-add" type="success" @click="showImportTask=true" size="mini">导入老师信息
       </el-button>
+
+      <el-button
+        class="btn-add" type="success" @click="showConfigTeacher=true" size="mini">为学院、专业、班级配置老师
+      </el-button>
     </el-card>
     <div class="table-container">
       <el-table
@@ -121,6 +125,27 @@
       </span>
     </el-dialog>
 
+    <el-dialog
+      title="为学院、专业、班级配置老师"
+      :visible.sync="showConfigTeacher"
+      width="30%">
+      <el-upload
+        class="upload-demo"
+        drag
+        :on-success="uploadTaskSuccess"
+        :on-error="uploadTaskError"
+        :action='configTeacherUrl'
+        multiple
+        headers="{'Content-Type':'application/x-www-form-urlencoded'}"
+        name="configTeacher">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showConfigTeacher = false">确 定</el-button>
+      </span>
+    </el-dialog>
 
     <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
       <el-form label-width="80px">
@@ -151,7 +176,7 @@
     _delete,
     createTeacher
   } from "@/api/teacher";
-  import {uploadTeacherUrl} from '@/config/config'
+  import {uploadTeacherUrl,uploadConfigTeacherUrl} from '@/config/config'
 
   const defaultListQuery = {
     key: null,
@@ -182,7 +207,9 @@
         teacher: {},
         dialogTitle: "",
         showImportTask: false,
-        uploadUrl: uploadTeacherUrl
+        uploadUrl: uploadTeacherUrl,
+        showConfigTeacher:false,
+        configTeacherUrl:uploadConfigTeacherUrl
       };
     },
     created() {
