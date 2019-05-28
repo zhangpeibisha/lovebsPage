@@ -104,6 +104,7 @@
             <el-button size="mini" @click="viewTeachTaskQuestion(scope.row)">评教卷</el-button>
             <!--学生填写评教-->
             <el-button size="mini" @click="answerSheet(scope.row)">评教</el-button>
+            <el-button size="mini" @click="viewTeachTaskQuestionAnswer(scope.row)">查看回答</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -216,7 +217,16 @@
             evaluationId: row.questionnaireId
           }
         })
-      }, answerSheet(row) {
+      },
+      viewTeachTaskQuestionAnswer(row){
+        this.$router.push({
+          path: "/questionnaire/view",
+          query: {
+            publishId: row.publishQuestionnaireId
+          }
+        })
+      }
+      , answerSheet(row) {
         this.$router.push({
           path: "/questionnaire/reply",
           query: {

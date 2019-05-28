@@ -137,7 +137,8 @@ export default {
       fetchPublish({
         publishId: this.publishId
       }).then(r => {
-        this.evaluationId = r.data.evaluationquestionnaire.id;
+        console.log("查询发布的评卷表信息",r.data);
+        this.evaluationId = r.data.evaluationQuestionnaire.id;
         if (r.data.answers && r.data.answers.questionReplies) {
           this.qAnswers = r.data.answers.questionReplies;
         }
