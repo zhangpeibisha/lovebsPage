@@ -75,7 +75,6 @@
         :data="teachCourseList"
         style="width: 100%"
         @selection-change="handleSelectionChange"
-        v-loading="listLoading"
         border>
         <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="课程名字" align="center">
@@ -101,7 +100,10 @@
         </el-table-column>
         <el-table-column label="操作" style="width: 600px">
           <template slot-scope="scope">
+            <!--老师和管理员查看内容-->
             <el-button size="mini" @click="viewTeachTaskQuestion(scope.row)">评教卷</el-button>
+            <!--学生填写评教-->
+            <el-button size="mini" @click="answerSheet(scope.row)">评教</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -150,7 +152,7 @@
         roles: [],
         total: 0,
         showImportTask: false,
-        uploadUrl:uploadTeachTaskUrl
+        uploadUrl: uploadTeachTaskUrl
       };
     },
     created() {
@@ -194,24 +196,31 @@
       handleCurrentChange(val) {
         this.listQuery.page = val;
         this.getList();
-      },uploadTaskSuccess(){
+      }, uploadTaskSuccess() {
         this.$message({
           message: '教学任务上传成功',
           type: 'success'
         });
-      },uploadTaskError(){
+      }, uploadTaskError() {
         this.$message({
           message: '教学任务上传失败',
           type: 'error'
         });
-      },viewTeachTaskQuestion(row){
-        console.log("获取到的信息为：",row)
-        console.log("获取到的信息为,发布评教卷id：",row.publishQuestionnaireId);
-        console.log("获取到的信息为,评教卷id：",row.questionnaireId);
+      }, viewTeachTaskQuestion(row) {
+        console.log("获取到的信息为：", row)
+        console.log("获取到的信息为,发布评教卷id：", row.publishQuestionnaireId);
+        console.log("获取到的信息为,评教卷id：", row.questionnaireId);
         this.$router.push({
           path: "/questionnaire/view",
           query: {
             evaluationId: row.questionnaireId
+          }
+        })
+      }, answerSheet(row) {
+        this.$router.push({
+          path: "/questionnaire/reply",
+          query: {
+            publishEvaluationId: row.publishQuestionnaireId
           }
         })
       }

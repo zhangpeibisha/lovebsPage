@@ -74,7 +74,7 @@ export default {
       this.answers.status = 'commit';
       this.answers.studentId = '';
       commitE({
-        publisId: this.publishId
+        publishId: this.publishId
       },this.answers).then(result => {
         console.log("提交返回结果",result);
         this.$message({
@@ -121,7 +121,7 @@ export default {
       findPublishQuestionById(this.publishId).then(result=>{
         const data = result.data;
         console.log("获取到的data为",result);
-        this.findEvaluationById(data.questionnaireid);
+        this.findEvaluationById(data.questionnaireId);
       });
     }
   },

@@ -148,7 +148,7 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'questionnaire',
     meta: {title: '教学质量评测', icon: 'product'},
-    role: ['MANGER'],
+    role: ['MANGER','STUDENT','TEACHER'],
     children: [
       {
         path: 'create',
@@ -162,14 +162,16 @@ export const asyncRouterMap = [
         name: 'view',
         component: () => import('@/views/question/card/view'),
         meta: {title: '查看评教表', icon: 'product-list'},
-        hidden:true
+        hidden:true,
+        role: ['MANGER', 'TEACHER']
       },
       {
         path: 'reply',
         name: 'reply',
         component: () => import('@/views/question/card/edit'),
         meta: {title: '回答评教表', icon: 'product-list'},
-        hidden:true
+        hidden:true,
+        role: ['STUDENT']
       }, {
         path: 'listView',
         name: 'listView',

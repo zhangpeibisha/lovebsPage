@@ -31,7 +31,6 @@
       <footer class="footer">
         <div class="operation">
           <span class="btn" :class="{ disabled: isLoading }" @click="createE()">保存问卷</span>
-          <span class="btn" :class="{ disabled: isLoading }" @click="publishBtnHandler">发布问卷</span>
         </div>
       </footer>
     </div>

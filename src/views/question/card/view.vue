@@ -45,7 +45,10 @@
           <div class="pick-date">
           </div>
           <div class="operation">
+            <!--学生查看-->
             <span class="btn" :class="{ disabled: isLoading }" @click="editEvaluation">回答问卷</span>
+            <!--老师使用-->
+            <span class="btn" :class="{ disabled: isLoading }" @click="editEvaluation">配置黑名单</span>
             <span class="btn" :class="{ disabled: isLoading }" @click="dialogViewAuthorInfo = true">查看作者信息</span>
           </div>
         </footer>

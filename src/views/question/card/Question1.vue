@@ -74,7 +74,7 @@ export default {
       });
     },
     checkboxChoose() {
-      let chooseId = ""
+      let chooseId = "";
       this.question.items.filter(item => item.choose).forEach(item => {
         chooseId += (item.id + ",");
       });

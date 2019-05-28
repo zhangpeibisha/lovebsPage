@@ -50,6 +50,7 @@ export function updateQuestion(params) {
 
 // 发现问卷id
 export function findEvaluationById(evaluationId) {
+  console.log("查询问卷的信息参数======：",evaluationId);
   return request({
     url: '/evaluationQuestionnaire/question/by/id',
     method: 'get',

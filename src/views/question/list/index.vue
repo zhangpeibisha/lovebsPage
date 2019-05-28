@@ -68,9 +68,9 @@
             <el-button
               size="mini" @click="viewQuestion(scope.row.id)">查看
             </el-button>
-            <el-button
-              size="mini" @click="publishQuestionConfig(scope.row)">发布问卷
-            </el-button>
+            <!--<el-button-->
+              <!--size="mini" @click="publishQuestionConfig(scope.row)">发布问卷-->
+            <!--</el-button>-->
           </template>
         </el-table-column>
       </el-table>
