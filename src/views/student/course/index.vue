@@ -31,20 +31,18 @@
       <i class="el-icon-tickets"></i>
       <span>课程数据</span>
       <el-button
-        v-if="userType === 'TEACHER'"
-        class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
-      <el-button
-        v-if="userType === 'TEACHER'"
         class="btn-add"
         @click="course = {
        };editDialog = true;dialogTitle='添加'"
         size="mini"
       >添加
       </el-button>
+      <el-button
+        class="btn-add" type="success" @click="showImportTask=true" size="mini">导入课程信息
+      </el-button>
     </el-card>
     <div class="table-container">
       <el-table
-        ref="studentTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -69,21 +67,11 @@
             >查看
             </el-button>
             <el-button
-              v-if="userType === 'TEACHER'"
               size="mini"
               @click="course = scope.row;editDialog = true;dialogTitle='编辑';course.type='edit'">编辑
             </el-button>
             <el-button
-              v-if="userType === 'TEACHER'"
-              size="mini" type="success" @click="addTeacher(scope.$index, scope.row)">添加老师
-            </el-button>
-            <el-button
-              v-if="userType === 'TEACHER'"
               size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
-            <el-button
-              v-if="userType === 'STUDENT'"
-              size="mini" type="danger" @click="chooseCourse(scope.$index, scope.row)">选课
             </el-button>
           </template>
         </el-table-column>
@@ -101,6 +89,52 @@
         :total="total"
       ></el-pagination>
     </div>
+
+
+    <el-dialog
+      title="上传课程信息"
+      :visible.sync="showImportTask"
+      width="30%">
+      <el-upload
+        class="upload-demo"
+        drag
+        :on-success="uploadTaskSuccess"
+        :on-error="uploadTaskError"
+        :action='uploadUrl'
+        multiple
+        headers="{'Content-Type':'application/x-www-form-urlencoded'}"
+        name="course">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showImportTask = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      title="上传课程信息"
+      :visible.sync="showImportTask"
+      width="30%">
+      <el-upload
+        class="upload-demo"
+        drag
+        :on-success="uploadTaskSuccess"
+        :on-error="uploadTaskError"
+        :action='uploadUrl'
+        multiple
+        headers="{'Content-Type':'application/x-www-form-urlencoded'}"
+        name="course">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showImportTask = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
     <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
       <el-form label-width="80px">
         <el-form-item label="课程名字">
@@ -195,6 +229,7 @@
   import {findUserInfo} from '@/api/center';
 
   import {chooseCourse} from '@/api/student';
+  import {uploadCourse} from '@/config/config'
 
   const defaultListQuery = {
     key: null,
@@ -205,7 +240,7 @@
   };
 
   export default {
-    name: "studentList",
+    name: "courseList",
     data() {
       return {
         editSkuInfo: {
@@ -235,8 +270,10 @@
         formLabelWidth: '120px',
         dialogTitle: "",
         userType: '',
-        teacherListByCourseId:[],
-        addCourseView:false
+        teacherListByCourseId: [],
+        addCourseView: false,
+        showImportTask: false,
+        uploadUrl: uploadCourse
       };
     },
     created() {
@@ -351,23 +388,33 @@
         })
       },
       chooseCourse(index, row) {
-        if (row){
+        if (row) {
           this.courseTeacher.course = row;
           this.findCourseTeacher(row.id);
         }
         this.addCourseView = true;
       },
-      submitChooseCourse(){
-        console.log("提交结果为：",this.teacherId,this.courseTeacher.course);
-        chooseCourse(this.courseTeacher.course.id,this.teacherId).then(res => {
+      submitChooseCourse() {
+        console.log("提交结果为：", this.teacherId, this.courseTeacher.course);
+        chooseCourse(this.courseTeacher.course.id, this.teacherId).then(res => {
           console.log("加课结果为：", res)
           this.addCourseView = false;
         })
       },
-      findCourseTeacher(courseId){
-        findTeacherByCourseId(courseId).then(res=>{
-           this.teacherListByCourseId = res.data;
+      findCourseTeacher(courseId) {
+        findTeacherByCourseId(courseId).then(res => {
+          this.teacherListByCourseId = res.data;
         })
+      }, uploadTaskSuccess() {
+        this.$message({
+          message: '课程上传成功',
+          type: 'success'
+        });
+      }, uploadTaskError() {
+        this.$message({
+          message: '课程上传失败',
+          type: 'error'
+        });
       }
     }
   };

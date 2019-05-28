@@ -9,7 +9,8 @@
         <el-button style="float: right"
                    @click="getList()"
                    type="primary"
-                   size="small">查询结果</el-button>
+                   size="small">查询结果
+        </el-button>
         <el-button style="float: right;margin-right: 15px"
                    @click="handleResetSearch()"
                    size="small">重置
@@ -35,15 +36,15 @@
       <el-button class="btn-add"
                  type="danger"
                  @click="handleDelete(0,0,true)"
-                 size="mini">删除</el-button>
+                 size="mini">删除
+      </el-button>
       <el-button class="btn-add"
                  @click="editDialog = true;faculty = {};dialogTitle='添加'"
                  size="mini">添加
       </el-button>
-      <el-button class="btn-add"
-                 type="primary"
-                 @click="importDia = true"
-                 size="mini">文件导入</el-button>
+      <el-button
+        class="btn-add" type="success" @click="showImportTask=true" size="mini">导入学院信息
+      </el-button>
     </el-card>
     <div class="table-container">
       <el-table ref="facultyTable"
@@ -74,7 +75,8 @@
             </el-button>
             <el-button size="mini"
                        type="danger"
-                       @click="handleDelete(scope.$index, scope.row,false)">删除</el-button>
+                       @click="handleDelete(scope.$index, scope.row,false)">删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -111,20 +113,26 @@
       </span>
     </el-dialog>
 
-    <el-dialog title="批量导入学院数据"
-               :center="true"
-               :visible.sync="importDia">
-      <el-upload class="upload-demo"
-                 drag
-                 action="https://jsonplaceholder.typicode.com/posts/"
-                 :on-success ="uploadSuccess"
-                 :on-error ="uploadError"
-                 multiple>
+    <el-dialog
+      title="上传学院信息"
+      :visible.sync="showImportTask"
+      width="30%">
+      <el-upload
+        class="upload-demo"
+        drag
+        :on-success="uploadTaskSuccess"
+        :on-error="uploadTaskError"
+        :action='uploadUrl'
+        multiple
+        headers="{'Content-Type':'application/x-www-form-urlencoded'}"
+        name="faculty">
         <i class="el-icon-upload"></i>
         <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip"
-             slot="tip">只能上传xls xlsx文件</div>
+        <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
       </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showImportTask = false">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -135,6 +143,8 @@
     update,
     _delete
   } from "@/api/faculty";
+
+  import {uploadFaculty} from '@/config/config'
 
   const defaultListQuery = {
     key: null,
@@ -163,7 +173,9 @@
           name: ''
         },
         dialogTitle: "",
-        importDia: false
+        importDia: false,
+        showImportTask: false,
+        uploadUrl: uploadFaculty
       };
     },
     created() {
@@ -177,8 +189,8 @@
         this.listQuery.keyword
           ? (this.listQuery.quire +=
             ` and (coding like '%${this.listQuery.keyword}%' or name like '%${
-            this.listQuery.keyword
-            }%')`)
+              this.listQuery.keyword
+              }%')`)
           : "";
         fetchList(this.listQuery).then(response => {
           this.listLoading = false;
@@ -254,6 +266,16 @@
             this.getList();
           });
         }
+      }, uploadTaskSuccess() {
+        this.$message({
+          message: '班级信息上传成功',
+          type: 'success'
+        });
+      }, uploadTaskError() {
+        this.$message({
+          message: '班级信息上传失败',
+          type: 'error'
+        });
       }
     }
   };

@@ -85,7 +85,35 @@
         size="mini"
       >添加
       </el-button>
+      <el-button
+        class="btn-add" type="success" @click="showImportTask=true" size="mini">导入学生信息信息(模拟)
+      </el-button>
     </el-card>
+
+
+    <el-dialog
+      title="上传模拟学生信息"
+      :visible.sync="showImportTask"
+      width="30%">
+      <el-upload
+        class="upload-demo"
+        drag
+        :on-success="uploadTaskSuccess"
+        :on-error="uploadTaskError"
+        :action='uploadUrl'
+        multiple
+        headers="{'Content-Type':'application/x-www-form-urlencoded'}"
+        name="student">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showImportTask = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+
     <div class="table-container">
       <el-table
         ref="studentTable"
@@ -216,6 +244,7 @@
     update,
     _delete
   } from "@/api/student";
+  import {uploadStudent} from '@/config/config'
 
   const defaultListQuery = {
     key: null,
@@ -251,7 +280,9 @@
             }
           }
         },
-        dialogTitle: ""
+        dialogTitle: "",
+        showImportTask: false,
+        uploadUrl: uploadStudent
       };
     },
     created() {
@@ -468,6 +499,16 @@
             });
           });
         }
+      }, uploadTaskSuccess() {
+        this.$message({
+          message: '教学任务上传成功',
+          type: 'success'
+        });
+      }, uploadTaskError() {
+        this.$message({
+          message: '教学任务上传失败',
+          type: 'error'
+        });
       }
     }
   };
