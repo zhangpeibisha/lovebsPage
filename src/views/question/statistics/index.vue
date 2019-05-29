@@ -1,8 +1,5 @@
 <template>
   <div class="app-container" style="height: 500px; overflow-y: scroll;">
-    <el-card class="filter-container" shadow="never">
-
-    </el-card>
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>评教表详细统计-{{title}}</span>
@@ -10,9 +7,33 @@
         class="btn-add" type="success" @click="showAdviseList=true" size="mini">查看学生意见
       </el-button>
       <el-button
-        class="btn-add" type="success" @click="showConfig=true" size="mini">查看整体数据
+        class="btn-add" type="success" @click="showConfig=true" size="mini">查看概要
       </el-button>
     </el-card>
+
+
+    <el-dialog title="评卷表概要" :visible.sync="showConfig">
+      <el-form >
+        <el-form-item label="总分">
+          <el-input v-model="questionConfig.totalScore" autocomplete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="平均分">
+          <el-input v-model="questionConfig.avgScore" autocomplete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="计划人数">
+          <el-input v-model="questionConfig.shouldAnswer" autocomplete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="回答人数">
+          <el-input v-model="questionConfig.realityAnswer" autocomplete="off" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="黑名单配置数量">
+          <el-input v-model="questionConfig.blackNumber" autocomplete="off" disabled></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showConfig = false">确 定</el-button>
+      </div>
+    </el-dialog>
 
 
     <el-dialog :title="topicTitle" :visible.sync="showOptionStatistics">
