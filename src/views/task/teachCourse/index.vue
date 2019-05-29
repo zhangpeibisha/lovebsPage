@@ -108,6 +108,7 @@
             <!--学生填写评教-->
             <el-button size="mini" @click="answerSheet(scope.row)">评教</el-button>
             <el-button size="mini" @click="viewTeachTaskQuestionAnswer(scope.row)">查看回答</el-button>
+            <el-button size="mini" @click="viewStatisticsScore(scope.row)">查看统计得分</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -215,7 +216,7 @@
         console.log("获取到的信息为,发布评教卷id：", row.publishQuestionnaireId);
         console.log("获取到的信息为,评教卷id：", row.questionnaireId);
         this.$router.push({
-          path: "/questionnaire/view",
+          path: "/task/view",
           query: {
             evaluationId: row.questionnaireId
           }
@@ -223,7 +224,7 @@
       },
       viewTeachTaskQuestionAnswer(row){
         this.$router.push({
-          path: "/questionnaire/view",
+          path: "/task/view",
           query: {
             publishId: row.publishQuestionnaireId
           }
@@ -231,7 +232,14 @@
       }
       , answerSheet(row) {
         this.$router.push({
-          path: "/questionnaire/reply",
+          path: "/task/reply",
+          query: {
+            publishEvaluationId: row.publishQuestionnaireId
+          }
+        })
+      },viewStatisticsScore(row){
+        this.$router.push({
+          path: "/questionnaire/statisticsScore",
           query: {
             publishEvaluationId: row.publishQuestionnaireId
           }

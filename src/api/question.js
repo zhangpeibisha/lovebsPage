@@ -50,7 +50,7 @@ export function updateQuestion(params) {
 
 // 发现问卷id
 export function findEvaluationById(evaluationId) {
-  console.log("查询问卷的信息参数======：",evaluationId);
+  console.log("查询问卷的信息参数======：", evaluationId);
   return request({
     url: '/evaluationQuestionnaire/question/by/id',
     method: 'get',
@@ -142,5 +142,16 @@ export function publishQuestionnaireByCourseIds(params) {
     url: '/publishQuestionnaire/publish/by/courseIds',
     method: 'post',
     params: params
+  })
+}
+
+// 获取统计信息，发布的评教卷的
+export function statisticsScore(publishId) {
+  return request({
+    url: '/publishQuestionnaire/statisticsScore',
+    method: 'get',
+    params: {
+      publishId: publishId
+    }
   })
 }
