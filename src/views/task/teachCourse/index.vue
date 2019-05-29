@@ -98,6 +98,9 @@
         <el-table-column label="结束时间" align="center">
           <template slot-scope="scope">{{scope.row.endTime}}</template>
         </el-table-column>
+        <el-table-column label="评教得分" align="center">
+          <template slot-scope="scope">{{scope.row.teachScore==0?'未结束':scope.row.teachScore}}</template>
+        </el-table-column>
         <el-table-column label="操作" style="width: 600px">
           <template slot-scope="scope">
             <!--老师和管理员查看内容-->
