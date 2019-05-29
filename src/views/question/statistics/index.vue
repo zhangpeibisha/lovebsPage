@@ -14,13 +14,29 @@
       </el-button>
     </el-card>
 
+
+    <el-dialog :title="topicTitle" :visible.sync="showOptionStatistics">
+      <el-table :data="optionStatistics"
+                style="width: 100%"
+                border>
+        <el-table-column align="center" label="标题" >
+          <template slot-scope="scope">{{scope.row.title}}</template>
+        </el-table-column>
+        <el-table-column align="center" label="选项" >
+          <template slot-scope="scope">{{scope.row.score}}</template>
+        </el-table-column>
+        <el-table-column align="center" label="选择人数">
+          <template slot-scope="scope">{{scope.row.chooseOfNumber}}</template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
+
+
     <div class="table-container">
       <el-table
         :data="topicStatistics"
         style="width: 100%"
-        @selection-change="handleSelectionChange"
         border>
-        <el-table-column type="selection" width="60" align="center"></el-table-column>
         <el-table-column label="标题" align="center">
           <template slot-scope="scope">{{scope.row.title}}</template>
         </el-table-column>
@@ -59,8 +75,10 @@
         optionStatistics: [],
         showAdviseList: false,
         showConfig: false,
+        showOptionStatistics: false,
         title: '重庆理工大学',
-        publishId: 0
+        publishId: 0,
+        topicTitle: ''
       };
     },
     created() {
@@ -82,6 +100,8 @@
         }
       }, viewOptionStatistics(row) {
         this.optionStatistics = row.optionStatistics;
+        this.topicTitle = row.title;
+        this.showOptionStatistics = true;
       }, findStatisticsScore() {
         // 从路由中获取的参数
         this.publishId = this.$route.query.publishEvaluationId;
