@@ -19,10 +19,10 @@
       <el-table :data="optionStatistics"
                 style="width: 100%"
                 border>
-        <el-table-column align="center" label="标题" >
+        <el-table-column align="center" label="标题">
           <template slot-scope="scope">{{scope.row.title}}</template>
         </el-table-column>
-        <el-table-column align="center" label="选项" >
+        <el-table-column align="center" label="选项">
           <template slot-scope="scope">{{scope.row.score}}</template>
         </el-table-column>
         <el-table-column align="center" label="选择人数">
@@ -31,6 +31,19 @@
       </el-table>
     </el-dialog>
 
+
+    <el-dialog title="学生建议" :visible.sync="showAdviseList">
+      <el-table :data="questionConfig.adviseList"
+                style="width: 100%"
+                border>
+        <el-table-column align="center" label="标题">
+          <template slot-scope="scope">{{scope.row.title}}</template>
+        </el-table-column>
+        <el-table-column align="center" label="建议">
+          <template slot-scope="scope">{{scope.row.advice}}</template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
 
     <div class="table-container">
       <el-table
@@ -73,6 +86,7 @@
         topicStatistics: [],
         questionConfig: {},
         optionStatistics: [],
+        adviseList: [],
         showAdviseList: false,
         showConfig: false,
         showOptionStatistics: false,

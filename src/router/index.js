@@ -135,7 +135,7 @@ export const asyncRouterMap = [
         component: () => import('@/views/question/card/view'),
         meta: {title: '查看评教表', icon: 'product-list'},
         hidden: true,
-        role: ['MANGER', 'TEACHER']
+        role: ['MANGER', 'TEACHER','STUDENT']
       }
     ]
   },
