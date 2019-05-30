@@ -129,13 +129,20 @@ export const asyncRouterMap = [
         meta: {title: '回答评教表', icon: 'product-list'},
         hidden: true,
         role: ['STUDENT']
-      },{
+      }, {
         path: 'view',
         name: 'view',
         component: () => import('@/views/question/card/view'),
         meta: {title: '查看评教表', icon: 'product-list'},
         hidden: true,
-        role: ['MANGER', 'TEACHER','STUDENT']
+        role: ['MANGER', 'TEACHER', 'STUDENT']
+      }, {
+        path: 'statisticsScore',
+        name: 'statisticsScore',
+        component: () => import('@/views/question/statistics/index'),
+        meta: {title: '查询统计信息', icon: 'product-add'},
+        role: ['MANGER', 'TEACHER'],
+        hidden: true
       }
     ]
   },
@@ -163,7 +170,7 @@ export const asyncRouterMap = [
     component: Layout,
     name: 'questionnaire',
     meta: {title: '教学质量评测', icon: 'product'},
-    role: ['MANGER', 'TEACHER'],
+    role: ['MANGER'],
     children: [
       {
         path: 'create',
@@ -177,13 +184,6 @@ export const asyncRouterMap = [
         component: () => import('@/views/question/list/index'),
         meta: {title: '评教表列表', icon: 'product-add'},
         role: ['MANGER']
-      }, {
-        path: 'statisticsScore',
-        name: 'statisticsScore',
-        component: () => import('@/views/question/statistics/index'),
-        meta: {title: '查询统计信息', icon: 'product-add'},
-        role: ['MANGER', 'TEACHER'],
-        hidden: true
       }
     ],
   },

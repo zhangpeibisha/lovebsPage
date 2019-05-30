@@ -239,7 +239,7 @@
         })
       },viewStatisticsScore(row){
         this.$router.push({
-          path: "/questionnaire/statisticsScore",
+          path: "/task/statisticsScore",
           query: {
             publishEvaluationId: row.publishQuestionnaireId
           }
