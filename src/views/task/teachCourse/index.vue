@@ -42,9 +42,12 @@
       <i class="el-icon-tickets"></i>
       <span>教学任务</span>
       <el-button
-        class="btn-add" type="success" @click="showImportTask=true" size="mini">导入教学任务
+        class="btn-add" type="success" @click="showImportTask=true" size="mini"
+        v-if="roles.includes('MANGER')">导入教学任务
       </el-button>
-      <el-button class="btn-add" size="mini" type="success" @click="showUploadStudentScore=true">上传学生课程分数</el-button>
+      <el-button
+        v-if="roles.includes('TEACHER')"
+        class="btn-add" size="mini" type="success" @click="showUploadStudentScore=true">上传学生课程分数</el-button>
     </el-card>
 
 
@@ -126,11 +129,11 @@
         <el-table-column label="操作" style="width: 600px">
           <template slot-scope="scope">
             <!--老师和管理员查看内容-->
-            <el-button size="mini" @click="viewTeachTaskQuestion(scope.row)">评教卷</el-button>
+            <el-button v-if="!roles.includes('STUDENT')" size="mini" @click="viewTeachTaskQuestion(scope.row)">评教卷</el-button>
             <!--学生填写评教-->
-            <el-button size="mini" @click="answerSheet(scope.row)">评教</el-button>
-            <el-button size="mini" @click="viewTeachTaskQuestionAnswer(scope.row)">查看回答</el-button>
-            <el-button size="mini" @click="viewStatisticsScore(scope.row)">查看统计得分</el-button>
+            <el-button v-if="roles.includes('STUDENT')" size="mini" @click="answerSheet(scope.row)">评教</el-button>
+            <el-button v-if="roles.includes('STUDENT')" size="mini" @click="viewTeachTaskQuestionAnswer(scope.row)">查看回答</el-button>
+            <el-button v-if="!roles.includes('STUDENT')" size="mini" @click="viewStatisticsScore(scope.row)">查看统计得分</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -229,12 +232,15 @@
         this.selectSchoolYearList();
         this.findTeachCourseList();
         this.$message({
-          message: '教学任务上传成功',
+          message: '上传成功',
           type: 'success'
         });
-      }, uploadTaskError() {
+      }, uploadTaskError(message) {
+        console.log("获取的上传错误信息",message);
+        console.log("获取的上传错误信息====",message.message);
+        console.log("获取的上传错误信息====",message.message.message);
         this.$message({
-          message: '教学任务上传失败',
+          message: '上传失败:',
           type: 'error'
         });
       }, viewTeachTaskQuestion(row) {
