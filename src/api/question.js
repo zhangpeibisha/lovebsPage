@@ -155,3 +155,12 @@ export function statisticsScore(publishId) {
     }
   })
 }
+
+// 获取排名信息
+export function findRankByFacultyAndYearAndSemester(params) {
+  return request({
+    url: '/teacherCourse/faculty/rank',
+    method: 'get',
+    params: params
+  })
+}

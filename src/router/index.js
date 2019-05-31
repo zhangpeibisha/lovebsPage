@@ -143,6 +143,13 @@ export const asyncRouterMap = [
         meta: {title: '查询统计信息', icon: 'product-add'},
         role: ['MANGER', 'TEACHER'],
         hidden: true
+      }, {
+        path: 'rank',
+        name: 'rank',
+        component: () => import('@/views/question/rank/index'),
+        meta: {title: '查询排名信息', icon: 'product-add'},
+        role: ['MANGER', 'TEACHER'],
+        hidden: true
       }
     ]
   },

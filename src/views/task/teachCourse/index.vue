@@ -163,7 +163,7 @@
     created() {
       this.findTeachCourseList();
       this.userRole();
-      this.selctSchoolYearList();
+      this.selectSchoolYearList();
     },
     methods: {
       findTeachCourseList() {
@@ -173,7 +173,7 @@
           this.total = res.data.total;
         })
       },
-      selctSchoolYearList() {
+      selectSchoolYearList() {
         findSchoolYearList().then(res => {
           console.log("获取到的学年信息未", res);
           this.schoolYear = res.data;
@@ -202,6 +202,8 @@
         this.listQuery.page = val;
         this.getList();
       }, uploadTaskSuccess() {
+        this.selectSchoolYearList();
+        this.findTeachCourseList();
         this.$message({
           message: '教学任务上传成功',
           type: 'success'
@@ -212,7 +214,7 @@
           type: 'error'
         });
       }, viewTeachTaskQuestion(row) {
-        console.log("获取到的信息为：", row)
+        console.log("获取到的信息为：", row);
         console.log("获取到的信息为,发布评教卷id：", row.publishQuestionnaireId);
         console.log("获取到的信息为,评教卷id：", row.questionnaireId);
         this.$router.push({

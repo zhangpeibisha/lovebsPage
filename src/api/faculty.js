@@ -34,6 +34,14 @@ export function findById(id) {
   })
 }
 
+export function findUserFaculty() {
+  return request({
+    url:'/faculty/user/faculty',
+    method:'get'
+  })
+}
+
+
 export function _delete(ids) {
   console.log("获取到的参数为:", ids);
   var str = '';
