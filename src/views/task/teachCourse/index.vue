@@ -44,6 +44,7 @@
       <el-button
         class="btn-add" type="success" @click="showImportTask=true" size="mini">导入教学任务
       </el-button>
+      <el-button class="btn-add" size="mini" type="success" @click="showUploadStudentScore=true">上传学生课程分数</el-button>
     </el-card>
 
 
@@ -69,6 +70,27 @@
       </span>
     </el-dialog>
 
+    <el-dialog
+      title="上传学生学习成绩"
+      :visible.sync="showUploadStudentScore"
+      width="30%">
+      <el-upload
+        class="upload-demo"
+        drag
+        :on-success="uploadTaskSuccess"
+        :on-error="uploadTaskError"
+        :action='uploadStudentScoreUrl'
+        multiple
+        headers="{'Content-Type':'application/x-www-form-urlencoded'}"
+        name="teachCourScore">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showUploadStudentScore = false">确 定</el-button>
+      </span>
+    </el-dialog>
 
     <div class="table-container">
       <el-table
@@ -99,7 +121,7 @@
           <template slot-scope="scope">{{scope.row.endTime}}</template>
         </el-table-column>
         <el-table-column label="评教得分" align="center">
-          <template slot-scope="scope">{{scope.row.teachScore==0?'未结束':scope.row.teachScore}}</template>
+          <template slot-scope="scope">{{scope.row.teachScore}}</template>
         </el-table-column>
         <el-table-column label="操作" style="width: 600px">
           <template slot-scope="scope">
@@ -138,7 +160,7 @@
     page: 1,
     limit: 5
   };
-  import {uploadTeachTaskUrl} from '@/config/config'
+  import {uploadTeachTaskUrl, uploadTeachCourScore} from '@/config/config'
 
   export default {
     name: "teachCourse",
@@ -157,7 +179,9 @@
         roles: [],
         total: 0,
         showImportTask: false,
-        uploadUrl: uploadTeachTaskUrl
+        uploadUrl: uploadTeachTaskUrl,
+        uploadStudentScoreUrl: uploadTeachCourScore,
+        showUploadStudentScore: false
       };
     },
     created() {
@@ -224,7 +248,7 @@
           }
         })
       },
-      viewTeachTaskQuestionAnswer(row){
+      viewTeachTaskQuestionAnswer(row) {
         this.$router.push({
           path: "/task/view",
           query: {
@@ -239,7 +263,7 @@
             publishEvaluationId: row.publishQuestionnaireId
           }
         })
-      },viewStatisticsScore(row){
+      }, viewStatisticsScore(row) {
         this.$router.push({
           path: "/task/statisticsScore",
           query: {
