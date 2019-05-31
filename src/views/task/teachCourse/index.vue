@@ -47,7 +47,8 @@
       </el-button>
       <el-button
         v-if="roles.includes('TEACHER')"
-        class="btn-add" size="mini" type="success" @click="showUploadStudentScore=true">上传学生课程分数</el-button>
+        class="btn-add" size="mini" type="success" @click="showUploadStudentScore=true">上传学生课程分数
+      </el-button>
     </el-card>
 
 
@@ -129,11 +130,15 @@
         <el-table-column label="操作" style="width: 600px">
           <template slot-scope="scope">
             <!--老师和管理员查看内容-->
-            <el-button v-if="!roles.includes('STUDENT')" size="mini" @click="viewTeachTaskQuestion(scope.row)">评教卷</el-button>
+            <el-button v-if="!roles.includes('STUDENT')" size="mini" @click="viewTeachTaskQuestion(scope.row)">评教卷
+            </el-button>
             <!--学生填写评教-->
             <el-button v-if="roles.includes('STUDENT')" size="mini" @click="answerSheet(scope.row)">评教</el-button>
-            <el-button v-if="roles.includes('STUDENT')" size="mini" @click="viewTeachTaskQuestionAnswer(scope.row)">查看回答</el-button>
-            <el-button v-if="!roles.includes('STUDENT')" size="mini" @click="viewStatisticsScore(scope.row)">查看统计得分</el-button>
+            <el-button v-if="roles.includes('STUDENT')" size="mini" @click="viewTeachTaskQuestionAnswer(scope.row)">
+              查看回答
+            </el-button>
+            <el-button v-if="!roles.includes('STUDENT')" size="mini" @click="viewStatisticsScore(scope.row)">查看统计得分
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -236,11 +241,12 @@
           type: 'success'
         });
       }, uploadTaskError(message) {
-        console.log("获取的上传错误信息",message);
-        console.log("获取的上传错误信息====",message.message);
-        console.log("获取的上传错误信息====",message.message.message);
+        console.log("获取的上传错误信息", message);
+        console.log("获取的上传错误信息====1", message.message);
+        console.log("获取的上传错误信息====2", message.message.msg);
+        console.log("获取的上传错误信息====3", message.msg);
         this.$message({
-          message: '上传失败:',
+          message: '上传失败:' + message.message,
           type: 'error'
         });
       }, viewTeachTaskQuestion(row) {
