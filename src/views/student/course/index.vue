@@ -410,6 +410,7 @@
           message: '课程上传成功',
           type: 'success'
         });
+        this.getList();
       }, uploadTaskError() {
         this.$message({
           message: '课程上传失败',

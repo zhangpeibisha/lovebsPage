@@ -328,6 +328,7 @@
           message: '教学任务上传成功',
           type: 'success'
         });
+        this.getList();
       }, uploadTaskError() {
         this.$message({
           message: '教学任务上传失败',

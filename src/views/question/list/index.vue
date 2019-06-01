@@ -49,7 +49,7 @@
           <template slot-scope="scope">{{scope.row.title}}</template>
         </el-table-column>
         <el-table-column label="描述" align="center">
-          <template slot-scope="scope">{{scope.row.descritption}}</template>
+          <template slot-scope="scope">{{scope.row.description}}</template>
         </el-table-column>
         <el-table-column label="作者" align="center">
           <template slot-scope="scope">{{scope.row.author.name}}</template>
@@ -61,7 +61,7 @@
           <template slot-scope="scope">{{scope.row.author.correspondence.email}}</template>
         </el-table-column>
         <el-table-column label="创建时间" align="center">
-          <template slot-scope="scope">{{scope.row.createtime}}</template>
+          <template slot-scope="scope">{{scope.row.createTime}}</template>
         </el-table-column>
         <el-table-column label="操作" style="width: 20%">
           <template slot-scope="scope">

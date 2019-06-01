@@ -501,12 +501,13 @@
         }
       }, uploadTaskSuccess() {
         this.$message({
-          message: '教学任务上传成功',
+          message: '学生信息上传成功',
           type: 'success'
         });
+        this.getList();
       }, uploadTaskError() {
         this.$message({
-          message: '教学任务上传失败',
+          message: '学生信息上传失败',
           type: 'error'
         });
       }

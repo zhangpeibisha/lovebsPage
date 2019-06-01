@@ -271,6 +271,7 @@
           message: '班级信息上传成功',
           type: 'success'
         });
+        this.getList();
       }, uploadTaskError() {
         this.$message({
           message: '班级信息上传失败',

@@ -373,6 +373,7 @@
               message: '黑名单数量超过限制: 限制=' + this.canFilters + " 当前数量=" + blackStudentSize,
               type: 'warning'
             });
+            this.blackStudent=[];
             return;
           }
         }
