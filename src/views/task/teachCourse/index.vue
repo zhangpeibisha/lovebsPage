@@ -51,7 +51,6 @@
       </el-button>
     </el-card>
 
-
     <el-dialog
       title="上传教学任务"
       :visible.sync="showImportTask"
@@ -73,7 +72,6 @@
         <el-button type="primary" @click="showImportTask = false">确 定</el-button>
       </span>
     </el-dialog>
-
     <el-dialog
       title="上传学生学习成绩"
       :visible.sync="showUploadStudentScore"
@@ -95,7 +93,6 @@
         <el-button type="primary" @click="showUploadStudentScore = false">确 定</el-button>
       </span>
     </el-dialog>
-
     <div class="table-container">
       <el-table
         :data="teachCourseList"
@@ -141,6 +138,8 @@
             </el-button>
             <el-button v-if="roles.includes('STUDENT')" size="mini" @click="viewScore(scope.row)">查看课程得分
             </el-button>
+            <el-button v-if="roles.includes('TEACHER')" size="mini" @click="configBlack(scope.row)">配置黑名单
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -157,8 +156,6 @@
         :total="total"
       ></el-pagination>
     </div>
-
-
     <el-dialog
       :title="courseName"
       :visible.sync="showScore">
@@ -168,6 +165,29 @@
       </span>
     </el-dialog>
 
+    <el-dialog title="配置黑名单学生" :visible.sync="showConfigBlack">
+      <el-form>
+        <el-form-item label="学生">
+          <el-select
+            v-model="blackStudent"
+            multiple
+            filterable
+            default-first-option
+            placeholder="请选择学生">
+            <el-option
+              v-for="item in students"
+              :key="item.accountId"
+              :label="item.name"
+              :value="item.accountId">
+            </el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="showConfigBlack = false">取 消</el-button>
+        <el-button type="primary" @click="submitConfigBlack">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -176,6 +196,8 @@
   import {fetchListAll, findSchoolYearList} from '@/api/task'
   import {uploadTeachTaskUrl, uploadTeachCourScore} from '@/config/config'
   import {findScore, checkStudentAnswer} from '@/api/student'
+  import {findPublishInfoByids, addBlackList} from '@/api/question'
+  import {findStudentByIds} from '@/api/student'
 
   const defaultListQuery = {
     year: null,
@@ -207,7 +229,12 @@
         score: 0,
         showScore: false,
         courseName: '',
-        isAnswer: false
+        isAnswer: false,
+        showConfigBlack: false,
+        students: [],
+        blackStudent: [],
+        publishQuestionId: -1,
+        canFilters: 0
       };
     },
     created() {
@@ -333,6 +360,49 @@
         } catch (e) {
           console.log("获取错误返回信息=====", e)
         }
+      }, configBlack(row) {
+        this.findStudentInfo(row);
+        this.publishQuestionId = row.publishQuestionnaireId;
+      },
+      submitConfigBlack() {
+        this.showConfigBlack = false;
+        if (this.blackStudent) {
+          var blackStudentSize = this.blackStudent.length;
+          if (this.canFilters < blackStudentSize) {
+            this.$message({
+              message: '黑名单数量超过限制: 限制=' + this.canFilters + " 当前数量=" + blackStudentSize,
+              type: 'warning'
+            });
+            return;
+          }
+        }
+        addBlackList(this.publishQuestionId, this.blackStudent).then(res => {
+          this.$message({
+            message: '配置黑名单成功',
+            type: 'success'
+          });
+        }).catch(err => {
+          this.$message({
+            message: '配置黑名单失败',
+            type: 'warning'
+          });
+        })
+      }, findStudentInfo(row) {
+        console.log("发现学生信息", row);
+        console.log("发现学生信息====", row.publishQuestionnaireId);
+        const publishIds = [];
+        publishIds.push(row.publishQuestionnaireId);
+        findPublishInfoByids(publishIds).then(res => {
+          console.log("获取的发布问卷信息为", res);
+          const studentIds = res.data[0].statistics.students;
+          this.blackStudent = res.data[0].statistics.black;
+          this.canFilters = res.data[0].statistics.canFilters;
+          findStudentByIds(studentIds).then(student => {
+            this.students = student.data;
+            console.log("获取的学生信息======11", this.students);
+            this.showConfigBlack = true;
+          })
+        })
       }
     }
   };

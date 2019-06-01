@@ -85,12 +85,18 @@ export function teacherClieckPublishQuestion(questionId) {
 
 // 添加黑名单学生
 export function addBlackList(publishId, ids) {
+  var requestPar = '';
+  if (ids) {
+    ids.forEach(res => {
+      requestPar += res + ",";
+    })
+  }
   return request({
     url: '/publishQuestionnaire/addBlack',
     method: 'post',
     params: {
-      publisId: publishId,
-      studentIds: ids
+      publishId: publishId,
+      studentIds: requestPar
     }
   })
 }
@@ -169,10 +175,10 @@ export function findPublishInfoByids(ids) {
   var str = '';
   ids.forEach(id => str += id + ",");
   return request({
-    url:'/publishQuestionnaire/list/by/ids',
-    method:'get',
-    params:{
-      ids:str
+    url: '/publishQuestionnaire/list/by/ids',
+    method: 'get',
+    params: {
+      ids: str
     }
   })
 }

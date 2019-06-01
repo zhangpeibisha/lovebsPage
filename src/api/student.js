@@ -59,13 +59,13 @@ export function _delete(params) {
   })
 }
 
-export function chooseCourse(courseId,teacherId) {
+export function chooseCourse(courseId, teacherId) {
   return request({
     url: '/studentCourse/course',
     method: 'post',
     params: {
-      courseId:courseId,
-      teacherAccountId:teacherId
+      courseId: courseId,
+      teacherAccountId: teacherId
     }
   })
 }
@@ -87,6 +87,23 @@ export function checkStudentAnswer(publishQuestionId) {
     method: 'get',
     params: {
       publishId: publishQuestionId
+    }
+  })
+}
+
+
+export function findStudentByIds(studentAccountIds) {
+  var requestIds = '';
+  if (studentAccountIds) {
+    studentAccountIds.forEach(res => {
+      requestIds += res + ",";
+    })
+  }
+  return request({
+    url: '/student/find/by/ids',
+    method: 'get',
+    params: {
+      ids: requestIds
     }
   })
 }
