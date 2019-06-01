@@ -199,8 +199,16 @@
         }
       },
       findUserFaculty() {
-        findUserFaculty().then(res=>{
-          this.faculty = res.data;
+        findUserFaculty().then(res => {
+          console.log("获取用户学院信息", res);
+          console.log("获取用户学院信息====", res.data);
+          if (res.data && res.data !== null) {
+            res.data.forEach(data => {
+              if (data && data !== null) {
+                this.faculty.push(data);
+              }
+            })
+          }
         })
       },
       viewOptionStatistics(row) {
@@ -213,7 +221,8 @@
         statisticsScore(this.publishId).then(res => {
           this.topicStatistics = res.data.topicStatistics;
           this.questionConfig = res.data;
-          if (!this.topicStatistics){
+          this.title = res.data.title;
+          if (!this.topicStatistics) {
             this.$message('该评教卷还未有学生回答');
           }
         })
