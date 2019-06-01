@@ -45,15 +45,10 @@
           <div class="pick-date">
           </div>
           <div class="operation">
-            <!--学生查看-->
-            <span v-if="roles.includes('STUDENT')"
-                  class="btn" :class="{ disabled: isLoading }" @click="editEvaluation">回答问卷</span>
-            <!--老师使用-->
-            <span
-              v-if="roles.includes('TEACHER')"
-              class="btn" :class="{ disabled: isLoading }" @click="editEvaluation">配置黑名单</span>
             <span
               class="btn" :class="{ disabled: isLoading }" @click="dialogViewAuthorInfo = true">查看作者信息</span>
+            <span
+              class="btn" :class="{ disabled: isLoading }" @click="back">返回</span>
           </div>
         </footer>
       </div>
@@ -67,7 +62,7 @@
   import Calendar from "../common/Calendar";
   import Alert from "../common/Alert";
   import Modal from "../common/Modal";
-  import {fetchPublish, findEvaluationById} from "@/api/question";
+  import {fetchPublish, findEvaluationById,findPublishInfoByids} from "@/api/question";
 
   export default {
     data() {
@@ -107,7 +102,7 @@
       },
       editEvaluation() {
         this.$router.push({
-          path: "/questionnaire/edit",
+          path: "/task/reply",
           query: {
             publishEvaluationId: this.publishId
           }
@@ -162,6 +157,10 @@
             this.roles.push(res.name);
           })
         }
+      },back(){
+        this.$router.push({
+          path: "/task/teachTask"
+        });
       }
     },
     components: {

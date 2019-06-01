@@ -161,8 +161,7 @@
 
     <el-dialog
       :title="courseName"
-      :visible.sync="showScore"
-      :before-close="handleClose">
+      :visible.sync="showScore">
       <span>得分：{{!score?'还未上传分数':score}}</span>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="showScore = false">确 定</el-button>

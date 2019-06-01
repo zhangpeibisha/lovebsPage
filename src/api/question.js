@@ -164,3 +164,15 @@ export function findRankByFacultyAndYearAndSemester(params) {
     params: params
   })
 }
+
+export function findPublishInfoByids(ids) {
+  var str = '';
+  ids.forEach(id => str += id + ",");
+  return request({
+    url:'/publishQuestionnaire/list/by/ids',
+    method:'get',
+    params:{
+      ids:str
+    }
+  })
+}
