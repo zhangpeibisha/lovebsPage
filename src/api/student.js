@@ -70,3 +70,23 @@ export function chooseCourse(courseId,teacherId) {
   })
 }
 
+export function findScore(teachCourseId) {
+  return request({
+    url: '/studentCourse/teachCourser/score',
+    method: 'get',
+    params: {
+      teachCourseId: teachCourseId
+    }
+  })
+}
+
+
+export function checkStudentAnswer(publishQuestionId) {
+  return request({
+    url: '/publishQuestionnaire/check/answer',
+    method: 'get',
+    params: {
+      publishId: publishQuestionId
+    }
+  })
+}

@@ -139,6 +139,8 @@
             </el-button>
             <el-button v-if="!roles.includes('STUDENT')" size="mini" @click="viewStatisticsScore(scope.row)">查看统计得分
             </el-button>
+            <el-button v-if="roles.includes('STUDENT')" size="mini" @click="viewScore(scope.row)">查看课程得分
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -156,11 +158,25 @@
       ></el-pagination>
     </div>
 
+
+    <el-dialog
+      :title="courseName"
+      :visible.sync="showScore"
+      :before-close="handleClose">
+      <span>得分：{{!score?'还未上传分数':score}}</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="showScore = false">确 定</el-button>
+      </span>
+    </el-dialog>
+
+
   </div>
 </template>
 <script>
   import store from '@/store'
   import {fetchListAll, findSchoolYearList} from '@/api/task'
+  import {uploadTeachTaskUrl, uploadTeachCourScore} from '@/config/config'
+  import {findScore, checkStudentAnswer} from '@/api/student'
 
   const defaultListQuery = {
     year: null,
@@ -168,7 +184,6 @@
     page: 1,
     limit: 5
   };
-  import {uploadTeachTaskUrl, uploadTeachCourScore} from '@/config/config'
 
   export default {
     name: "teachCourse",
@@ -189,7 +204,11 @@
         showImportTask: false,
         uploadUrl: uploadTeachTaskUrl,
         uploadStudentScoreUrl: uploadTeachCourScore,
-        showUploadStudentScore: false
+        showUploadStudentScore: false,
+        score: 0,
+        showScore: false,
+        courseName: '',
+        isAnswer: false
       };
     },
     created() {
@@ -261,20 +280,38 @@
         })
       },
       viewTeachTaskQuestionAnswer(row) {
-        this.$router.push({
-          path: "/task/view",
-          query: {
-            publishId: row.publishQuestionnaireId
+        checkStudentAnswer(row.publishQuestionnaireId).then(res => {
+          if (res.data) {
+            this.$router.push({
+              path: "/task/view",
+              query: {
+                publishId: row.publishQuestionnaireId
+              }
+            })
+          } else {
+            this.$message({
+              message: '警告:你还没有回答该教学任务的评教卷',
+              type: 'warning'
+            });
           }
-        })
+        });
       }
       , answerSheet(row) {
-        this.$router.push({
-          path: "/task/reply",
-          query: {
-            publishEvaluationId: row.publishQuestionnaireId
+        checkStudentAnswer(row.publishQuestionnaireId).then(res => {
+          if (!res.data) {
+            this.$router.push({
+              path: "/task/reply",
+              query: {
+                publishEvaluationId: row.publishQuestionnaireId
+              }
+            })
+          } else {
+            this.$message({
+              message: '警告:你已经回答该教学任务的评教卷',
+              type: 'warning'
+            });
           }
-        })
+        });
       }, viewStatisticsScore(row) {
         this.$router.push({
           path: "/task/statisticsScore",
@@ -282,6 +319,21 @@
             publishEvaluationId: row.publishQuestionnaireId
           }
         })
+      }, viewScore(row) {
+        try {
+          findScore(row.teachCourseId).then(res => {
+            this.score = res.data;
+            this.courseName = row.course.name;
+            this.showScore = true;
+          }).catch(res => {
+            this.$message({
+              message: '警告:获取分数失败，可能没有回答评教卷',
+              type: 'warning'
+            });
+          })
+        } catch (e) {
+          console.log("获取错误返回信息=====", e)
+        }
       }
     }
   };
