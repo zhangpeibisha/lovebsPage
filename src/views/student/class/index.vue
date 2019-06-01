@@ -71,11 +71,10 @@
     </el-dialog>
 
 
-
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>班级数据</span>
-      <el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
+      <!--<el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>-->
       <el-button
         class="btn-add"
         @click="classModel = {
@@ -95,7 +94,6 @@
     </el-card>
     <div class="table-container">
       <el-table
-        ref="professionTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -107,10 +105,10 @@
           <template slot-scope="scope">{{scope.row.classCoding}}</template>
         </el-table-column>
         <el-table-column label="指导老师" align="center">
-          <template slot-scope="scope">{{scope.row.teacher ? scope.row.teacher.name : "-"}}</template>
+          <template slot-scope="scope">{{scope.row.teacher ? scope.row.teacher.name : "无"}}</template>
         </el-table-column>
         <el-table-column label="专业" align="center">
-          <template slot-scope="scope">{{scope.row.profession ? scope.row.profession.name : "-"}}</template>
+          <template slot-scope="scope">{{scope.row.profession ? scope.row.profession.name : "无"}}</template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -121,10 +119,12 @@
             </el-button>
             <el-button
               size="mini"
-              @click="classModel = scope.row;editDialog = true;dialogTitle='编辑';classModel.type='edit';getProfessionList(classModel.profession.faculty.id);"
+              @click="classModel = scope.row;editDialog = true;
+              dialogTitle='编辑';classModel.type='edit';
+              getProfessionList(classModel.profession.faculty.id);"
             >编辑
             </el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <!--<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -144,7 +144,7 @@
     <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
       <el-form label-width="80px">
         <el-form-item label="班级编号">
-          <el-input v-model="classModel.classCoding" :disabled="classModel.type == 'see'"></el-input>
+          <el-input v-model="classModel.classCoding" :disabled="classModel.type === 'see'"></el-input>
         </el-form-item>
         <el-form-item label="学院：">
           <el-select
@@ -152,8 +152,8 @@
             placeholder="请选择学院"
             clearable
             filterable
-            :disabled="classModel.type == 'see'"
-            @change="classModel.professionid = null;getProfessionList(classModel.profession.faculty.id)"
+            :disabled="classModel.type === 'see'"
+            @change="classModel.professionId = null;getProfessionList(classModel.profession.faculty.id)"
           >
             <el-option
               v-for="item in facultyList"
@@ -165,11 +165,11 @@
         </el-form-item>
         <el-form-item label="专业：">
           <el-select
-            v-model="classModel.professionid"
+            v-model="classModel.professionId"
             placeholder="请选择专业"
             clearable
             filterable
-            :disabled="classModel.type == 'see'"
+            :disabled="classModel.type === 'see'"
           >
             <el-option
               v-for="item in professionList"
@@ -185,18 +185,18 @@
             placeholder="请选指导老师"
             clearable
             filterable
-            :disabled="classModel.type == 'see'"
+            :disabled="classModel.type === 'see'"
           >
             <el-option
               v-for="item in teacherList"
-              :key="item.id"
+              :key="item.accountId"
               :label="item.name"
-              :value="item.id"
+              :value="item.accountId"
             ></el-option>
           </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer" v-if="classModel.type != 'see'">
+      <span slot="footer" class="dialog-footer" v-if="classModel.type !== 'see'">
         <el-button @click="editDialog = false">取 消</el-button>
         <el-button type="primary" @click="edit()">确 定</el-button>
       </span>
@@ -254,7 +254,7 @@
         },
         dialogTitle: "",
         showImportTask: false,
-        uploadUrl: uploadClass
+        uploadUrl: uploadClass,
       };
     },
     created() {
@@ -332,7 +332,7 @@
           let professionList = result.data.data;
           if (professionList && professionList.length > 0) {
             if (facultyId) {
-              this.classModel.professionid = professionList[0].id;
+              this.classModel.professionId = professionList[0].id;
             } else {
               this.listQuery.professionId = professionList[0].id;
             }
