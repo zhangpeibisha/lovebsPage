@@ -213,6 +213,9 @@
         statisticsScore(this.publishId).then(res => {
           this.topicStatistics = res.data.topicStatistics;
           this.questionConfig = res.data;
+          if (!this.topicStatistics){
+            this.$message('该评教卷还未有学生回答');
+          }
         })
       }, selectSchoolYearList() {
         findSchoolYearList().then(res => {

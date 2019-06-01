@@ -244,7 +244,7 @@
       viewQuestion(questionId) {
         console.log("获取到的问卷id为：" + questionId);
         this.$router.push({
-          path: "/questionnaire/view",
+          path: "/task/view",
           query: {
             evaluationId: questionId
           }

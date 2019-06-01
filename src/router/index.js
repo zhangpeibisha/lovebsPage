@@ -125,7 +125,7 @@ export const asyncRouterMap = [
       {
         path: 'reply',
         name: 'reply',
-        component: () => import('@/views/question/card/edit'),
+        component: () => import('@/views/question/card/answer'),
         meta: {title: '回答评教表', icon: 'product-list'},
         hidden: true,
         role: ['STUDENT']

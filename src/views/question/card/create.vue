@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import Question from "./Question";
+import Question from "./createQuestion";
 import Calendar from "../common/Calendar";
 import Alert from "../common/Alert";
 import Modal from "../common/Modal";

@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import Question from "./Question1";
+import Question from "./replyAnswer";
 import Calendar from "../common/Calendar";
 import Alert from "../common/Alert";
 import Modal from "../common/Modal";
