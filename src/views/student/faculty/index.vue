@@ -33,11 +33,11 @@
              shadow="never">
       <i class="el-icon-tickets"></i>
       <span>学院数据</span>
-      <el-button class="btn-add"
-                 type="danger"
-                 @click="handleDelete(0,0,true)"
-                 size="mini">删除
-      </el-button>
+      <!--<el-button class="btn-add"-->
+      <!--type="danger"-->
+      <!--@click="handleDelete(0,0,true)"-->
+      <!--size="mini">删除-->
+      <!--</el-button>-->
       <el-button class="btn-add"
                  @click="editDialog = true;faculty = {};dialogTitle='添加'"
                  size="mini">添加
@@ -47,12 +47,12 @@
       </el-button>
     </el-card>
     <div class="table-container">
-      <el-table ref="facultyTable"
-                :data="list"
-                style="width: 100%"
-                @selection-change="handleSelectionChange"
-                v-loading="listLoading"
-                border>
+      <el-table
+        :data="list"
+        style="width: 100%"
+        @selection-change="handleSelectionChange"
+        v-loading="listLoading"
+        border>
         <el-table-column type="selection"
                          width="60"
                          align="center"></el-table-column>
@@ -65,18 +65,24 @@
                          align="center">
           <template slot-scope="scope">{{scope.row.name}}</template>
         </el-table-column>
+        <el-table-column label="院长"
+                         align="center">
+          <template slot-scope="scope">{{!scope.row.dean?'无':scope.row.dean.name}}</template>
+        </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini"
                        @click="faculty = scope.row;editDialog = true;faculty.type = 'see';dialogTitle='查看'">查看
             </el-button>
             <el-button size="mini"
-                       @click="faculty = scope.row;editDialog = true;dialogTitle='编辑';faculty.type='edit'">编辑
+                       @click="faculty = scope.row;editDialog = true;
+                       dialogTitle='编辑';faculty.type='edit';
+                       faculty.dean.accountId=''">编辑
             </el-button>
-            <el-button size="mini"
-                       type="danger"
-                       @click="handleDelete(scope.$index, scope.row,false)">删除
-            </el-button>
+            <!--<el-button size="mini"-->
+            <!--type="danger"-->
+            <!--@click="handleDelete(scope.$index, scope.row,false)">删除-->
+            <!--</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -97,16 +103,32 @@
       <el-form label-width="80px">
         <el-form-item label="编号">
           <el-input v-model="faculty.coding"
-                    :disabled="faculty.type == 'see'"></el-input>
+                    :disabled="faculty.type === 'see'"></el-input>
         </el-form-item>
         <el-form-item label="学院名">
           <el-input v-model="faculty.name"
-                    :disabled="faculty.type == 'see'"></el-input>
+                    :disabled="faculty.type === 'see'"></el-input>
+        </el-form-item>
+        <el-form-item label="院长">
+          <el-select
+            v-model="faculty.dean.accountId"
+            placeholder="请选院长"
+            clearable
+            filterable
+            :disabled="faculty.type === 'see'"
+          >
+            <el-option
+              v-for="item in teacherList"
+              :key="item.accountId"
+              :label="item.name"
+              :value="item.accountId"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer"
             class="dialog-footer"
-            v-if="faculty.type != 'see'">
+            v-if="faculty.type !== 'see'">
         <el-button @click="editDialog = false">取 消</el-button>
         <el-button type="primary"
                    @click="edit()">确 定</el-button>
@@ -143,8 +165,9 @@
     update,
     _delete
   } from "@/api/faculty";
-
+  import {findById as teacherFindById} from "@/api/teacher";
   import {uploadFaculty} from '@/config/config'
+  import {fetchTeacherList} from "@/api/profession";
 
   const defaultListQuery = {
     key: null,
@@ -170,22 +193,28 @@
         editDialog: false,
         faculty: {
           coding: '',
-          name: ''
+          name: '',
+          dean: {
+            accountId: 0,
+            name: ''
+          }
         },
         dialogTitle: "",
         importDia: false,
         showImportTask: false,
-        uploadUrl: uploadFaculty
+        uploadUrl: uploadFaculty,
+        teacherList: []
       };
     },
     created() {
+      this.getFetchTeacherList();
       this.getList();
     },
     watch: {},
     methods: {
       getList() {
         this.listLoading = true;
-        this.listQuery.quire = "and 1 = 1"
+        this.listQuery.quire = "and 1 = 1";
         this.listQuery.keyword
           ? (this.listQuery.quire +=
             ` and (coding like '%${this.listQuery.keyword}%' or name like '%${
@@ -215,11 +244,27 @@
         this.listQuery = Object.assign({}, defaultListQuery);
         this.getList();
       },
+      getFetchTeacherList() {
+        fetchTeacherList({
+          quire: `and 1 = 1`
+        }).then(result => {
+          this.teacherList = result.data.data;
+        });
+      },
       uploadSuccess() {
         this.importDia = false;
+        this.$message({
+          message: '学院信息上传成功',
+          type: 'success'
+        });
+        this.getList();
       },
       uploadError() {
         console.log("error");
+        this.$message({
+          message: '学院信息上传失败',
+          type: 'error'
+        });
       },
       handleDelete(index, row, batch) {
         console.log("index=", index);
@@ -250,10 +295,19 @@
         let faculty = this.faculty;
         // 编辑学院信息
         if (faculty.id) {
-          update(this.faculty).then(result => {
+          const updateValue = {};
+          updateValue.coding= this.faculty.coding;
+          updateValue.dean= this.faculty.dean.accountId;
+          updateValue.id= this.faculty.id;
+          updateValue.name= this.faculty.name;
+          update(updateValue).then(result => {
             console.log("编辑学院结果返回", result);
             // 关闭窗口
             this.editDialog = false;
+            this.$message({
+              message: '学院信息编辑成功',
+              type: 'success'
+            });
             this.getList();
           });
         }
@@ -268,13 +322,13 @@
         }
       }, uploadTaskSuccess() {
         this.$message({
-          message: '班级信息上传成功',
+          message: '学院信息上传成功',
           type: 'success'
         });
         this.getList();
       }, uploadTaskError() {
         this.$message({
-          message: '班级信息上传失败',
+          message: '学院信息上传失败',
           type: 'error'
         });
       }

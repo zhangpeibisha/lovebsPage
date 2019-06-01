@@ -17,6 +17,7 @@ export function create(params) {
 }
 
 export function update(params) {
+  console.log("获取更新学院信息的参数为",params);
   return request({
     url: '/faculty/update',
     method: 'put',
