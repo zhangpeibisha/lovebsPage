@@ -3,33 +3,51 @@
     <p class="mine">我的个人主页</p>
     <el-container>
       <el-aside width="200px">
-        <img :src="userInfo.imageUrl"/>
+        <img :src="userInfo.avatar"/>
       </el-aside>
       <el-main>
         <p>姓名：{{userInfo.name}}</p>
-        <p>工号：{{userInfo.jobNumber}}</p>
-        <p>电话：{{userInfo.phone}}</p>
-        <p>邮箱：{{userInfo.email}}</p>
+        <p>角色：{{rolesName}}</p>
       </el-main>
     </el-container>
-
   </div>
 </template>
 
 <script>
+  import store from '@/store'
 
   export default {
     data() {
       return {
-
+        userInfo: {},
+        roles:[],
+        rolesName:[]
       };
     },
     created() {
-      this.findUserInfo();
+      this.findUserInfo()
     },
     methods: {
       findUserInfo() {
-
+        const user = store.state.user;
+        this.userInfo = user;
+        console.log("主页用户信息获取到：", user);
+        const roles = user.roles;
+        this.insertRole(roles);
+        this.insertRoleName(roles);
+        console.log("主页角色信息获取到：", this.roles);
+        this.imageUrl = user.avatar;
+        console.log("主页角色信息获取到imageUrl：", this.imageUrl);
+      }, insertRole(roles) {
+        if (roles) {
+          roles.forEach(res => {
+            this.roles.push(res.name);
+          })
+        }
+      },insertRoleName(roles){
+        roles.forEach(res => {
+          this.rolesName.push(res.description);
+        })
       }
     }
   };
@@ -44,7 +62,7 @@
   }
 
   .el-container {
-    border-bottom: 1px solid #E4E7ED;
+    border-bottom: 1px solid #e4e7ed;
     margin-bottom: 10px;
   }
 
@@ -52,9 +70,8 @@
     font-weight: 600;
     margin-bottom: 20px;
     text-align: center;
-    border-bottom: 1px solid #E4E7ED;
+    border-bottom: 1px solid #e4e7ed;
     padding: 20px;
-
   }
 
   .el-aside {
@@ -74,5 +91,9 @@
 
   .el-main p {
     margin-bottom: 10px;
+  }
+
+  .info-row {
+    margin: 0.8em 0;
   }
 </style>
