@@ -49,18 +49,26 @@
         }
       }
     },
-    mounted () {
+    mounted() {
       this.getIdentifyingCode();
     },
     methods: {
       handleLogin() {
-        this.loading = true;
-        this.$store.dispatch('Login', this.loginForm).then(() => {
+        try {
+          this.loading = true;
+          this.$store.dispatch('Login', this.loginForm)
+            .then(() => {
+              this.loading = false;
+              this.$router.push({path: '/'})
+            })
+            .catch(err => {
+              console.log("获取的登陆错误信息==", err)
+            });
           this.loading = false;
-          this.$router.push({path: '/'})
-        }).catch(() => {
-          this.loading = false
-        })
+        } catch (e) {
+          console.log("获取的登陆错误信息", e)
+        }
+
       },
       resetForm() {
         this.loginForm.username = '';
@@ -69,7 +77,7 @@
       },
       getIdentifyingCode() {
         let objs = document.getElementById("imgIdentifyingCode");
-        objs.src = 'http://zp.xx11.top/validate/image';
+        objs.src = 'http://localhost:8080/validate/image';
       }
     }
   }
@@ -77,7 +85,7 @@
 
 <style>
 
-  .login-template{
+  .login-template {
     width: 100%;
     height: 100%;
     background: url("../../assets/images/background.png") no-repeat center fixed;
@@ -85,16 +93,16 @@
     position: fixed;
   }
 
-#loginForm{
-  margin: 0 auto;
-  margin-top: 14%;
-  width: 367px;
-  padding-top: 23px;
-  height: 300px;
-  background-color: #ffffff;
-  opacity: 0.93;
-  border-radius: 10px;
-  /*background-color: #8b8b8b;*/
-}
+  #loginForm {
+    margin: 0 auto;
+    margin-top: 14%;
+    width: 367px;
+    padding-top: 23px;
+    height: 300px;
+    background-color: #ffffff;
+    opacity: 0.93;
+    border-radius: 10px;
+    /*background-color: #8b8b8b;*/
+  }
 
 </style>

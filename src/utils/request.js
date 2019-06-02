@@ -21,9 +21,9 @@ service.interceptors.request.use(config => {
   return config
 }, error => {
   // Do something with request error
-  console.log(error) // for debug
+  console.log(error) ;// for debug
   Promise.reject(error)
-})
+});
 
 // respone拦截器
 service.interceptors.response.use(
@@ -43,14 +43,14 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error)// for debug
+    console.log('err' ,  error.response)// for debug
     Message({
-      message: error.message,
+      message: error.response.data.message,
       type: 'error',
       duration: 3 * 1000
-    })
+    });
     return Promise.reject(error)
   }
-)
+);
 
 export default service
