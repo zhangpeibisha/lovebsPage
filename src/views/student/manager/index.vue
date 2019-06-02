@@ -69,7 +69,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>学生数据</span>
-      <el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
+      <!--<el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>-->
       <el-button
         class="btn-add"
         @click="student = {
@@ -116,7 +116,6 @@
 
     <div class="table-container">
       <el-table
-        ref="studentTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -150,7 +149,7 @@
               @click="student = scope.row;editDialog = true;dialogTitle='编辑';student.type='edit';getClasses(scope.row.class.profession.id)"
             >编辑
             </el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <!--<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -471,34 +470,34 @@
         // 编辑学生信息
         if (student.id) {
           update({
-            classid: student.class.id,
-            studentid: student.studentId,
+            classId: student.class.id,
+            studentId: student.studentId,
             name: student.name,
             phone: student.phone,
             id: student.id
           }).then(result => {
-            Message({
-              message: "添加成功",
-              type: "success",
-              duration: 1000
+            this.$message({
+              message: '修改成功',
+              type: 'success'
             });
           });
         }
         // 添加学生
         else {
           create([{
-            classid: student.class.id,
-            studentid: student.studentId,
+            classId: student.class.id,
+            studentId: student.studentId,
             name: student.name,
             phone: student.phone
           }]).then(result => {
-            Message({
-              message: "添加成功",
-              type: "success",
-              duration: 1000
+            this.$message({
+              message: '添加成功',
+              type: 'success'
             });
           });
         }
+        this.editDialog = false;
+        this.getList();
       }, uploadTaskSuccess() {
         this.$message({
           message: '学生信息上传成功',
