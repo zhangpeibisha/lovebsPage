@@ -39,7 +39,14 @@
       <!--size="mini">删除-->
       <!--</el-button>-->
       <el-button class="btn-add"
-                 @click="editDialog = true;faculty = {};dialogTitle='添加'"
+                 @click="editDialog = true;faculty = {
+                      coding: '',
+                      name: '',
+                      dean: {
+                        accountId: '',
+                        name: ''
+                      }
+                 };dialogTitle='添加'"
                  size="mini">添加
       </el-button>
       <el-button
@@ -67,12 +74,13 @@
         </el-table-column>
         <el-table-column label="院长"
                          align="center">
-          <template slot-scope="scope">{{!scope.row.dean?'无':scope.row.dean.name}}</template>
+          <template slot-scope="scope">{{!scope.row.dean?'':scope.row.dean.name}}</template>
         </el-table-column>
         <el-table-column label="操作">
           <template slot-scope="scope">
             <el-button size="mini"
-                       @click="faculty = scope.row;editDialog = true;faculty.type = 'see';dialogTitle='查看'">查看
+                       @click="faculty = scope.row;editDialog = true;faculty.type = 'see';dialogTitle='查看';
+                        faculty.dean.accountId=!scope.row.dean?'无':scope.row.dean.name">查看
             </el-button>
             <el-button size="mini"
                        @click="faculty = scope.row;editDialog = true;
@@ -159,13 +167,7 @@
   </div>
 </template>
 <script>
-  import {
-    fetchList,
-    create,
-    update,
-    _delete
-  } from "@/api/faculty";
-  import {findById as teacherFindById} from "@/api/teacher";
+  import {_delete, create, fetchList, update} from "@/api/faculty";
   import {uploadFaculty} from '@/config/config'
   import {fetchTeacherList} from "@/api/profession";
 
@@ -296,10 +298,10 @@
         // 编辑学院信息
         if (faculty.id) {
           const updateValue = {};
-          updateValue.coding= this.faculty.coding;
-          updateValue.dean= this.faculty.dean.accountId;
-          updateValue.id= this.faculty.id;
-          updateValue.name= this.faculty.name;
+          updateValue.coding = this.faculty.coding;
+          updateValue.dean = this.faculty.dean.accountId;
+          updateValue.id = this.faculty.id;
+          updateValue.name = this.faculty.name;
           update(updateValue).then(result => {
             console.log("编辑学院结果返回", result);
             // 关闭窗口
@@ -313,10 +315,18 @@
         }
         // 添加学院
         else {
-          create(this.faculty).then(result => {
+          const addValue = {};
+          addValue.coding = this.faculty.coding;
+          addValue.dean = this.faculty.dean.accountId;
+          addValue.name = this.faculty.name;
+          create(addValue).then(result => {
             console.log("添加学院结果返回", result);
             // 关闭窗口
             this.editDialog = false;
+            this.$message({
+              message: '学院信息添加成功',
+              type: 'success'
+            });
             this.getList();
           });
         }
