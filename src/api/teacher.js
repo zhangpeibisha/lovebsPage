@@ -17,7 +17,6 @@ export function update(params) {
 }
 
 export function createTeacher(params) {
-
   var data = params[0];
   return request({
     url: '/teacher/create',
@@ -26,7 +25,8 @@ export function createTeacher(params) {
       email: data.email,
       jobNumber: data.jobNumber,
       name: data.name,
-      phone: data.phone
+      phone: data.phone,
+      roleId:data.roleId
     }
   })
 }

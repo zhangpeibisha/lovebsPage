@@ -33,7 +33,7 @@
       <el-button
         class="btn-add"
         @click="teacher = {
-       };editDialog = true;dialogTitle='添加'"
+       };editDialog = true;dialogTitle='添加';teacher.type = 'create'"
         size="mini"
       >添加
       </el-button>
@@ -149,19 +149,29 @@
     <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
       <el-form label-width="80px">
         <el-form-item label="工号">
-          <el-input v-model="teacher.jobNumber" :disabled="teacher.type == 'see'"></el-input>
+          <el-input v-model="teacher.jobNumber" :disabled="teacher.type !== 'create'"></el-input>
         </el-form-item>
         <el-form-item label="姓名">
-          <el-input v-model="teacher.name" :disabled="teacher.type == 'see'"></el-input>
+          <el-input v-model="teacher.name" :disabled="teacher.type === 'see'"></el-input>
         </el-form-item>
         <el-form-item label="手机号码">
-          <el-input v-model="teacher.phone" :disabled="teacher.type == 'see'"></el-input>
+          <el-input v-model="teacher.phone" :disabled="teacher.type === 'see'"></el-input>
         </el-form-item>
         <el-form-item label="邮箱">
-          <el-input v-model="teacher.email" :disabled="teacher.type == 'see'"></el-input>
+          <el-input v-model="teacher.email" :disabled="teacher.type === 'see'"></el-input>
+        </el-form-item>
+        <el-form-item label="角色"  v-if="teacher.type === 'create'">
+          <el-select v-model="teacher.roleId" placeholder="请选择">
+            <el-option
+              v-for="item in roles"
+              :key="item.id"
+              :label="item.description"
+              :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer" v-if="teacher.type != 'see'">
+      <span slot="footer" class="dialog-footer" v-if="teacher.type !== 'see'">
         <el-button @click="editDialog = false">取 消</el-button>
         <el-button type="primary" @click="edit()">确 定</el-button>
       </span>
@@ -176,6 +186,7 @@
     createTeacher
   } from "@/api/teacher";
   import {uploadTeacherUrl,uploadConfigTeacherUrl} from '@/config/config'
+  import {findAll} from '@/api/roleList'
 
   const defaultListQuery = {
     key: null,
@@ -208,11 +219,14 @@
         showImportTask: false,
         uploadUrl: uploadTeacherUrl,
         showConfigTeacher:false,
-        configTeacherUrl:uploadConfigTeacherUrl
+        configTeacherUrl:uploadConfigTeacherUrl,
+        userRoles:[],
+        roles:[]
       };
     },
     created() {
       this.getList();
+      this.findAllRole();
     },
     methods: {
       getList() {
@@ -238,6 +252,11 @@
           this.total = response.data.total;
           console.log("获取到的数据为：", response)
         });
+      },
+      findAllRole(){
+        findAll().then(res=>{
+           this.roles = res.data;
+        })
       },
       handleSizeChange(val) {
         this.listQuery.page = 1;
