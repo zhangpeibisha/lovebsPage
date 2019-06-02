@@ -48,7 +48,7 @@
             <span
               class="btn" :class="{ disabled: isLoading }" @click="dialogViewAuthorInfo = true">查看作者信息</span>
             <span
-              class="btn" :class="{ disabled: isLoading }" @click="back">返回</span>
+              class="btn" :class="{ disabled: isLoading }" @click="back">教学任务</span>
           </div>
         </footer>
       </div>

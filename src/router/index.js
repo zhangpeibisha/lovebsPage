@@ -158,6 +158,7 @@ export const asyncRouterMap = [
     name: "rbac",
     component: Layout,
     meta: {title: "权限管理", icon: 'example'},
+    hidden: true,
     role: ['MANGER'],
     children: [{
       path: 'resource',

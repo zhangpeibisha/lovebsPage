@@ -28,15 +28,13 @@
       <span>问卷模板数据</span>
       <el-button
         class="btn-add"
-        @click="teacher = {
-       };editDialog = true;dialogTitle='添加'"
+        @click="add"
         size="mini"
       >添加
       </el-button>
     </el-card>
     <div class="table-container">
       <el-table
-        ref="studentTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -69,7 +67,7 @@
               size="mini" @click="viewQuestion(scope.row.id)">查看
             </el-button>
             <!--<el-button-->
-              <!--size="mini" @click="publishQuestionConfig(scope.row)">发布问卷-->
+            <!--size="mini" @click="publishQuestionConfig(scope.row)">发布问卷-->
             <!--</el-button>-->
           </template>
         </el-table-column>
@@ -204,6 +202,12 @@
       this.getList();
     },
     methods: {
+      add() {
+        console.log("进入点击");
+        this.$router.push({
+          path: '/questionnaire/create'
+        })
+      },
       getList() {
         this.listLoading = true;
         this.listQuery.query = "where 1 = 1";
@@ -260,7 +264,7 @@
         console.log("获取到时间", this.answerTime[0], this.answerTime[1]);
         this.publishQuestionVisible = false;
 
-        if (!this.courseIds && this.courseIds.length == 0){
+        if (!this.courseIds && this.courseIds.length == 0) {
           this.$message({
             message: '请选择课程',
             type: 'warning'
@@ -269,7 +273,7 @@
         }
         var courseIdsStr = '';
         this.courseIds.forEach(row => {
-           courseIdsStr += row + ",";
+          courseIdsStr += row + ",";
         });
 
         this.submitPublishQuestionConfigQuery.courseIds = courseIdsStr;
@@ -279,8 +283,8 @@
         this.submitPublishQuestionConfigQuery.endRespondTime = this.answerTime[1];
         this.submitPublishQuestionConfigQuery.blacks = this.blackNumber;
 
-        publishQuestionnaireByCourseIds(this.submitPublishQuestionConfigQuery).then(res=>{
-          console.log("返回结果为",res);
+        publishQuestionnaireByCourseIds(this.submitPublishQuestionConfigQuery).then(res => {
+          console.log("返回结果为", res);
         })
       }, queryCourse(query) {
         console.log("获取的查询参数为", query);
