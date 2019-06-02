@@ -33,7 +33,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>专业数据</span>
-      <el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
+      <!--<el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>-->
       <el-button
         class="btn-add"
         @click="profession = {
@@ -49,7 +49,6 @@
     </el-card>
     <div class="table-container">
       <el-table
-        ref="professionTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -67,7 +66,7 @@
           <template slot-scope="scope">{{getTheacher(scope.row.departmentId).name}}</template>
         </el-table-column>
         <!--<el-table-column label="学院" align="center">-->
-          <!--<template slot-scope="scope">{{scope.row.name}}</template>-->
+        <!--<template slot-scope="scope">{{scope.row.name}}</template>-->
         <!--</el-table-column>-->
         <el-table-column label="操作">
           <template slot-scope="scope">
@@ -81,7 +80,7 @@
               @click="profession = scope.row;editDialog = true;dialogTitle='编辑';profession.type='edit'"
             >编辑
             </el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <!--<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -304,10 +303,9 @@
         if (profession.id) {
           update(this.profession).then(result => {
             this.editDialog = false;
-            Message({
-              message: "修改成功",
-              type: "success",
-              duration: 1000
+            this.$message({
+              message: '修改成功',
+              type: 'success'
             });
           });
         }
@@ -316,22 +314,21 @@
           create(this.profession).then(result => {
             this.editDialog = false;
             this.getList();
-            Message({
-              message: "添加成功",
-              type: "success",
-              duration: 1000
+            this.$message({
+              message: '添加成功',
+              type: 'success'
             });
           });
         }
       }, uploadTaskSuccess() {
         this.$message({
-          message: '教学任务上传成功',
+          message: '专业上传成功',
           type: 'success'
         });
         this.getList();
       }, uploadTaskError() {
         this.$message({
-          message: '教学任务上传失败',
+          message: '专业上传失败',
           type: 'error'
         });
       }
