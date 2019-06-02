@@ -70,9 +70,9 @@
               size="mini"
               @click="course = scope.row;editDialog = true;dialogTitle='编辑';course.type='edit'">编辑
             </el-button>
-            <el-button
-              size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
-            </el-button>
+            <!--<el-button-->
+              <!--&lt;!&ndash;size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除&ndash;&gt;-->
+            <!--</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -113,101 +113,23 @@
       </span>
     </el-dialog>
 
-    <el-dialog
-      title="上传课程信息"
-      :visible.sync="showImportTask"
-      width="30%">
-      <el-upload
-        class="upload-demo"
-        drag
-        :on-success="uploadTaskSuccess"
-        :on-error="uploadTaskError"
-        :action='uploadUrl'
-        multiple
-        headers="{'Content-Type':'application/x-www-form-urlencoded'}"
-        name="course">
-        <i class="el-icon-upload"></i>
-        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
-        <div class="el-upload__tip" slot="tip">请规范excel格式，不然无法导入</div>
-      </el-upload>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="showImportTask = false">确 定</el-button>
-      </span>
-    </el-dialog>
 
     <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
       <el-form label-width="80px">
         <el-form-item label="课程名字">
-          <el-input v-model="course.name" :disabled="course.type == 'see'"></el-input>
+          <el-input v-model="course.name" :disabled="course.type === 'see'"></el-input>
         </el-form-item>
         <el-form-item label="课程编号">
-          <el-input v-model="course.coding" :disabled="course.type == 'see'"></el-input>
+          <el-input v-model="course.coding" :disabled="course.type === 'see'"></el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input v-model="course.description" :disabled="course.type == 'see'"></el-input>
+          <el-input v-model="course.description" :disabled="course.type === 'see'"></el-input>
         </el-form-item>
       </el-form>
-      <span slot="footer" class="dialog-footer" v-if="course.type != 'see'">
+      <span slot="footer" class="dialog-footer" v-if="course.type !== 'see'">
         <el-button @click="editDialog = false">取 消</el-button>
         <el-button type="primary" @click="edit()">确 定</el-button>
       </span>
-    </el-dialog>
-
-    <el-dialog title="添加老师" :visible.sync="addTeacherView">
-      <el-form :model="courseTeacher" inline>
-        <el-form-item label="课程名字" :label-width="formLabelWidth">
-          <el-input v-model="courseTeacher.course.name" autocomplete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="老师">
-          <el-select
-            v-model="teacherId"
-            placeholder="请选择老师"
-            clearable
-            filterable
-            @change="chooseTeacher"
-          >
-            <el-option
-              v-for="item in teacherList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.accountid"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addTeacherView = false">取 消</el-button>
-        <el-button type="primary" @click="submitAddTeacher">确 定</el-button>
-      </div>
-    </el-dialog>
-
-
-    <el-dialog title="选择老师" :visible.sync="addCourseView">
-      <el-form :model="courseTeacher" inline>
-        <el-form-item label="课程名字" :label-width="formLabelWidth">
-          <el-input v-model="courseTeacher.course.name" autocomplete="off" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="老师">
-          <el-select
-            v-model="teacherId"
-            placeholder="请选择老师"
-            clearable
-            filterable
-            @change="chooseTeacher"
-          >
-            <el-option
-              v-for="item in teacherListByCourseId"
-              :key="item.id"
-              :label="item.name"
-              :value="item.accountid"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="addCourseView = false">取 消</el-button>
-        <el-button type="primary" @click="submitChooseCourse">确 定</el-button>
-      </div>
     </el-dialog>
 
   </div>
