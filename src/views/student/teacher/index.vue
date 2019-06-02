@@ -29,7 +29,7 @@
     <el-card class="operate-container" shadow="never">
       <i class="el-icon-tickets"></i>
       <span>老师数据</span>
-      <el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>
+      <!--<el-button class="btn-add" type="danger" @click="handleDelete()" size="mini">删除</el-button>-->
       <el-button
         class="btn-add"
         @click="teacher = {
@@ -47,7 +47,6 @@
     </el-card>
     <div class="table-container">
       <el-table
-        ref="studentTable"
         :data="list"
         style="width: 100%"
         @selection-change="handleSelectionChange"
@@ -84,7 +83,7 @@
               @click="teacher = scope.row;editDialog = true;dialogTitle='编辑';teacher.type='edit'"
             >编辑
             </el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            <!--<el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -150,7 +149,7 @@
     <el-dialog :title="dialogTitle" :visible.sync="editDialog" width="30%">
       <el-form label-width="80px">
         <el-form-item label="工号">
-          <el-input v-model="teacher.jobnumber" :disabled="teacher.type == 'see'"></el-input>
+          <el-input v-model="teacher.jobNumber" :disabled="teacher.type == 'see'"></el-input>
         </el-form-item>
         <el-form-item label="姓名">
           <el-input v-model="teacher.name" :disabled="teacher.type == 'see'"></el-input>
@@ -282,6 +281,10 @@
         if (teacher.id) {
           update(this.teacher).then(result => {
             console.log("返回的数据为：", result);
+            this.$message({
+              message: '编辑成功',
+              type: 'success'
+            });
             this.getList()
           });
         }
@@ -290,17 +293,21 @@
           createTeacher([this.teacher]).then(result => {
             console.log("返回的数据为：", result);
           });
+          this.$message({
+            message: '添加成功',
+            type: 'success'
+          });
           this.getList()
         }
         this.editDialog = false
       }, uploadTaskSuccess() {
         this.$message({
-          message: '教学任务上传成功',
+          message: '上传成功',
           type: 'success'
         });
       }, uploadTaskError() {
         this.$message({
-          message: '教学任务上传失败',
+          message: '上传失败',
           type: 'error'
         });
       }

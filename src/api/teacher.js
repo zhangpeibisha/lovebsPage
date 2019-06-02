@@ -24,7 +24,7 @@ export function createTeacher(params) {
     method: 'post',
     params: {
       email: data.email,
-      jobNumber: data.jobnumber,
+      jobNumber: data.jobNumber,
       name: data.name,
       phone: data.phone
     }
