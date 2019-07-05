@@ -10,7 +10,8 @@ const service = axios.create({
 });
 
 export function getBaseUrl() {
-  return "/api";
+  // return "/api";
+  return "/";
 }
 
 // request拦截器

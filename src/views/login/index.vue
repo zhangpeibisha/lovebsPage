@@ -77,7 +77,7 @@
       },
       getIdentifyingCode() {
         let objs = document.getElementById("imgIdentifyingCode");
-        objs.src = 'http://localhost:8080/validate/image';
+        objs.src = 'http://wds001:8080/validate/image';
       }
     }
   }
